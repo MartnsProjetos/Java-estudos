@@ -9,10 +9,12 @@ O código de Alice possui algum problema?
 
 Selecione uma alternativa
 
-**A** = Sim, pois o correto é Int e não int.
+**A** - Sim, pois o correto é Int e não int.
 
 
-**B** = Sim, pois não é possível concatenar uma String com umint.
+**B** - Sim, pois não é possível concatenar uma String com umint.
 
 
 **C** - Não há problemas, a concatenação pode ser feita sem problemas.
+
+**Resposta** - **C**
