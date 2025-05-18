@@ -1,0 +1,42 @@
+Agora que Alice está ficando craque em laços, decidiu desafiar seu amigo Bernardo a transformar o código a seguir, que utiliza um laço while, em um código que utiliza o for.
+
+Código com while:
+
+public class Programa {
+
+    public static void main(String[] args) {
+
+        int contador = 1;
+
+        while(contador <= 10) {
+            System.out.println(contador);
+            contador++;
+        }
+    }
+}Copiar código
+Você consegue ajudar Bernardo a chegar a resposta do desafio?
+
+Selecione uma alternativa
+
+public class Programa {
+    public static void main(String[] args) {
+        for(contador <= 10) {
+            System.out.println(contador);
+        }
+    }
+}
+
+public class Programa {
+    public static void main(String[] args) {
+        for(int contador = 1; contador <= 10; contador++) {
+        }
+    }
+}
+
+public class Programa {
+    public static void main(String[] args) {
+        for(int contador = 1; contador <= 10; contador++) {
+            System.out.println(contador);
+        }
+    }
+}
