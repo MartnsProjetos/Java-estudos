@@ -9,3 +9,50 @@ Crie uma classe Soma em Java para imprimir no console o resultado da operação 
 Crie uma classe Subtracao para imprimir o resultado de 10 - 5 no console.
 Caso precise de ajuda, opções de solução das atividades estarão disponíveis na seção “Ver opinião do instrutor”.
 
+Ver opinião do instrutor
+Opinião do instrutor
+
+1)
+public class Perfil{
+
+    public static void main(String[] args) {
+        System.out.println("Olá, Nome");
+    }
+
+}
+Copiar código
+2)
+public class Perfil{
+
+    public static void main(String[] args) {
+        System.out.println("Olá, Nome");
+        System.out.println("Tudo bem?");
+    }
+
+}
+Copiar código
+3)
+public class Estudos{
+
+    public static void main(String[] args) {
+        System.out.println("JVM (Java Virtual Machine) - é a Máquina Virtual do Java responsável por executar o bytecode");
+        System.out.println("JRE (Java Runtime Environment) - Ambiente de Execução do Java que fornece as bibliotecas padrões do Java para o JDK compilar o seu código e para a JVM executar o seu program");
+    }
+
+}
+Copiar código
+4)
+public class Soma{
+
+    public static void main(String[] args) {
+        System.out.println(10 + 5);
+    }
+}
+Copiar código
+5)
+public class Subtracao{
+
+    public static void main(String[] args) {
+        System.out.println(10 - 5);
+    }
+}
