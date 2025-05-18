@@ -1,0 +1,7 @@
+Nesta aula do curso de Java, aprendemos sobre como controlar o fluxo da aplicação utilizando condicionais. Começamos criando uma nova classe chamada Condicional e implementamos o método main() para executar nosso código.
+
+Exploramos a estrutura condicional if/else, onde utilizamos variáveis como anoDeLancamento, incluidoNoPlano e notaDoFilme para decidir se um filme é um lançamento ou um filme retrô. Aprendemos a sintaxe do if, que avalia uma expressão booleana, e como usar else para definir uma ação alternativa.
+
+Além disso, introduzimos operadores lógicos, como || (ou) e && (e), para combinar condições. Vimos que, ao usar ||, basta que uma das condições seja verdadeira para que o bloco de código correspondente seja executado, enquanto que com &&, ambas as condições precisam ser verdadeiras.
+
+Por fim, discutimos a importância de usar o método .equals() para comparar strings em Java, em vez de usar ==, e como isso se relaciona com a manipulação de objetos. A aula enfatizou a prática e a legibilidade do código ao trabalhar com condicionais.
