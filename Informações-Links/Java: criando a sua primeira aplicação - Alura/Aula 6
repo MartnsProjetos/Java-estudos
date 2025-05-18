@@ -1,0 +1,12 @@
+Nessa aula você aprendeu:
+A trabalhar com variáveis: recurso utilizado para armazenar valores em memória;
+
+Sobre tipos primitivos:
+
+inteiros (byte, short, int, long);
+ponto flutuante (double e float);
+char: contém um único caractere;
+boolean: recebe 2 valores, true ou false;
+Como representar textos em Java, utilizando a classe String;
+
+A realizar casting de valores, para resolver situações de tipos incompatíveis no momento de realizar um cálculo ou atribuição de uma variável.
