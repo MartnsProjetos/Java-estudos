@@ -1,0 +1,5 @@
+Nesta aula, os instrutores Jacqueline e Paulo introduzem os alunos ao desenvolvimento de um projeto em Java utilizando o IntelliJ. Eles demonstram como criar um novo projeto, escolher o nome e a pasta, selecionar a versão da JDK e adicionar um código de exemplo. O código gerado é uma classe chamada Main, que contém o método principal e uma instrução para imprimir "Alô Mundo!" no console.
+
+Os instrutores explicam a estrutura do projeto, destacando a pasta "src" onde o código-fonte é armazenado, e mencionam a importância de entender o que acontece por trás da execução do código. Eles também falam sobre a máquina virtual Java (JVM) e como ela está envolvida na execução do programa. Por fim, eles incentivam os alunos a rodar o programa e se prepararem para aprender sobre variáveis, laços, condicionais e funções nas próximas aulas.
+
+Copiar texto da Luri para área de transferêcia
