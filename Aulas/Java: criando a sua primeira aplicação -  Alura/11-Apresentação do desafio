@@ -1,0 +1,5 @@
+Nesta aula, a instrutora Jacqueline Oliveira apresenta um desafio prático para consolidar os conhecimentos adquiridos no curso de Java. O projeto consiste em criar uma aplicação que controla uma conta bancária virtual, onde o aluno deve implementar métodos como recebeTransferencia(), fazTransferencia(), enviaPix() e recebePix().
+
+Os dados iniciais do cliente incluem nome, tipo de conta e saldo. O programa deve oferecer um menu com quatro opções: consultar saldos, receber valor, transferir valor e sair. O aluno deve implementar a lógica para cada operação, garantindo que o saldo seja atualizado corretamente e que mensagens de erro sejam exibidas em caso de operações inválidas, como tentar transferir um valor maior do que o saldo disponível.
+
+A sugestão é que o aluno desenvolva o projeto em etapas, testando cada parte do código, como a inicialização dos dados, o menu de opções, a visualização do saldo e as operações de envio e recebimento de valores.
