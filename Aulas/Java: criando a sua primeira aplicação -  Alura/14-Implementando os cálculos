@@ -1,0 +1,11 @@
+Nesta aula, aprendemos a implementar a manipulação de valores em um programa Java que simula um sistema de gerenciamento de saldo. O foco foi no uso de condicionais para realizar diferentes operações com o saldo, dependendo da opção escolhida pelo usuário.
+
+Visualização do saldo: Quando a opção 1 é selecionada, o programa exibe o saldo atualizado.
+
+Transferência de valores: Na opção 2, o usuário pode transferir um valor. O programa verifica se o saldo é suficiente para a transferência e, se for, atualiza o saldo.
+
+Recebimento de valores: A opção 3 permite que o usuário receba um valor, que é adicionado ao saldo.
+
+Tratamento de opções inválidas: Se o usuário digitar uma opção que não está entre as válidas, o programa informa que a opção é inválida.
+
+Ao final, o código é testado no terminal para garantir que todas as funcionalidades estão funcionando corretamente. Essa aula consolidou o aprendizado sobre condicionais e manipulação de valores em Java.
