@@ -1,0 +1,30 @@
+import java.util.Random;
+import java.util.Scanner;
+public class JogoDeAdivinhacao {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        Random numeroSecreto = new Random();
+        int numero = numeroSecreto.nextInt(100);
+        int palpite;
+
+        System.out.println("Jogo da Advinhação, Você tem 5 Tentativas para acertar o número Aleatório de 0 á 100!");
+
+        for (int tentativa = 1; tentativa <= 5; tentativa++) {
+            System.out.println("Tentativa " + tentativa + " :");
+            palpite = entrada.nextInt();
+
+            if (palpite == numero){
+                System.out.println("Parabéns! Você acertou.");
+                break;
+            } else if (palpite < numero){
+                System.out.println("O número é Maior!");
+            } else {
+                System.out.println("O número é Menor");
+            }
+            if (tentativa == 5){
+                System.out.println("Infelizmente você não acertou... O número SECRETO era " + numero);
+            }
+        }
+        entrada.close();
+    }
+}
