@@ -66,4 +66,4 @@ Este repositório é de uso pessoal, mas estou sempre aberto a sugestões ou dic
 
 ---
 
-**Desenvolvido por [Matheus Martins](https://www.linkedin.com/in/seu-perfil-linkedin-aqui)**  
+**Desenvolvido por [Matheus Martins](https://www.linkedin.com/in/matheusmartnsdeveloper)**  
