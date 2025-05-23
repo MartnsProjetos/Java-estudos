@@ -1,4 +1,4 @@
-aaaaaaaasasaa# 💻 Aprendizado em Java
+aaaaaaaaasasaa# 💻 Aprendizado em Java
 
 Este repositório foi criado para reunir todo o meu progresso e aprendizados em **Java**, através de cursos, desafios, projetos práticos e anotações pessoais. Ele é atualizado conforme avanço nos estudos e serve como base de consulta e prática contínua.
 
