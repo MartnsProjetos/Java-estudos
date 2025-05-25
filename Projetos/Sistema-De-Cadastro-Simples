@@ -1,0 +1,73 @@
+import java.util.Objects;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Sistema de Cadastro");
+
+        //Apenas utilizei para aprender melhor o TRY/CATCH
+        try {
+            System.out.println("Iniciando Sistema de Cadastro...");
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            System.out.println("Erro ao iniciar.");
+        }
+
+        //Loop para o nome, com mínimo de 5 letras e não pode simbolos e números.
+        String nome;
+        while (true) {
+            System.out.print("Nome Completo: ");
+            nome = scanner.nextLine();
+
+            if (nome.isEmpty() || nome.length() < 5 || !nome.matches("[a-zA-ZÀ-ÿ\\s]+")) {
+                System.out.println("Preencha Corretamente");
+            } else {
+                break;
+            }
+        }
+
+        //Loop para CPF, Não pode ser diferente de 11 números
+        String cpf;
+        while (true){
+            System.out.println("CPF (Somente Números): ");
+            cpf = scanner.nextLine();
+
+            try {
+                System.out.println("Validando CPF...");
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                System.out.println("Erro ao validar CPF.");
+            }
+
+            if (cpf.matches("\\d{11}")) {
+
+                break;
+            } else {
+                System.out.println("CPF Inválido");
+            }
+        }
+
+        //Loop para telefone, pode 55+ (11) 96382-2159 e pode também 11963822159, e mínimo de 10 números
+        String regexTelefone = "(\\+?55)?\\s?\\(?\\d{2}\\)?\\s?\\d{4,5}-?\\d{4}";
+        String telefone;
+        while (true) {
+            System.out.print("Digite seu telefone: ");
+            telefone = scanner.nextLine();
+
+            if (telefone.matches(regexTelefone)) {
+                break;
+            } else {
+                System.out.println("Telefone Inválido");
+            }
+        }
+
+        //Informações final
+        System.out.println("\n✅ Cadastro realizado com sucesso!");
+        System.out.println("Nome: " + nome);
+        System.out.println("CPF: " + cpf);
+        System.out.println("Telefone: " + telefone);
+    }
+}
