@@ -1,0 +1,190 @@
+Agora é com você! Faça o mesmo procedimento que eu fiz na aula, aplicando os conceitos de herança e polimorfismo, criando para isso as classes Titulo, Serie e CalculadoraDeTempo.
+
+Ver opinião do instrutor
+Opinião do instrutor
+
+Você vai precisar criar uma nova classe chamada Titulo no pacote br.com.alura.screenmatch.modelos, movendo para ela todos os atributos e métodos da classe Filme:
+
+package br.com.alura.screenmatch.modelos;
+
+public class Titulo {
+
+    private String nome;
+    private int anoDeLancamento;
+    private int duracaoEmMinutos;
+    private boolean incluidoNoPlano;
+    private double somaDasAvaliacoes;
+    private int totalDeAvaliacoes;
+    
+    public void exibeFichaTecnica() {
+        System.out.println(“Nome do filme: “ +nome);
+        System.out.println(“Ano de lançamento: “ +anoDeLancamento);
+        System.out.println(“Duração em minutos: “ +duracaoEmMinutos);
+        System.out.println(“Incluído no plano: “ +incluidoNoPlano);
+    }
+
+    public void avalia(double nota) {
+        somaDasAvaliacoes += nota;
+        totalDeAvaliacoes++;
+    }
+
+    public double pegaMedia() {
+        return somaDasAvaliacoes / totalDeAvaliacoes;
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getAnoDeLancamento() {
+        return this.anoDeLancamento;
+    }
+
+    public void setAnoDeLancamento(int anoDeLancamento) {
+        this.anoDeLancamento = anoDeLancamento;
+    }
+
+    public boolean getIncluidoNoPlano() {
+        return this.incluidoNoPlano;
+    }
+
+    public void setIncluidoNoPlano(boolean incluidoNoPlano) {
+        this.incluidoNoPlano = incluidoNoPlano;
+    }
+
+    public int getDuracaoEmMinutos() {
+        return this.duracaoEmMinutos;
+    }
+
+    public void setDuracaoEmMinutos(int duracaoEmMinutos) {
+        this.duracaoEmMinutos = duracaoEmMinutos;
+    }
+
+    public int getTotalDeAvaliacoes() {
+        return this.totalDeAvaliacoes;
+    }
+
+}
+Copiar código
+Na classe Filme, vai precisar herdar da classe Titulo e incluir nela o atributo diretor, juntamente com os métodos getter/setter desse atributo:
+
+package br.com.alura.screenmatch.modelos;
+
+public class Filme extends Titulo {
+
+    private String diretor;
+
+    public String getDiretor() {
+        return this.diretor;
+    }
+
+    public void setDiretor(String diretor) {
+        this.diretor = diretor;
+    }
+
+}
+Copiar código
+Agora, você vai precisar criar a classe Serie, que também vai herdar da classe Titulo, e terá os atributos temporadas, ativa, episodiosPorTemporada e minutosPorEpisodio, além dos métodos getter/setter desses atributos:
+
+package br.com.alura.screenmatch.modelos;
+
+public class Serie extends Titulo {
+
+    private int temporadas;
+    private boolean ativa;
+    private int episodiosPorTemporada;
+    private int minutosPorEpisodio;
+
+    public int getTemporadas() {
+        return temporadas;
+    }
+
+    public void setTemporadas(int temporadas) {
+        this.temporadas = temporadas;
+    }
+
+    public boolean isAtiva() {
+        return ativa;
+    }
+
+    public void setAtiva(boolean ativa) {
+        this.ativa = ativa;
+    }
+
+    public int getEpisodiosPorTemporada() {
+        return episodiosPorTemporada;
+    }
+
+    public void setEpisodiosPorTemporada(int episodiosPorTemporada) {
+        this.episodiosPorTemporada = episodiosPorTemporada;
+    }
+
+    public int getMinutosPorEpisodio() {
+        return minutosPorEpisodio;
+    }
+
+    public void setMinutosPorEpisodio(int minutosPorEpisodio) {
+        this.minutosPorEpisodio = minutosPorEpisodio;
+    }
+
+}
+Copiar código
+Ainda na classe Serie, sobrescreva o método getDuracaoEmMinutos:
+
+@Override
+public int getDuracaoEmMinutos() {
+    return temporadas * episodiosPorTemporada * minutosPorEpisodio;
+}
+Copiar código
+Por fim, crie o pacote br.com.alura.screenmatch.calculos e dentro dele crie a classe CalculadoraDeTempo:
+
+package br.com.alura.screenmatch.calculos;
+
+public class CalculadoraDeTempo {
+
+    private int tempoTotal;
+
+    public void inclui(Titulo titulo) {
+        tempoTotal += titulo.getDuracaoEmMinutos();
+    }
+
+    public int getTempoTotal() {
+        return tempoTotal;
+    }
+
+}
+Copiar código
+Para testar os novos códigos, altere o método main da classe Principal:
+
+Filme favorito = new Filme();
+favorito.setNome(“The Matrix”);
+favorito.setAnoDeLancamento(1999);
+favorito.setDuracaoEmMinutos(135);
+favorito.setIncluidoNoPlano(true);
+
+Filme outro = new Filme();
+outro.setNome(“John Wick”);
+outro.setAnoDeLancamento(2014);
+outro.setDuracaoEmMinutos(101);
+outro.setIncluidoNoPlano(true);
+
+Serie serie = new Serie();
+serie.setNome(“La Casa de Papel”);
+serie.setAnoDeLancamento(2017);
+serie.setIncluidoNoPlano(true);
+serie.setAtiva(true);
+serie.setTemporadas(5);
+serie.setEpisodiosPorTemporada(10);
+serie.setMinutosPorEpisodio(45);
+
+CalculadoraDeTempo calculadora = new CalculadoraDeTempo();
+calculadora.inclui(favorito);
+calculadora.inclui(outro);
+calculadora.inclui(serie);
+
+System.out.println(“Tempo total: “ +calculadora.getTempoTotal());
+C
