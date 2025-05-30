@@ -1,0 +1,58 @@
+🔹 1. Criação da classe Episodio
+Local: pacote br.com.alura.screenmatch.modelos.
+
+Atributos:
+
+numero (int)
+
+nome (String)
+
+serie (objeto da classe Serie)
+
+Adição de getters e setters usando o recurso de geração automática da IDE (Alt+Insert).
+
+🔹 2. Introdução à interface Classificavel
+Criada no pacote br.com.alura.screenmatch.calculos.
+
+Substituiu a ideia inicial de uma classe para permitir múltiplos comportamentos compartilhados.
+
+Definição da interface:
+
+java
+Copiar
+Editar
+public interface Classificavel {
+    int getClassificacao();
+}
+Interface ≠ Classe: não tem implementação, apenas declara métodos que devem ser implementados.
+
+🔹 3. Diferença entre extends e implements
+Java não permite herança múltipla com extends.
+
+Para aplicar comportamento comum a múltiplas classes (como Filme, Serie, Episodio), usa-se interfaces com implements.
+
+🔹 4. Implementando Classificavel
+Exemplo com a classe Filme:
+
+java
+Copiar
+Editar
+public class Filme extends Titulo implements Classificavel {
+    @Override
+    public int getClassificacao() {
+        // lógica de classificação (ex: avaliação / 2)
+    }
+}
+🔹 5. Importância e uso das interfaces
+Interfaces representam contratos que obrigam uma classe a implementar certos métodos.
+
+Promovem polimorfismo: objetos diferentes podem ser tratados da mesma forma se implementarem a mesma interface.
+
+Muito utilizadas em bibliotecas Java (como Connection, List, etc).
+
+Tornam o design de software mais flexível e desacoplado.
+
+🔹 6. Aplicações práticas
+Interface usada como um "rótulo comportamental": qualquer coisa que possa ser "classificada" pode implementá-la.
+
+Exemplo: Filme, Serie, Episodio, e até mesmo Pessoa poderiam implementar Classificavel.
