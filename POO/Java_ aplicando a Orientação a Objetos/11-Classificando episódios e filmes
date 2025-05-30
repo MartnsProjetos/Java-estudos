@@ -1,0 +1,298 @@
+ranscrição
+Jacqueline: Dissemos que Filme implementa o Classificavel. Como será essa classificação?
+
+Podemos retornar o que você disse, Paulo: pegar a avaliação no return com pegaMedia() dividido por 2. Isso representará a minha classificação.
+
+Pegamos um erro aqui. Precisa ser inteiro, por isso faremos o cast que já conhecemos, colocando um int entre parênteses.
+
+public class Filme extends Titulo implements Classificavel {
+
+// Código omitido
+
+    @Override
+    public int getClassificacao() {
+        return (int) pegaMedia() / 2;
+    }
+}
+Copiar código
+Também queremos classificar o Episodio com estrelas. Acessando o arquivo Episodio.java, na classe Episodio, precisamos dar o implements Classificavel.
+
+public class Episodio implements Classificavel {
+
+// Código omitido
+
+}
+Copiar código
+Paulo: Quando fazemos isso, fica em vermelho. Isso ocorre porque temos o Classificavel, mas não o método getClassificacao().
+
+Jacqueline: Exatamente, temos que implementá-lo, igual fizemos antes: na caixa do sistema que exibe a explicação do erro, clicaremos em "Implement methods" e na janela seguinte, selecionaremos getClassificacao():int, pressionando por fim o botão "OK".
+
+Receberemos a estrutura do método.
+
+@Override
+public int getClassificacao() {
+    return 0;
+}
+Copiar código
+Acessaremos a estrutura do método, onde faremos a classificação. Já que não temos uma classificação específica, criaremos outra forma de controle.
+
+Por exemplo, criaremos na classe Episodio um atributo chamado totalVisualizacoes, sem acento. Se ele tiver mais de 100 visualizações, daremos quatro estrelas, e se tiver menos, daremos duas estrelas.
+
+Paulo: Tá bem. Uma regra maluca.
+
+Jacqueline: Só para ficar claro que não tem nada a ver com a regra do Filme. Aquela é uma, e esta pode ser outra completamente diferente.
+
+Adicionaremos a variável private int totalVisualizacoes junto aos seus Getters e Setters.
+
+public class Episodio implements Classificavel {
+
+    private int numero;
+    private String nome;
+    private Serie serie;
+    private int totalVisualizacoes;
+    
+    public int getTotalVisualizacoes() {
+        return totalVisualizacoes;
+    }
+
+    public void setTotalVisualizacoes(int totalVisualizacoes) {
+        this.totalVisualizacoes = totalVisualizacoes;
+    }
+
+// Código omitido
+
+}
+Copiar código
+No método getClassificacao(), a regra será:
+
+Se tivermos mais de 100 visualizações, retornaremos quatro estrelas.
+Caso contrário, retornaremos duas.
+Para isso, adicionaremos um if (totalVisualizacoes) > 100, e dentro de suas chaves um return 4. Fora do ìf, adicionaremos um else que incluirá o return pré-definido, substituindo o seu valor de 0 para 2.
+
+@Override
+public int getClassificacao() {
+    if (totalVisualizacoes > 100) {
+        return 4;
+    } else {
+        return 2;
+    }
+}
+Copiar código
+Temos uma classificação para Episodio e outra para Filme. Onde vamos usá-las? Como vamos ver essa classificação? O que faremos com ela?
+
+Clicaremos com o botão direito na pasta "calculos" por meio do explorador e criaremos uma nova classe Java, onde diremos que, se o conteúdo assistido tiver mais de quatro estrelas, ele estará entre os preferidos. Caso contrário, não estará.
+
+Paulo: Pode ser um filtro de recomendação, onde daremos "ok" somente no conteúdo que possui mais de quatro estrelas, ou algo assim.
+
+Jacqueline: Isso. Então será FiltroRecomendacao.
+
+package br.com.alura.screenmatch.calculos;
+
+public class FiltroRecomendacao {
+
+}
+Copiar código
+Paulo: Isto é algo que teríamos no front-end, em uma situação onde queremos ver o gênero Drama, por exemplo, mas somente conteúdos que possuem quatro ou cinco estrelas.
+
+Jacqueline: Exatamente. Dentro do FiltroRecomendacao, precisamos incluir qual será essa recomendação, adicionando um atributorecomendacao que a identifique. Ele poderá ser uma string.
+
+package br.com.alura.screenmatch.calculos;
+
+public class FiltroRecomendacao {
+    private String recomendacao;
+}
+Copiar código
+Ou seria melhor criar um método obterRecomendacao()? Vamos pensar: temos que incluir nele o nosso Classificavel, então precisaremos de um método para incluí-lo.
+
+Abaixo da string recomendacao, faremos um public void …
+
+Paulo: filtra(), pois queremos receber um Classificavel e verificar se ele é acima de determinado valor para recomendá-lo.
+
+Jacqueline: Isso. Queremos passar um Filme, por exemplo, e pedir que ele nos diga: "este filme está entre os preferidos" ou "assista-o depois".
+
+package br.com.alura.screenmatch.calculos;
+
+public class FiltroRecomendacao {
+    private String recomendacao;
+    
+    public void filtra() {
+    
+    }
+}
+Copiar código
+Se pensássemos no filme, passaríamos entre parênteses o Filme.
+
+Paulo: Sim, mas já sabemos que queremos utilizar o Polimorfismo, para ser possível aceitar Filme, Serie, Episodio e, quem sabe no futuro, uma pessoa usuária.
+
+Jacqueline: Exatamente. Então, não usaremos Filme, mas sim o Classificavel, cujo nome será classificavel, com inicial minúscula.
+
+public class FiltroRecomendacao {
+    private String recomendacao;
+    
+    public void filtra(Classificavel classificavel){
+    
+    }
+}
+Copiar código
+Como será este método? Se a classificação — ou seja, o getClassificacao() — for maior ou igual quatro estrelas, retornaremos a mensagem "Está entre os preferidos do momento".
+
+Para os casos em que o getClassificacao() for maior ou igual a 2, retornaremos a mensagem "Muito bem avaliado no momento!".
+
+Por fim, se não for nenhum dos dois casos, retornaremos a mensagem "Coloque na sua lista para assistir depois".
+
+Esta lógica será implementada dentro de filtra(), por meio do seguinte bloco de código:
+
+if (classificavel.getClassificacao() >= 4) {
+    System.out.println("Está entre os preferidos do momento");
+} else if (classificavel.getClassificacao() >= 2) {
+    System.out.println("Muito bem avaliado no momento");
+} else {
+    System.out.println("Coloque na sua lista para assistir depois");
+}
+Copiar código
+Com isso, não precisaremos do atributo private String recomendacao. Vamos removê-lo.
+
+Abaixo temos o código completo:
+
+public class FiltroRecomendacao {
+    
+    public void filtra(Classificavel classificavel){
+        if (classificavel.getClassificacao() >= 4) {
+            System.out.println("Está entre os preferidos do momento");
+        } else if (classificavel.getClassificacao() >= 2) {
+            System.out.println("Muito bem avaliado no momento");
+        } else {
+            System.out.println("Coloque na sua lista para assistir depois");
+        }
+    }
+}
+Copiar código
+Estamos dizendo que, quando chamarmos o FiltroRecomendação e mandarmos filtrar, ele buscará a classificação dentro da entidade que implementou o Classificavel, olhará as estrelas, e retornará a mensagem correspondente.
+
+Como vamos utilizar isso? Vamos acessar o arquivo Principal.java.
+
+Paulo: O interessante é que a porta denominada Classificavel pode ser todo mundo que se comprometeu a possui um método de classificação.
+
+Jacqueline: Exatamente.
+
+Paulo: Se segurarmos o "Ctrl" e clicarmos duas vezes em getClassificacao(), seremos direcionados para o arquivo Clasificavel.java, onde veremos o código abaixo.
+
+package br.com.alura.screenmatch.calculos;
+
+public interface Classificavel {
+    int getClassificacao();
+}
+Copiar código
+O método que ele vai executar é do objeto onde foi dado um new. Por isso que não conseguimos dar new em interfaces. Se tentarmos dar new Classificavel();, o sistema apontará um erro de compilação, informando que não é possível criar um objeto com um contrato, ficará faltando algo.
+
+Podemos criar uma referência ou uma variável para o tipo Classificavel, como fizemos em FiltroRecomendacao. Mas não podemos criar nele um objeto new.
+
+Já aprendemos, e continuaremos praticando essa lição mais adiante.
+
+Jacqueline: Voltando ao arquivo Principal.java, vamos utilizar nosso filtro de recomendação.
+
+Para isso, dentro das chaves da classe Principal e abaixo da CalculadoraDeTempo, adicionaremos um filtroRecomendacao do tipo FiltroRecomendacao, que receberá um new FiltroRecomendacao().
+
+Nesse filtro, mandaremos filtrar o primeiro filme por meio de um filtro.filtra(meuFilme).
+
+public class Principal {
+
+// Código omitido
+
+        CalculadoraDeTempo calculadora = new CalculadoraDeTempo();
+        calculadora.inclui(meuFilme);
+        calculadora.inclui(outroFilme);
+        calculadora.inclui(lost);
+        System.out.println(calculadora.getTempoTotal());
+
+        FiltroRecomendacao filtro = new FiltroRecomendacao();
+        filtro.filtra(meuFilme);
+}
+Copiar código
+Vamos rodar o código e ver o que ele fará. A aba "Run" será aberta abaixo do código, onde veremos o seguinte retorno.
+
+Muito bem avaliado no momento!
+
+Se rolarmos o conteúdo para cima, veremos que esta classificação foi dada devido ao resultado da média de avaliações. Quando dividimos por inteiro, o resultado de estrelas provavelmente foi três ou quatro.
+
+Paulo: Ficou bem avaliado, mas não sabemos qual foi avaliado. Se voltarmos no arquivo FiltroRecomendacao.java, na classe FiltroRecomendacao e buscarmos o nome do filme por meio de um classificavel.getNome(), vai funcionar?
+
+Jacqueline: Para concatenar, né? Seria uma ótima ideia.
+
+Paulo: É.
+
+Jacqueline: Na classe atual, dentro do primeiro if, temos um println(). Em seu interior, à esquerda do texto, adicionaremos classificavel., o que abrirá a lista de sugestões do sistema.
+
+Contudo, não encontraremos o método getNome() nela.
+
+Paulo: Mesmo se digitarmos manualmente, não compilará. Significa que ele nem existe para o sistema.
+
+Apesar de sabermos que ele existe, não conseguimos encontrá-lo devido à falta de especificação no Classificavel. Lá não informamos que todo Classificavel possui um nome.
+
+Existe sempre uma disputa, onde às vezes temos que remodelar interfaces e classes para que a mãe garanta determinadas propriedades do contrato a todas as suas filhas.
+
+Jacqueline: Inclusive, se quiséssemos, poderíamos colocar o getNome() no Classificavel.
+
+Paulo: Dessa forma, todo Classificavel teria um nome. Precisamos discutir e elaborar melhor o nosso design de classes para ver se isso faz sentido. O aprimoramento destes elementos é uma discussão recorrente.
+
+É muito natural aprimorar, refatorar e remodelar uma classe durante o seu processo de criação.
+
+Jacqueline: Exatamente. Para testarmos o nosso Episodio, adicionamos uma regra para dar quatro estrelas a todo conteúdo com mais de 100 visualizações.
+
+Nestes casos, o FiltroRecomendacao reconhecerá o valor como maior ou igual a 4 e devolverá a mensagem informando que este conteúdo é um dos preferidos do momento.
+
+Portanto, acessaremos nossa classe Principal no arquivo de mesmo nome. Em seu interior, abaixo de filtro.filtra(meuFilme), criaremos os comandos abaixo, um em cada linha.
+
+episodio do tipo Episodio que receberá um new Episodio().
+
+episodio.setNumero(), em cujos parênteses informaremos o episódio 1.
+
+episodio.setSerie(), em cujos parênteses informaremos a série lost, já instanciada.
+
+episodio.setTotalVisualizacoes(), em cujos parênteses informaremos o total de 300 visualizações.
+
+filtraremos por meio de um filtro.filtra(episodio), onde verificaremos se é um bom episódio ou não.
+
+public class Principal {
+
+// Código omitido
+
+        FiltroRecomendacao filtro = new FiltroRecomendacao();
+        filtro.filtra(meuFilme);
+        
+        Episodio episodio = new Episodio();
+        episodio.setNumero(1);
+        episodio.setSerie(lost);
+        episodio.setTotalVisualizacoes(300);
+        filtro.filtra(episodio);
+}
+Copiar código
+Paulo: É a primeira vez que relacionamos dois objetos. Em Episodio, a Serie é o lost. Estamos criando uma referência de um para outro, o que é frequente e parecerá cada vez mais aqui na formação.
+
+Jacqueline: Exatamente. Vamos rodar o código para ver na aba "Run" a última coisa a ser dita por ele.
+
+Está entre os preferidos do momento
+
+O resultado saiu como esperado. Com isso, conseguimos usar um Classificavel no nosso filtro para qualquer coisa que possa ser classificável, tornando o processo mais dinâmico e fácil.
+
+Paulo: Nesse curso, vemos bastante os principais pilares da Orientação a Objetos, junto às boas práticas. A Jaque está trazendo o conteúdo de uma forma que o entendemos junto ao seu principal uso.
+
+É possível utilizar este conteúdo para o mal também, é importante entender isso. Herança e Polimorfismo são temas que costumamos entender mais rápido, enquanto o assunto de Interfaces nos parece um pouco assustador.
+
+Conforme caminhamos na formação e enxergamos os principais pacotes do Java (como java.lang e java.util), além de trabalhar com coleções extensas de episódios e de filmes, reforçaremos tudo o que estamos aprendendo.
+
+Pode seguir com tranquilidade, pois tocaremos novamente nos assuntos de Interface, Herança e Polimorfismo. Além disso, avançaremos em conceitos de Orientação a Objetos que ainda não foram vistos aqui, como construtores e classes abstratas.
+
+Veremos que não se trata apenas de criação, mas também de utilizar no dia-a-dia os conteúdos que outras pessoas criaram. O conteúdo do curso, além do desafio que será proposto pela Jaque, fixarão o conhecimento.
+
+Você não usará somente o que você criou, como listas (que são interfaces no Java), classes e métodos criados por outras pessoas. Entre eles, haverão métodos que utilizam Polimorfismo para aceitar diversos objetos.
+
+Aplicaremos tudo o que estamos vendo, aliado aos exercícios feitos e ao desafio, enquanto evoluímos outros conceitos do Java, como o trabalho com conexões com a Internet, downloads de microsserviços, entre outros.
+
+É natural que, quando nos aprofundamos em um tema e começamos a entender o design das classes, vemos que não sabemos de tudo, e que se trata de algo muito maior.
+
+Fique para o desafio! Queremos ver o seu resultado no Discord, no LinkedIn e no Github. Podemos inclusive incluir o nosso projeto no Github ao final da formação.
+
+Jacqueline: Isso aí. Paulo, muito obrigado pela parceria.
+
+Nos vemos daqui a pouco, no desafio!
