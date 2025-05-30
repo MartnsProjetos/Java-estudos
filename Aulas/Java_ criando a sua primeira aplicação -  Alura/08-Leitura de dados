@@ -1,0 +1,18 @@
+Nesta aula, aprendemos sobre a leitura de dados em Java utilizando a classe Scanner. O objetivo é permitir que o usuário interaja com o programa, inserindo informações através do teclado.
+
+Criação da Classe: Começamos criando uma nova classe chamada Leitura e definindo o método main.
+
+Importação do Scanner: Importamos a classe Scanner do pacote java.util para realizar a leitura de dados.
+
+Instanciação do Scanner: Criamos um objeto leitura da classe Scanner, que recebe System.in como parâmetro para ler entradas do teclado.
+
+Leitura de Dados: Aprendemos a ler diferentes tipos de dados:
+
+String: Usamos nextLine() para ler textos.
+int: Usamos nextInt() para ler números inteiros.
+double: Usamos nextDouble() para ler números decimais, lembrando que a entrada deve ser feita com vírgula no Brasil.
+Exibição dos Dados: Após coletar as informações, imprimimos os dados lidos para confirmar que tudo funcionou corretamente.
+
+Tratamento de Erros: Discutimos sobre exceções que podem ocorrer, como InputMismatchException, quando o tipo de dado inserido não corresponde ao esperado.
+
+A aula enfatizou a importância de interagir com o usuário e como isso torna o programa mais dinâmico e interessante.

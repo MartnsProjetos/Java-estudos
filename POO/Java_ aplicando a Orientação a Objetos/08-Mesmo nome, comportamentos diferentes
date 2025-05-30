@@ -1,0 +1,155 @@
+Transcrição
+Jacqueline: No início do arquivo Principal.java, colocamos a duração em minutos do objeto meuFilme. Podemos chamar getDuracaoEmMinutos() e imprimir o valor com System.out.println() para conferir se ele foi gravado corretamente:
+
+// Principal.java
+// ...
+
+public class Principal {
+    public static void main(String[] args) {
+        Filme meuFilme = new Filme();
+        meuFilme.setNome("O poderoso chefão");
+        meuFilme.setAnoDeLancamento(1970);
+        meuFilme.setDuracaoEmMinutos(180);
+        System.out.println("Duração do filme: " + meuFilme.getDuracaoEmMinutos());
+
+// ...Copiar código
+Duração do filme: 180
+
+Não definimos a duração em minutos da série que criamos há pouco, então vamos repetir essa linha para o objeto lost e verificar o que acontece:
+
+// Principal.java
+
+// ...
+
+Serie lost = new Serie();
+lost.setNome("Lost");
+lost.setDataDeLancamento(2000);
+lost.exibeFichaTecnica();
+lost.setTemporadas(10);
+lost.setEpisodiosPorTemporada(10);
+System.out.println("Duração do filme: " + lost.getDuracaoEmMinutos());
+
+// ...Copiar código
+Duração do filme: 0
+
+Temos o valor zerado, porque não o atribuímos. Na realidade, a duração em minutos de uma série é definida de forma diferente do filme. Ela não virá do atributo duracaoEmMinutos, é preciso um cálculo que combine a quantidade de temporadas com a quantidade de episódios e suas respetivas durações. O método getDuracaoEmMinutos() precisa ser diferente para as séries.
+
+Paulo: Poderíamos considerar criar um método getDuracaoEmMinutosDeUmaSerie() na classe Serie, mas ficaríamos com dois métodos similares, o que pode causar confusão. Quando eu codar "lost.", aparecerão duas sugestões de métodos com nomes muito parecidos. Qual que eu uso?
+
+Na verdade, queremos sobrescrever o método getDuracaoEmMinutos().
+
+Jacqueline: Sobrescrever, exatamente! E o Java nos permite essa possibilidade de sobrescrita! Uma vez que temos um método na classe Titulo, podemos sobrescrevê-lo na classe Serie.
+
+No final de Serie.java, vamos escrever "public get" e o IntelliJ dará a sugestão de autocompletar com "public int getDuracaoEmMinutos()". Ao selecionar essa opção, ele automaticamente completará o código da seguinte forma:
+
+// Serie.java
+// ...
+
+@Override
+public int getDuracaoEmMinutos() {
+    return super.getDuracaoEmMinutos();
+}
+
+// ...Copiar código
+Note que a IDE acrescentou o @Override, que é a anotação do Java que possibilita a sobrescrita de métodos.
+
+Paulo: É a primeira vez no curso que temos uma anotação do Java. Nesse caso, é opcional. A IDE a gerou automaticamente, indicando que esse método existe na superclasse, isto é, na classe da qual Serie herda.
+
+Classe Mãe, superclasse e parent class são termos comuns para se referir à classe que estamos estendendo. No caso de Serie, a classe-mãe é Titulo.
+
+Então, o método getDuracaoEmMinutos() existe na classe mãe, mas vamos desenvolvê-lo de forma diferente em Serie. Como ele será diferente, em relação à superclasse?
+
+Jacqueline: Nesse trecho autogerado pelo IntelliJ, estamos chamando o método da superclasse — o "super" refere-se à superclasse. Não é o que pretendemos fazer, então vamos remover essa chamada.
+
+Em vez disso, vamos retornar um cálculo. Multiplicaremos a quantidade de temporadas pelo número de episódios por temporada pela quantidade de minutos por episódio:
+
+// Serie.java
+// ...
+
+@Override
+public int getDuracaoEmMinutos() {
+    return temporadas * episodiosPorTemporada * minutosPorEpisodio;
+}
+
+// ...Copiar código
+Voltando ao arquivo Principal.java, nós determinamos que a série lost tem 10 temporadas e 10 episódios por temporada. Vamos definir 50 minutos por episódio:
+
+// Principal.java
+
+// ...
+
+Serie lost = new Serie();
+lost.setNome("Lost");
+lost.setDataDeLancamento(2000);
+lost.exibeFichaTecnica();
+lost.setTemporadas(10);
+lost.setEpisodiosPorTemporada(10);
+lost.setMinutosPorEpisodio(50);
+System.out.println("Duração do filme: " + lost.getDuracaoEmMinutos());
+
+// ...Copiar código
+Inclusive, adaptaremos o texto no System.out.println() de "Duração do filme" para "Duração para maratonar Lost". Ao executar o projeto, temos o seguinte resultado:
+
+Duração para maratonar Lost: 5000
+
+Na especialização de Serie, temos um método com o mesmo nome da superclasse, então usamos o da especialização.
+
+Paulo: Vamos aproveitar para esclarecer os termos, já que há vários sinônimos. No nosso projeto, Titulo é a classe mãe, enquanto Filme e Serie são as classes filhas. A classe mãe é uma generalização e as classes filhas são especializações.
+
+Termos sinônimos que aparecem com frequência são:
+
+Superclasse e subclasse
+Classe Mãe e Classe Filha
+Assim como:
+
+Atributos e Campos
+Métodos e Funções
+Existe um vasto vocabulário em Java e no paradigma de orientação a objetos. Nós procuramos mencionar vários para que você se familiarize com todos os termos importantes, principalmente agora no início dos seus estudos.
+
+Jacqueline: Anteriormente, o Paulo comentou que a anotação @Override era opcional. De fato, podemos removê-la da classe Serie, executar o projeto novamente e não haverá diferença no resultado:
+
+// Serie.java
+// ...
+
+public int getDuracaoEmMinutos() {
+    return temporadas * episodiosPorTemporada * minutosPorEpisodio;
+}
+
+// ...Copiar código
+Duração para maratonar Lost: 5000
+
+Paulo: Tem linguagens em que é obrigatório escrever a palavra-chave ou anotação para indicar que estamos modificando o funcionamento interno de um método herdado da classe mãe.
+
+Jacqueline: Exato. Então, qual é a vantagem de escrevermos o @override? Se eventualmente o método for modificado na superclasse, a IDE exibirá um alerta se a classe que sobrescreve esse método deixar de funcionar.
+
+Como demostração, podemos simular que getDuracaoEmMinutos() recebe um novo parâmetro inteiro chamado "valor", na superclasse, por exemplo:
+
+// Titulo.java
+// ...
+
+public int getDuracaoEmMinutos(int valor) {
+        return duracaoEmMinutos;
+}
+
+// ...Copiar código
+Imediatamente, o IntelliJ indica o problema no console e a anotação @Override na classe Serie ficará sublinhada em vermelho, indicado o erro. Posicionando o mouse sobre esse erro, aparecerá um menu suspenso com mais detalhes.
+
+Sem a anotação, não teríamos esse alerta. Por isso, é uma boa prática mantê-la no código.
+
+Caso você tenha feito a demonstração também, não se esqueça de remover o parâmetro int valor da superclasse, pois não precisamos dele.
+
+Paulo: Quero dar mais alguns exemplos para consolidar esse conhecimento, que é muito importante. No início, pode ser difícil entender o poder da sobrescrita de métodos, mas ela é fundamental!
+
+Quando começarmos a consumir serviços da internet para os filmes, vamos reparar que as bibliotecas que usaremos para conectar em web services e fazer o parser do JSON e do XML usam bastante esse recurso.
+
+É interessante fazer uma analogia com encapsulamento do carro, por exemplo. Para dirigir um carro, temos o voltante e os pedais de aceleração e breque. Não importa se o motor é a álcool ou a gasolina, pisar no acelerador é como invocar um método, é a maneira como fazemos o combustível exercer seu papel.
+
+Se temos uma especialização de um carro elétrico ou um carro voador, por exemplo, ele continua funcionando quando pisamos no acelerador. Não precisamos saber o que acontece debaixo capô — se o motor funciona com eletricidade, a gás, a hidrogênio etc.
+
+No caso do nosso projeto, criamos as classes juntos, mas seria comum que quem desenvolveu a classe Principal não fosse a mesma pessoa que desenvolveu a classe Titulo.
+
+Então, eu estou trabalhando na classe Principal e decido usar o método getDuracaoEmMinutos() da classe Serie, desenvolvida pela Jacque. Enquanto usuário dessa classe, não preciso saber qual é o cálculo realizado, estou apenas invocando o método para obter o resultado e mostrá-lo no front-end, por exemplo.
+
+Não preciso me preocupar com a regra de negócio, alguém já pensou no cálculo e sobrescreveu o método, isto é, alterou o comportamento herdado da classe mãe.
+
+Com o tempo, notaremos que esses recursos de herança, sobrescrita e polimorfismo (que aprenderemos em breve) aparecerão com muita frequência. Então, vale a pena prestar bastante atenção!

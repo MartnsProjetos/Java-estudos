@@ -1,0 +1,7 @@
+Nesta aula, aprendemos sobre a conversão de tipos em Java, especialmente quando lidamos com a média de estrelas de um filme. A Jacqueline e o Paulo explicaram que, ao calcular a classificação em estrelas, precisamos dividir a média por 2, já que as notas vão de 0 a 10 e queremos um resultado de 0 a 5 estrelas.
+
+Foi destacado que, ao tentar atribuir um valor do tipo double a uma variável do tipo int, ocorre um erro, pois estamos tentando passar um valor que pode ter casas decimais para um tipo que aceita apenas números inteiros. Para resolver isso, utilizamos o casting explícito, que é a conversão de um tipo para outro, utilizando a sintaxe (int).
+
+Além disso, foi apresentada uma tabela que mostra quais tipos podem ser convertidos implicitamente e quais requerem casting. Por exemplo, um byte pode ser convertido para um int sem problemas, mas o contrário exige casting. A aula enfatizou a importância de entender essas conversões para evitar perda de informações e garantir que o código funcione corretamente.
+
+Por fim, foi recomendado que os alunos pratiquem os exercícios da plataforma para consolidar o aprendizado.

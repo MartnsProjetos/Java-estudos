@@ -1,0 +1,13 @@
+Nesta aula, aprendemos sobre a modelagem de uma classe chamada Filme e como instanciar objetos dessa classe em Java.
+
+Renomeação da Classe Principal: Começamos renomeando a classe Main para Principal e removendo o System.out.println().
+
+Instanciação de Objetos: Vimos que para criar um objeto do tipo Filme, usamos a sintaxe Filme meuFilme = new Filme();. A variável meuFilme é uma referência ao objeto criado na memória.
+
+Atributos do Objeto: Aprendemos a acessar e atribuir valores aos atributos do objeto Filme, como nome, anoDeLancamento e duracaoEmMinutos, utilizando a sintaxe meuFilme.nome = "O poderoso chefão";.
+
+Impressão de Atributos: Ao imprimir meuFilme, obtemos um resultado que mostra o endereço de memória, mas podemos acessar e imprimir os atributos individualmente, como System.out.println(meuFilme.nome);.
+
+Erro de Acesso: Discutimos um erro que ocorre ao tentar acessar um atributo de um objeto diretamente pela classe, como Filme.nome, o que não é permitido.
+
+Essa aula nos introduziu à criação e manipulação de objetos em Java, preparando-nos para o uso de métodos em aulas futuras.

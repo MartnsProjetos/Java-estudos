@@ -1,0 +1,37 @@
+Sua amiga Suellen, que está iniciando os estudos em Java, criou a seguinte classe para representar uma Venda:
+
+public class Venda {
+    
+    String produto;
+    int quantidade;
+    double valorUnitario;
+    double valorTotal;
+
+}
+Copiar código
+No entanto, ao criar uma instância dessa classe em um método main, você percebeu que ela escreveu o seguinte código contendo alguns erros:
+
+public static void main(String[] args) {
+    Venda venda1 = Venda();
+    venda1.produto = "Camiseta";
+    venda1.quantidade = "2";
+    venda1.valorUnitario = 25.50;
+
+    System.out.println("Valor total da venda: " + venda1.quantidade * venda1.valorUnitario);
+    
+}
+Copiar código
+Escolha TODAS as alternativas que identificam os erros cometidos por ela no código anterior:
+
+Selecione 2 alternativas
+
+O atributo quantidade foi preenchido de maneira incorreta.
+
+
+O código está correto e não apresenta erros.
+
+
+Existe um erro ao instanciar o objeto venda1.
+
+
+Erro no trecho do System.out.println, referente à concatenação dos valores.

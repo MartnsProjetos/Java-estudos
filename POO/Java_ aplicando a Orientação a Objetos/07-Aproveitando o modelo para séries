@@ -1,0 +1,69 @@
+Transcrição: Herança e Reuso de Código com Título, Filme e Série
+
+Jacqueline e Paulo discutem boas práticas de herança em Java para evitar repetição de código ao modelar filmes e séries em uma plataforma de streaming.
+
+💡 Problema
+As classes Filme e Serie têm muitos atributos e métodos em comum, como nome, anoDeLancamento, avaliacoes, e duracaoEmMinutos.
+
+🧠 Solução
+Criar uma superclasse chamada Titulo que concentra todos os elementos comuns. Depois, usar herança (extends) para que Filme e Serie herdem esses elementos e adicionem apenas o que for exclusivo.
+
+📁 Classe Titulo
+Contém atributos comuns: nome, anoDeLancamento, avaliacoes, etc.
+
+Métodos: exibeFichaTecnica(), avalia(double nota), pegaMedia(), getters e setters.
+
+java
+Copiar
+Editar
+public class Titulo {
+    private String nome;
+    private int anoDeLancamento;
+    private boolean incluidoNoPlano;
+    private double somaDasAvaliacoes;
+    private int totalDeAvaliacoes;
+    private int duracaoEmMinutos;
+    
+    // métodos: exibeFichaTecnica, avalia, pegaMedia, getters/setters
+}
+🎬 Classe Filme
+Herda de Titulo com extends Titulo
+
+Atributo exclusivo: diretor
+
+java
+Copiar
+Editar
+public class Filme extends Titulo {
+    private String diretor;
+    // getters/setters
+}
+📺 Classe Serie
+Também herda de Titulo
+
+Atributos exclusivos: temporadas, episodiosPorTemporada, minutosPorEpisodio, ativa
+
+java
+Copiar
+Editar
+public class Serie extends Titulo {
+    private int temporadas;
+    private boolean ativa;
+    private int episodiosPorTemporada;
+    private int minutosPorEpisodio;
+    // getters/setters
+}
+🧪 Teste na classe Principal
+Mesmo sem nada extra na classe Serie, ela já consegue usar os métodos herdados de Titulo, como setNome() e exibeFichaTecnica(). Depois, adicionam-se os dados específicos da série.
+
+java
+Copiar
+Editar
+Serie lost = new Serie();
+lost.setNome("Lost");
+lost.setDataDeLancamento(2000);
+lost.exibeFichaTecnica(); // Usa método herdado
+lost.setTemporadas(10);
+lost.setEpisodiosPorTemporada(10);
+✅ Conclusão
+A herança foi aplicada corretamente com um supertipo genérico (Titulo), evitando código duplicado e melhorando a organização do sistema. Isso reflete boas práticas reais de orientação a objetos.
