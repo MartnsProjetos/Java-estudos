@@ -1,0 +1,5 @@
+Nesta aula, aprendemos sobre a criação de métodos na classe Filme, que definem comportamentos para os objetos dessa classe. Começamos criando o método exibeFichaTecnica(), que exibe o nome e o ano de lançamento do filme. Vimos que, ao criar métodos, utilizamos a palavra-chave void quando não retornamos nenhum valor.
+
+Depois, implementamos o método avalia(double nota), que registra as avaliações de um filme, somando as notas e incrementando o total de avaliações. Também renomeamos o atributo avaliacao para somaDasAvaliacoes para refletir melhor sua função.
+
+Por fim, criamos o método pegaMedia(), que retorna a média das avaliações. Aprendemos a importância de boas práticas de nomenclatura e a legibilidade do código, além de como chamar esses métodos na classe Principal. A aula enfatizou a estruturação do código e a importância da orientação a objetos no desenvolvimento em Java.

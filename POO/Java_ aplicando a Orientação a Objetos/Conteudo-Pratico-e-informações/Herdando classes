@@ -1,0 +1,62 @@
+Considere a seguinte hierarquia de classes em Java:
+
+public class Animal {
+
+    private String nome;
+    private double peso;
+
+    public void fazerBarulho() {
+        System.out.println("fazendo barulho!");
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public double getPeso() {
+        return peso;
+    }
+
+    public void setPeso(double peso) {
+        this.peso = peso;
+    }
+
+}
+Copiar código
+public class Cachorro extends Animal {
+    
+    @Override
+    public void fazerBarulho() {
+        System.out.println("Au au au!");
+    }
+
+    public void buscarOsso() {
+        System.out.println("Buscando o osso!");
+    }
+}
+Copiar código
+public class Gato extends Animal {
+
+    public void brincarComLaser() {
+        System.out.println("Brincando com o laser!");
+    }
+}
+Copiar código
+Em relação ao conceito de herança, escolha TODAS as alternativas corretas:
+
+Selecione 2 alternativas
+
+A classe Gato não pode herdar da classe Cachorro.
+
+
+Um objeto do tipo Animal pode ser instanciado e fazer barulho, mas não é possível chamar o método buscarOsso.
+
+
+Somente é possível instanciar objetos Gato e Cachorro.
+
+
+A classe Gato não compila, pois faltou sobrescrever o método fazerBarulho.

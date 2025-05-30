@@ -1,0 +1,7 @@
+Nesta aula, aprendemos sobre o controle de fluxo em Java, focando em laços de repetição, especialmente o uso do while. A instrutora Jacqueline explicou como criar uma nova classe chamada OutroLoop e como adaptar um código que usava um laço for para um laço while.
+
+O while permite que o código execute repetidamente enquanto uma condição for verdadeira. No exemplo, a condição era que a nota digitada fosse diferente de -1, permitindo que o usuário insira várias notas até decidir encerrar.
+
+Além disso, foi introduzida a variável totalDeNotas para contar quantas notas foram inseridas, já que a média deve ser calculada com base no número real de notas fornecidas. Também foi discutido como evitar que o valor -1 fosse somado à média, utilizando um if para verificar se a nota era diferente de -1 antes de somá-la.
+
+Por fim, foi abordado o problema do resultado NaN (Not a Number) quando nenhuma nota era inserida, sugerindo a necessidade de tratar esse caso para evitar divisões por zero. A aula concluiu com a importância de praticar esses conceitos para ganhar fluência em Java.

@@ -1,0 +1,81 @@
+import java.util.Scanner;
+
+public class Calculadora {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
+        double primeiroNumero;
+        double segundoNumero;
+        double resultado;
+        int opcao;
+
+        String menu = """
+                ********************************
+                ** Equação Desejada: **
+                1 - Soma
+                2 - Subtração
+                3 - Multiplicação
+                4 - Divisão
+                5 - Encerrar
+                *********************************
+                """;
+
+        while (true) {
+            System.out.println(menu);
+            System.out.print("Escolha uma opção: ");
+            opcao = entrada.nextInt();
+            if (opcao == 5) {
+                System.out.println("Encerrando o programa...");
+                break;
+            } else if (opcao < 1 || opcao > 5) {
+                System.out.println("Opção inválida. Tente novamente.");
+                continue;
+            } switch (opcao) {
+                case 1:
+                    System.out.print("Digite o primeiro número: ");
+                    primeiroNumero = entrada.nextDouble();
+                    System.out.print("Digite o segundo número: ");
+                    segundoNumero = entrada.nextDouble();
+                    resultado = primeiroNumero + segundoNumero;
+                    System.out.println("Resultado da soma: " + resultado);
+                    break;      
+                case 2:
+                    System.out.print("Digite o primeiro número: ");
+                    primeiroNumero = entrada.nextDouble();
+                    System.out.print("Digite o segundo número: ");
+                    segundoNumero = entrada.nextDouble();
+                    resultado = primeiroNumero - segundoNumero;
+                    System.out.println("Resultado da subtração: " + resultado);
+                    break;    
+                case 3: 
+                    System.out.print("Digite o primeiro número: ");
+                    primeiroNumero = entrada.nextDouble();
+                    System.out.print("Digite o segundo número: ");
+                    segundoNumero = entrada.nextDouble();
+                    resultado = primeiroNumero * segundoNumero;
+                    System.out.println("Resultado da multiplicação: " + resultado);
+                    break;
+                case 4:
+                    System.out.print("Digite o primeiro número: ");
+                    primeiroNumero = entrada.nextDouble();
+                    System.out.print("Digite o segundo número: ");
+                    segundoNumero = entrada.nextDouble();
+                    if (segundoNumero == 0) {
+                        System.out.println("Divisão por zero não é permitida.");
+                        break;
+                    }
+                    resultado = primeiroNumero / segundoNumero;
+                    System.out.println("Resultado da divisão: " + resultado);
+                    break;
+                // Adicionei o case 5 para encerrar o programa
+
+                case 5:
+                    System.out.println("Encerrando o programa...");
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+          
+        }
+        entrada.close();
+    }
+}

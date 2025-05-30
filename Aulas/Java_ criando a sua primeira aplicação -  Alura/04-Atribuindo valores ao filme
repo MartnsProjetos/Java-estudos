@@ -1,0 +1,5 @@
+Nesta aula do curso "Java: criando a sua primeira aplicação", os instrutores Paulo e Jacqueline introduziram os conceitos básicos de variáveis e tipos de dados em Java, utilizando o projeto de um serviço de streaming chamado Screen Match como exemplo.
+
+Eles explicaram como declarar variáveis, a importância de especificar o tipo (como int, boolean e double), e as convenções de nomenclatura, como camelCase e PascalCase. A aula também abordou a concatenação de strings com variáveis e a utilização de tipos primitivos para armazenar informações como ano de lançamento, inclusão em um plano e notas de filmes.
+
+Além disso, foi demonstrado como usar a IDE IntelliJ para facilitar a escrita do código, como o uso do atalho "sout" para imprimir no console. A aula concluiu com a promessa de explorar mais sobre strings e operadores matemáticos nas próximas aulas.

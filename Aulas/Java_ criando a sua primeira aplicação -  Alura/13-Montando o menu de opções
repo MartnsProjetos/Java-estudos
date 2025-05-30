@@ -1,0 +1,5 @@
+Nesta aula, aprendemos a criar um menu de opções em Java utilizando um loop while e a classe Scanner para interagir com o usuário. O menu continuará sendo exibido enquanto a opção escolhida for diferente de 4, que indica o encerramento.
+
+Iniciamos criando uma variável opcao do tipo int, que será usada para armazenar a escolha do usuário. Em seguida, definimos uma String chamada menu, que contém as opções disponíveis. Dentro do loop, exibimos o menu e lemos a opção escolhida pelo usuário. O programa continuará a mostrar o menu até que o usuário digite a opção 4 para sair.
+
+Se precisar de mais detalhes ou de ajuda com algum ponto específico, estou aqui para ajudar!
