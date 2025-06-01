@@ -1,0 +1,55 @@
+ Encapsulamento e Atributos Privados
+Encapsulamento é a prática de proteger os atributos de uma classe, tornando-os private, ou seja, não podem ser acessados diretamente de fora da classe.
+
+Para acessar ou modificar esses atributos, usamos métodos especiais chamados getters (para ler) e setters (para alterar).
+
+🛠️ Criando Getters e Setters no IntelliJ
+Use Alt + Insert (ou botão direito > Generate) para gerar esses métodos automaticamente.
+
+O setter tem formato padrão:
+
+java
+Copiar
+Editar
+public void setNome(String nome){
+    this.nome = nome;
+}
+A palavra-chave this é usada para diferenciar o atributo da variável local (parâmetro do método).
+
+O getter é assim:
+
+java
+Copiar
+Editar
+public String getNome(){
+    return nome;
+}
+📌 Boas Práticas
+Nem todo atributo precisa de getter e setter. Use apenas se for necessário expor ou permitir alteração daquele dado.
+
+Sempre mantenha os atributos como private e controle o acesso via métodos. Isso evita problemas futuros e mantém seu código seguro.
+
+🧠 Aplicação na Classe Principal
+Em vez de fazer meuFilme.nome = "...", usamos:
+
+java
+Copiar
+Editar
+meuFilme.setNome("O poderoso chefão");
+Isso permite que você adicione regras dentro do setter, como validações (ex: proibir anos de lançamento inválidos).
+
+🧭 Navegação no IntelliJ
+Segure Ctrl e clique no método para navegar diretamente para sua definição.
+
+📚 Resumo do Que Você Aprendeu
+Atributos devem ser private para proteger os dados.
+
+Criar getters e setters permite acessar ou modificar esses dados de forma segura.
+
+A palavra this diferencia o atributo do parâmetro no método.
+
+Podemos adicionar regras de negócio nos setters (como validações).
+
+IDEs como o IntelliJ ajudam muito com geração automática e navegação de código.
+
+Isso tudo faz parte do encapsulamento, um dos pilares da orientação a objetos.

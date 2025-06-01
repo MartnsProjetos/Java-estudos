@@ -1,0 +1,43 @@
+Resumo da Aula: Organização de Classes, Pacotes e Uso da Documentação no Java
+Uso do private: É comum usar private para atributos, garantindo encapsulamento.
+
+Classe String: Não é um tipo primitivo, mas sim uma classe da linguagem Java (java.lang.String). Tem muitos métodos prontos como toUpperCase(), isEmpty(), etc.
+
+JavaDoc: É a documentação oficial das classes do Java. Através dela é possível ver métodos, atributos (fields), construtores e exemplos.
+
+Importância da documentação: Evita “reinventar a roda”, já que muitas funcionalidades já estão implementadas nas bibliotecas do Java.
+
+Organização com pacotes:
+
+No Java, as classes são agrupadas em pacotes (package) para melhor organização.
+
+Criou-se o pacote br.com.alura.screenmatch.modelos para a classe Filme.
+
+Pacotes seguem convenções de nomenclatura baseadas em domínios invertidos (ex: br.com.alura).
+
+Importação (import):
+
+Ao mover uma classe para um pacote, é necessário importar essa classe onde for utilizada.
+
+A IDE (IntelliJ) auxilia automaticamente com essas importações.
+
+Modificadores de acesso:
+
+Antes, como as classes estavam no mesmo pacote, o modificador “padrão” permitia acesso.
+
+Agora, com pacotes separados, é preciso usar public para que outras classes acessem atributos e métodos.
+
+Boas práticas:
+
+Apesar de usar public para atributos facilitar no início, não é recomendado usá-lo no dia a dia.
+
+O correto é usar private com métodos públicos de acesso (getters e setters) para controle.
+
+Essa aula introduz conceitos fundamentais de organização e boas práticas em Java, como encapsulamento, reutilização de código via bibliotecas e estruturação com pacotes.
+
+
+
+
+
+
+

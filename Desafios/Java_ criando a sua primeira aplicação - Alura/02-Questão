@@ -1,0 +1,15 @@
+Alice estava praticando seus conhecimentos sobre a estrutura de repetição while e teve a ideia de fazer um programa que apresentasse os números de 1 a 10. Assim, ela escreveu o seguinte trecho de código:
+
+public class Programa {
+
+    public static void main(String[] args) {
+        int contador = 1;
+
+        while(contador <= 10) {
+            System.out.println(contador);
+        }
+    }
+}
+Copiar código
+No entanto, seu programa só imprime no console o número 1 infinitamente. Qual problema no código de Alice?
+

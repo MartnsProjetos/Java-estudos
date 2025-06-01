@@ -1,0 +1,13 @@
+Nesta aula, aprendemos a controlar o fluxo da aplicação em Java utilizando laços de repetição, especificamente o laço for. O objetivo foi criar uma aplicação que permite ao usuário inserir avaliações de filmes e calcular a média dessas notas.
+
+Entrada de Dados: Utilizamos a classe Scanner para ler as avaliações digitadas pelo usuário.
+
+Estrutura de Repetição: Criamos um laço for para repetir a solicitação de notas três vezes. A variável i foi utilizada como contador, iniciando em 0 e incrementando até 2.
+
+Acumulação de Notas: Declaramos uma variável mediaAvaliacao para acumular as notas inseridas. A cada iteração do laço, a nota recebida é somada a essa variável.
+
+Cálculo da Média: Após o laço, calculamos a média das avaliações dividindo a soma total das notas por 3 e exibimos o resultado.
+
+Importância da Inicialização: Discutimos a importância de inicializar variáveis antes de usá-las, já que o Java exige que variáveis sejam inicializadas para evitar erros de compilação.
+
+Ao final, a aplicação foi testada, e o resultado da média das avaliações foi impresso no console. A aula também introduziu a ideia de que existem outras formas de fazer loops, como o while, que serão exploradas em aulas futuras.

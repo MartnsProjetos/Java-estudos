@@ -1,0 +1,5 @@
+Nesta aula, os instrutores Paulo e Jacqueline discutem a importância de trabalhar com coleções de dados em Java, especificamente utilizando a classe ArrayList para gerenciar uma lista de filmes em um sistema de streaming chamado Screen Match.
+
+Eles começam revisando a estrutura do projeto, que inclui classes como Titulo, Filme e Serie, e a necessidade de armazenar múltiplos objetos em uma coleção. A aula aborda como criar uma lista de filmes, adicionando objetos do tipo Filme à lista e utilizando métodos como add() para inserir filmes e size() para verificar a quantidade de itens na lista.
+
+Os instrutores também demonstram como acessar elementos da lista usando o método get(), além de concatenar strings para imprimir informações sobre os filmes. Por fim, eles mencionam a importância de entender a estrutura de dados e a orientação a objetos, preparando os alunos para trabalhar com conceitos mais avançados no Java.

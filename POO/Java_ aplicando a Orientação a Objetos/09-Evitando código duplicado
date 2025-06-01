@@ -1,0 +1,47 @@
+Nesta aula, Jacqueline ensinou como criar uma classe calculadora de tempo em Java, para somar a duração de filmes e séries que um usuário deseja assistir — como se fosse "maratonar" nas férias.
+
+Resumo do que foi ensinado:
+Criação de novo pacote:
+Foi criado o pacote br.com.alura.screenmatch.calculos para organizar melhor o projeto e separar a lógica de cálculo.
+
+Classe CalculadoraDeTempo:
+
+Possui o atributo tempoTotal, que acumula a duração dos títulos.
+
+Método getTempoTotal() para acessar esse valor.
+
+Método inclui() que soma o tempo de um filme à variável tempoTotal.
+
+Testes na classe Principal:
+
+Foi criada uma instância da calculadora.
+
+Adicionados filmes com suas durações.
+
+Verificado que o tempo total calculado estava correto.
+
+Sobre o uso do this:
+
+Explicado que não é obrigatório, mas pode ser usado para clareza.
+
+O atributo tempoTotal é automaticamente iniciado como 0, mas pode ser explicitado.
+
+Encapsulamento:
+
+Não foi criado um setter para tempoTotal, pois o valor deve ser controlado apenas internamente pela lógica da calculadora.
+
+Inclusão de séries:
+
+Inicialmente, foi feita uma sobrecarga do método inclui() para aceitar também objetos da classe Serie.
+
+Mas percebeu-se que isso causaria repetição e acoplamento, dificultando a manutenção do código.
+
+Refatoração com herança:
+
+Como Filme e Serie são subclasses de Titulo, foi criado um único método inclui(Titulo titulo).
+
+Isso eliminou a necessidade de múltiplas versões do método inclui().
+
+Demonstrou-se um exemplo prático de polimorfismo e bom design orientado a objetos, reduzindo dependências e melhorando a flexibilidade do código.
+
+Essa aula reforçou práticas importantes como encapsulamento, organização de pacotes, reutilização de código com herança, refatoração e design limpo.
