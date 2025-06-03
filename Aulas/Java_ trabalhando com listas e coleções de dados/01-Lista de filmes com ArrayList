@@ -1,0 +1,67 @@
+🔹 1. Organização do Projeto
+Projeto Screen Match: sistema de streaming com filmes e séries.
+
+Classes utilizadas:
+
+Titulo (superclasse com nome, duração, ano).
+
+Filme e Serie (subclasses que herdam de Titulo).
+
+CalculadoraDeTempo (para avaliação).
+
+Principal (ponto de execução do programa).
+
+🔹 2. Criação de Objetos
+Criou instâncias de Filme e Serie:
+
+Ex: Filme filmeDoPaulo = new Filme();
+
+Usou métodos como:
+
+setNome()
+
+setDuracaoEmMinutos()
+
+setAnoDeLancamento()
+
+avalia()
+
+🔹 3. Uso do var
+O var permite inferência de tipo:
+
+var filmeDoPaulo = new Filme();
+
+Mesmo com var, o tipo continua sendo fixo (não pode mudar depois).
+
+🔹 4. Introdução às Listas com ArrayList
+Uso da classe ArrayList do pacote java.util:
+
+ArrayList<Filme> listaDeFilmes = new ArrayList<>();
+
+Adição de elementos com add():
+
+java
+Copiar
+Editar
+listaDeFilmes.add(filmeDoPaulo);
+listaDeFilmes.add(meuFilme);
+listaDeFilmes.add(outroFilme);
+🔹 5. Manipulação da Lista
+Obteve tamanho da lista com .size():
+
+System.out.println("Tamanho da lista: " + listaDeFilmes.size());
+
+Acessou elementos com .get():
+
+listaDeFilmes.get(0).getNome(); → retorna o nome do primeiro filme.
+
+Aprendeu que métodos podem ser encadeados: lista.get().getNome()
+
+🔹 6. Boas práticas e curiosidades
+Nomes de variáveis devem ser claros no aprendizado, mas no mundo real são mais curtos.
+
+Em Java, listas começam na posição 0.
+
+Diferente de outras linguagens como Python, Java é fortemente tipado e mais verboso.
+
+Java usa o paradigma de orientação a objetos de forma intensa.
