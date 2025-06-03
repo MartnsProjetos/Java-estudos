@@ -1,0 +1,62 @@
+Aprendemos a representar listas com ArrayList e que os métodos add, size e get facilitam a manipulação. Além disso, o método toString() é essencial para visualizar objetos em texto.
+
+Para solidificar esses conceitos, sugerimos atividades práticas (não obrigatórias) que aprimorarão sua compreensão desses princípios fundamentais. Está preparado para aplicar essas ideias?
+
+Crie uma classe Pessoa com atributos como nome, idade, e um método toString que represente esses atributos.
+No método main da classe Principal, crie um ArrayList de Pessoa chamado listaDePessoas.
+Adicione pelo menos três pessoas à lista utilizando o método add.
+Imprima o tamanho da lista utilizando o método size.
+Imprima a primeira pessoa da lista utilizando o método get.
+Imprima a lista completa
+Caso precise de ajuda, opções de solução das atividades estarão disponíveis na seção “Ver opinião do instrutor”.
+
+Ver opinião do instrutor
+Opinião do instrutor
+
+1)
+public class Pessoa {
+    private String nome;
+    private int idade;
+    
+    public Pessoa(String nome, int idade) {
+        this.nome = nome;
+        this.idade = idade;
+    }
+
+    @Override
+    public String toString() {
+        return "Pessoa: " + nome + " (Idade: " + idade + ")";
+    }
+}
+Copiar código
+2)
+import java.util.ArrayList;
+
+public class Principal {
+
+    public static void main(String[] args) {
+        ArrayList<Pessoa> listaDePessoas = new ArrayList<>();
+
+    }
+}
+Copiar código
+3)
+Pessoa pessoa1 = new Pessoa("Akemi", 18);
+Pessoa pessoa2 = new Pessoa("Rodrigo", 30);
+Pessoa pessoa3 = new Pessoa("Caroline", 35);
+
+listaDePessoas.add(pessoa1);
+listaDePessoas.add(pessoa2);
+listaDePessoas.add(pessoa3);
+Copiar código
+4)
+System.out.println("Tamanho da lista: " + listaDePessoas.size());
+Copiar código
+5)
+System.out.println("Primeira Pessoa: " + listaDePessoas.get(0));
+Copiar código
+6)
+System.out.println("Lista de Pessoas:");
+for (Pessoa pessoa : listaDePessoas) {
+    System.out.println(pessoa);
+}
