@@ -1,0 +1,54 @@
+🧭 Documentação (Javadoc)
+É uma ferramenta essencial para qualquer programador Java.
+
+Pode ser acessada facilmente buscando por “javadoc ArrayList” no Google.
+
+Exibe métodos disponíveis, construtores, comportamentos e exceções lançadas.
+
+Mantenha a versão da documentação compatível com seu JDK (Java 17 no curso).
+
+📚 Entendendo o método println()
+Quando você imprime um objeto com System.out.println(obj), o Java chama automaticamente o método toString() desse objeto.
+
+Se o toString() não for sobrescrito, ele mostra algo como br.com.alura.screenmatch.modelos.Filme@378bf509 (nome da classe + hashcode hexadecimal).
+
+🔁 Classe Object e o método toString()
+Toda classe em Java herda da classe Object, direta ou indiretamente.
+
+O método toString() da classe Object retorna:
+
+java
+Copiar
+Editar
+getClass().getName() + '@' + Integer.toHexString(hashCode())
+🛠️ Sobrescrevendo o toString()
+Na classe Filme.java, você sobrescreve o método para personalizar a saída:
+
+java
+Copiar
+Editar
+@Override
+public String toString() {
+    return "Filme: " + this.getNome() + " (" + this.getAnoDeLancamento() + ")";
+}
+Isso muda completamente como seus objetos aparecem na tela ao imprimir, e melhora o debug, o log e a leitura de código.
+
+🔁 toString() também é usado internamente pelo ArrayList
+Quando você imprime um ArrayList, ele internamente percorre todos os elementos e chama toString() para cada um deles.
+
+Exemplo:
+
+java
+Copiar
+Editar
+System.out.println(listaDeFilmes);
+Se os objetos da lista têm toString() sobrescrito, a saída será clara e legível.
+
+✅ Boas práticas
+Sempre sobrescreva toString() para facilitar o debug.
+
+Use Ctrl+clique para navegar até os métodos e entender como funcionam.
+
+Use o IntelliJ para ver a documentação flutuante e explorar métodos disponíveis com . (ponto).
+
+Consulte a Javadoc sempre que tiver dúvidas sobre métodos, construtores ou comportamentos esperados.
