@@ -1,0 +1,48 @@
+Sua amiga Iasmin trabalha em uma aplicação Java de uma loja virtual e precisa criar uma classe que representa um carrinho de compras. Ela pensou em fazer da seguinte maneira:
+
+public class Carrinho {
+
+  ArrayList<Produto> produtos = new ArrayList<>();
+    
+  public void adicionaProduto(Produto produto) {
+    produtos.add(produto);
+  }
+    
+}
+Copiar código
+Porém, a loja tem uma restrição de permitir uma quantidade máxima de apenas 10 produtos no carrinho de compras. Escolha a alternativa que representa a mudança correta que Iasmin deve fazer no código anterior para atender a essa restrição.
+
+Selecione uma alternativa
+
+Iasmin pode manter o código da maneira que está, já que o ArrayList tem um tamanho máximo de 10 elementos.
+
+
+Iasmin vai precisar alterar o método adicionaProduto para:
+
+public void adicionaProduto(Produto produto) {
+  if (produtos.length() < 10) {
+    produtos.add(produto);
+  } else {
+    System.out.println("Carrinho cheio!");
+  }
+}
+
+Iasmin vai precisar alterar o método adicionaProduto para:
+
+public void adicionaProduto(Produto produto) {
+  if (produtos.size < 10) {
+    produtos.add(produto);
+  } else {
+    System.out.println("Carrinho cheio!");
+  }
+}
+
+Iasmin vai precisar alterar o método adicionaProduto para:
+
+public void adicionaProduto(Produto produto) {
+  if (produtos.size() < 10) {
+    produtos.add(produto);
+  } else {
+    System.out.println("Carrinho cheio!");
+  }
+}
