@@ -1,0 +1,46 @@
+Você está analisando o código de uma aplicação Java e encontra a seguinte classe:
+
+public class Produto {
+
+    private String nome;
+    private double preco;
+
+    public Produto() {
+    }
+
+    public Produto(String nome, double preco) {
+        nome = nome;
+        preco = preco;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public double getPreco() {
+        return preco;
+    }
+}
+Copiar código
+Em relação ao uso de construtores, qual o problema no código acima?
+
+Selecione uma alternativa
+
+O construtor default não deveria ter sido declarado.
+
+
+O construtor com parâmetros não inicializa os atributos corretamente.
+
+
+A classe está correta e não possui problemas relacionados aos construtores.
+
+
+Os métodos setNome e setPreco deveriam ter sido declarados como private.
