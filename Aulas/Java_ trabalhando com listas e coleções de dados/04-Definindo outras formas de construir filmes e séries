@@ -1,0 +1,52 @@
+1. Criação do Construtor em Titulo
+Foi criado um construtor em Titulo que recebe nome e anoDeLancamento como parâmetros.
+
+Isso substitui o uso dos métodos setNome() e setAnoDeLancamento().
+
+java
+Copiar
+Editar
+public Titulo(String nome, int anoDeLancamento) {
+    this.nome = nome;
+    this.anoDeLancamento = anoDeLancamento;
+}
+2. Ajustes nas Classes Filhas (Serie e Filme)
+Como construtores não são herdados, a criação de um construtor com parâmetros em Titulo remove o construtor padrão (sem parâmetros).
+
+Portanto, Serie e Filme precisam criar seus próprios construtores que chamem o da superclasse com super(nome, anoDeLancamento).
+
+Exemplo em Serie:
+
+java
+Copiar
+Editar
+public Serie(String nome, int anoDeLancamento) {
+    super(nome, anoDeLancamento);
+}
+3. Ajuste nas Instâncias no Principal.java
+Ao instanciar objetos de Serie e Filme, é necessário agora passar também o anoDeLancamento.
+
+java
+Copiar
+Editar
+Serie lost = new Serie("Lost", 2000);
+Filme meuFilme = new Filme("O poderoso chefão", 1970);
+4. Paulo e Jacqueline comentam sobre boas práticas:
+Construtores podem ter sobrecarga: ex., Filme pode ter mais de um construtor.
+
+Construtores também podem realizar validações, como verificar se o ano é válido.
+
+Cada sistema pode exigir dados diferentes na criação de objetos, conforme a regra de negócio.
+
+Importância de aprender sobre boas práticas como SOLID, Clean Code e DRY.
+
+Conclusão
+O construtor é essencial na inicialização e validação de objetos. Com herança, é importante lembrar que as classes filhas devem chamar o construtor da superclasse usando super(), respeitando os parâmetros exigidos. Esse processo fortalece o encapsulamento e ajuda a manter a lógica de negócio clara e consistente.
+
+
+
+
+
+
+
+
