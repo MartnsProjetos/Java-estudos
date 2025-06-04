@@ -1,0 +1,54 @@
+Seu primo Arthur, que também está estudando Java, criou as seguintes classes em seu projeto:
+
+public class Pessoa {
+
+    private String nome;
+    private int idade;
+    
+    public Pessoa(String nome, int idade) {
+        this.nome = nome;
+        this.idade = idade;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+}
+Copiar código
+public class Aluno extends Pessoa {
+
+    private int matricula;
+    private String curso;
+
+    public Aluno(String nome, int idade, int matricula, String curso) {
+        this.matricula = matricula;
+        this.curso = curso;
+    }
+
+    public int getMatricula() {
+        return matricula;
+    }
+
+    public String getCurso() {
+        return curso;
+    }
+}
+Copiar código
+Entretanto, ele afirma que o código dessas classes está com um erro. Qual foi o erro cometido pelo seu primo Arthur?
+
+Selecione uma alternativa
+
+A classe Aluno não deveria ter construtor.
+
+
+O construtor da classe Aluno não está chamando o construtor da classe Pessoa.
+
+
+O construtor da classe Pessoa deveria ser declarado como private.
+
+
+A subclasse Aluno deveria ter sobrescrito os métodos getNome() e getIdade().Construtor da classe herdada
