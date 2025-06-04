@@ -1,0 +1,38 @@
+✅ 1. Classe Object e o método toString()
+Todo objeto em Java herda da classe Object, que já possui métodos como toString().
+
+Mesmo sem reescrever o toString(), ele já existe por padrão em qualquer classe.
+
+✅ 2. Polimorfismo e tipos de referência
+Um objeto pode ser referenciado por sua própria classe, por sua superclasse ou até por Object.
+
+Porém, se referenciarmos como Object, não teremos acesso a métodos específicos como getDuracaoEmMinutos().
+
+✅ 3. Por que não usar Object para tudo
+Embora tudo herde de Object, ele é genérico demais.
+
+O compilador não sabe que métodos específicos pertencem ao objeto se ele for referenciado como Object.
+
+✅ 4. Construtores em Java
+Construtores não são métodos. Eles:
+
+Têm o mesmo nome da classe.
+
+Não retornam nada.
+
+São usados para criar e inicializar objetos.
+
+Você pode criar construtores com parâmetros (ex: new Filme("Dogville")) para já definir atributos ao criar o objeto.
+
+✅ 5. Construtor padrão x personalizado
+Toda classe tem um construtor padrão (sem parâmetros) até você criar um personalizado.
+
+Se você quiser continuar usando o padrão depois de criar um novo construtor, precisa criá-lo manualmente.
+
+✅ 6. Boas práticas com getters e setters
+Nem sempre é necessário criar setters para todos os atributos.
+
+Se um valor (como o nome de um filme) não precisa ser alterado, não crie um setNome() à toa.
+
+✅ Resumo geral
+Você aprendeu sobre a classe Object, o uso do toString(), o conceito de polimorfismo, como e por que usar construtores (com ou sem parâmetros), e boas práticas ao definir atributos de uma classe. Também viu como tudo isso aparece na prática em aplicações Java reais.
