@@ -34,6 +34,7 @@ Este repositório foi criado para reunir todo o meu progresso e aprendizados em 
 - Programação Orientada a Objetos (POO)  
 - Manipulação de arquivos  
 - Desenvolvimento de pequenos sistemas em console
+- Herança, Polimorfismo, Extends, Object e ++
 
 ---
 
