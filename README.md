@@ -1,10 +1,10 @@
-jhyyh# 💻 Aprendizado em Java
+ojhyyh# 💻 Aprendizado em Java
 
 Este repositório foi criado para reunir todo o meu progresso e aprendizados em **Java**, através de cursos, desafios, projetos práticos e anotações pessoais. Ele é atualizado conforme avanço nos estudos e serve como base de consulta e prática contínua.
 
 ---
 
-## 📁 Estrutura do Repositório
+## 📁 Estrutura do Repositório pq pp
 
 - `resumos-aulas/`  
   Resumos e anotações das aulas feitas em cursos e vídeos.
