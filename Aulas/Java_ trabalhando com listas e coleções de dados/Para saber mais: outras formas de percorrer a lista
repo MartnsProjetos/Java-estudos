@@ -1,0 +1,22 @@
+A forma mais comum de percorrer uma lista no Java é utilizando o laço foreach tradicional, também conhecido como for-each. Esse laço permite que se percorra todos os elementos de uma lista, sem a necessidade de se preocupar com índices ou o tamanho dela, tornando o código mais simples e legível. Por exemplo, suponha que tenhamos uma lista de nomes de pessoas e que desejamos imprimi-los na tela:
+
+ArrayList<String> nomes = new ArrayList<>();
+nomes.add("Jacqueline");
+nomes.add("Paulo");
+nomes.add("Suellen");
+nomes.add("Emily");
+
+for (String nome : nomes) {
+    System.out.println(nome);
+}Copiar código
+Esse loop for percorre todos os elementos da lista, atribuindo cada um deles à variável nome, que é usada para imprimir o valor na tela. Esse tipo de loop é muito útil em situações onde não precisamos realizar nenhuma operação complexa sobre os elementos da lista.
+
+No entanto, a partir do Java 8, foi adicionado na interface List, a qual a classe ArrayList implementa, um novo método chamado forEach, que possibilita a iteração sobre os elementos da lista de forma mais concisa e elegante. Por exemplo, o exemplo anterior pode ser reescrito utilizando o método forEach da seguinte forma:
+
+nomes.forEach(nome -> System.out.println(nome));Copiar código
+Nesse caso, o método forEach é chamado sobre a lista nomes e recebe como parâmetro uma expressão lambda que realiza a impressão do valor na tela. A expressão lambda nome -> System.out.println(nome) é uma forma compacta de definir uma função que recebe um parâmetro nome e realiza a operação de impressão.
+
+É possível simplificar ainda mais o exemplo de código anterior, utilizando o recurso conhecido como Method Reference, que nada mais é do que uma forma reduzida de uma expressão lambda:
+
+nomes.forEach(System.out::println);Copiar código
+No código anterior, o símbolo :: é a sintaxe do Method Reference, que no exemplo mostrado faz uma referência para o método println.
