@@ -1,0 +1,48 @@
+📚 Resumo da Aula: Trabalhando com Listas e Polimorfismo em Java
+Criação de Pacote e Classe Principal
+
+Criado um novo pacote principal.
+
+Dentro dele, criada a classe PrincipalComListas com método main().
+
+Adição de Filmes e Séries
+
+Instanciados 3 objetos da classe Filme e 1 da classe Serie.
+
+Criada uma lista com tipo ArrayList<Titulo> para armazenar tanto filmes quanto séries.
+
+Uso de Polimorfismo
+
+A lista foi tipada como ArrayList<Titulo> (classe mãe), permitindo armazenar objetos de Filme e Serie.
+
+Importações Automáticas
+
+Usado Alt + Enter para importar classes automaticamente.
+
+Impressão com for-each
+
+Usado for (Titulo item : lista) para iterar e imprimir nomes dos títulos.
+
+Como não havia toString() na classe Serie, foi impresso um código de objeto.
+
+Evitar ArrayList<Object>
+
+Foi explicado por que não se deve usar ArrayList<Object>: aceita qualquer tipo, o que não é seguro nem recomendável.
+
+Avaliação de Filmes
+
+Os filmes foram avaliados usando o método .avalia().
+
+Tentou-se imprimir a classificação com item.getClassificacao(), mas isso gerou erro pois getClassificacao() é exclusivo de Filme.
+
+Type Casting
+
+Usado casting: Filme filme = (Filme) item;
+
+Funcionou nos filmes, mas lançou exceção (ClassCastException) quando encontrou a série.
+
+Erro de Execução
+
+O erro aconteceu porque Serie não pode ser convertida para Filme.
+
+Conclusão: é necessário verificar o tipo antes de fazer o casting (com instanceof — será ensinado depois).
