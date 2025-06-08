@@ -1,0 +1,40 @@
+✅ Resumo do que foi ensinado:
+1. Organização do Projeto
+Criaram um novo pacote chamado principal para centralizar a classe principal PrincipalComListas.
+
+Instanciaram filmes e uma série, e os adicionaram a uma lista de Titulo, em vez de Filme, para aceitar ambos os tipos (filme e série).
+
+2. Uso de ArrayList<Titulo>
+Usar ArrayList<Filme> causava erro ao adicionar uma Serie.
+
+Solução: usar ArrayList<Titulo> (classe mãe de Filme e Serie).
+
+3. Iteração com for-each
+Usaram o laço for (Titulo item : lista) para imprimir os títulos.
+
+O método toString() foi necessário para exibir corretamente os dados dos objetos, pois a ausência dele mostrou apenas o endereço de memória da Serie.
+
+4. Casting e instanceof
+Ao tentar acessar getClassificacao(), deu erro com Serie, pois esse método só existe em Filme.
+
+Resolveram usando:
+
+java
+Copiar
+Editar
+if (item instanceof Filme filme) {
+    System.out.println("Classificação: " + filme.getClassificacao());
+}
+Essa técnica verifica e faz o cast seguro dentro do próprio if.
+
+5. Polimorfismo e Referência de Objetos
+Criar Filme f1 = filmeDoPaulo não cria um novo objeto, apenas uma nova referência ao mesmo objeto.
+
+Objetos não mudam de tipo com cast — eles são o que foram instanciados com new.
+
+O que muda com cast é como o programa "vê" o objeto, não o objeto em si.
+
+6. Boas práticas
+Evitar usar Object em listas — isso permite qualquer tipo de dado, o que é perigoso e nada específico.
+
+instanceof não é a forma mais elegante, mas é comum em códigos legados.
