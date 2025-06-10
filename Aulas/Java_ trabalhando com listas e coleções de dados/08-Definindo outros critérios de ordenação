@@ -1,0 +1,46 @@
+Transcrição
+Jacqueline: Imprimimos a lista ordenada pelo título do filme. Vamos fazer o toString() da série, porque da maneira que foi exibido não ficou bom. Na classe Serie, incluiremos uma função toString() que, assim como fizemos para os filmes, retorna a concatenação do texto Série: com o nome e o ano de lançamento de cada série.
+
+@Override
+public String toString() {
+    return "Série: " + this.getNome() + "(" + this.getAnoDeLancamento() + ")";
+}Copiar código
+Ao executar novamente o arquivo PrincipalComListas.java, teremos a listagem correta:
+
+[Filme: Avatar (2023), Filme: Dogville (2003), Série: Lost (2000), Filme: O podeoroso chefão (1970)]
+
+Paulo: Inclusive dava para incluir o toString na classe mãe, Titulo. Nesse caso, não seria tão trivial escrever "Filme" ou "Série" ao lado de cada saída, mas existem várias soluções. A ideia aqui é justamente fazer você pensar. Decisões como em que classe colocar determinado método, se uma lógica é encapsulada ou não, e quem protege uma informação fazem parte do dia a dia de quem está desenvolvendo, e as respostas vão depender do cenário do problema.
+
+Jacqueline: Também poderíamos ordenar nosso catálogo pelo ano de lançamento ao invés do nome. Mas como faríamos isso? Se alterarmos o compareTo(), vamos "estragar" o que já tínhamos feito, pois toda ordenação passará a ser por ano. O ideal seria termos uma nova forma de comparação.
+
+Para isso podemos, a partir de lista, executar o método .sort() que recebe como parâmetro um critério de comparação.
+
+PrincipalComListas.java
+
+lista.sort();Copiar código
+Paulo: Ele é diferente do comparable, que no nosso caso é o próprio filme. O sort() é um Comparator, um comparador.
+
+Jacqueline: Exatamente. Passaremos para esse sort() o recurso do Java Comparator.comparing(). Entre os parênteses, digitando Titulo, receberemos como sugestão os getters dos atributos da nossa classe, como getNome, getAnoDeLancamento, getDuracaoEmMinutos e assim por diante.
+
+lista.sort(Comparator.comparing(Titulo::getAnoDeLancamento));Copiar código
+Paulo: Repare que essa é uma sintaxe bem diferente, usando o ::. Diferente do ponto (.), que seria uma invocação de método, esse par de dois pontos serve para referenciar métodos, trabalhar com lambdas, gerar um mecanismo que atribuo a uma interface, entre outras funções. Tem várias coisas acontecendo nessa linha, pois estamos a maneira mais moderna de se ordenar em Java.
+
+Estamos usando o .sort() a partir da lista e pedindo para o Comparator, que é uma interface, chamar o método estático comparing(). Em seguida, ao invés de passarmos um ano de lançamento, estamos sinalizando que para todo Titulo recebido o getAnoDeLancamento deve ser usado como critério de comparação.
+
+Antigamente, no Java, seria necessário criar uma classe comparadora que implementasse o Comparator da classe Titulo para só então, dentro dela, ter um método compare() que devolveria 1 se um ano fosse maior, -1 se fosse menor ou 0 se fossem iguais. Às vezes ainda encontramos código da forma antiga, mas no Java mais moderno temos esse tipo de sintaxe mais "adocicada" que nos permite comparar pelo ano de lançamento, quantidade de episódios ou o que for.
+
+Ficou bem curtinho, mas tem muita coisa de sintaxe envolvida, inclusive conceitos que ainda não abordamos em detalhes. Isso é normal quando trabalhamos com linguagens tão robustas como o Java. Algumas coisas são entendidas com mais profundidade, outras só usamos. Claro que, aqui na Alura, queremos que em algum momento da sua carreira você tenha motivação e conforto para investigar como tudo isso funciona, explorando o código, lendo a documentação e tentando conectar as peças.
+
+Vamos executar para ver se mudou alguma coisa.
+
+Jacqueline: Vamos incluir um System.out.println("Ordenando por ano") para termos uma boa visibilidade do resultado. Em seguida, faremos a impressão da lista.
+
+lista.sort(Comparator.comparing(Titulo::getAnoDeLancamento));
+System.out.println("Ordenando por ano");
+System.out.println(lista);
+Copiar código
+Como resultado, teremos:
+
+[Filme: O poderoso chefão (1970), Série: Lost (2000), Filme: Dogville (2003). Filme: Avatar (2023)]
+
+Já conseguimos, com uma linha, resolver o problema da ordenação pelo critério do ano de lançamento, mantendo o compareTo() que ordena pelo nome dos filmes.
