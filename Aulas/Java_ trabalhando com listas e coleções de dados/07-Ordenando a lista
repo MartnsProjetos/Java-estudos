@@ -1,0 +1,57 @@
+Neste trecho da aula, os professores Paulo e Jacqueline ensinam conceitos importantes sobre listas (ArrayList) em Java, ordenação de elementos e implementação da interface Comparable. Aqui estão os principais pontos abordados:
+
+1. Trabalhando com ArrayList
+Criaram uma ArrayList<String> chamada buscaPorArtista e adicionaram alguns nomes.
+
+Usaram System.out.println() para exibir os elementos na ordem de inserção.
+
+2. Ordenando uma lista de Strings
+Para ordenar a lista alfabeticamente, usaram:
+
+java
+Copiar
+Editar
+Collections.sort(buscaPorArtista);
+Como String já implementa a interface Comparable, a ordenação ocorre automaticamente com base na ordem alfabética.
+
+3. Ordenando uma lista de objetos personalizados
+Ao tentar ordenar uma lista de objetos da classe Titulo, o método Collections.sort(lista) gerou erro.
+
+Isso aconteceu porque a classe Titulo não informava como os objetos deveriam ser comparados.
+
+4. Interface Comparable
+Para resolver isso, foi implementada a interface Comparable<Titulo> na classe Titulo.
+
+A interface obriga a implementação do método:
+
+java
+Copiar
+Editar
+public int compareTo(Titulo outroTitulo)
+Dentro do método, foi usado:
+
+java
+Copiar
+Editar
+return this.getNome().compareTo(outroTitulo.getNome());
+Isso delega a comparação ao método compareTo() de String, que já sabe comparar alfabeticamente.
+
+5. Resultado da ordenação
+Com a implementação de compareTo() baseada no nome do título, a lista de objetos Titulo foi ordenada corretamente em ordem alfabética.
+
+Exemplo de saída:
+
+yaml
+Copiar
+Editar
+Lista de titulos ordenados
+[Filme: Avatar (2023), Filme: Dogville (2003), Filme: O poderoso chefão (1970), br.com.alura.screenmatch.modelos.Serie@...]
+6. Conclusão
+Implementar Comparable é útil quando queremos ordenar objetos personalizados.
+
+Só é necessário implementar se for preciso ordenar; não é obrigatório em todos os casos.
+
+O Java utiliza o contrato (interface) para saber como comparar dois objetos da mesma classe.
+
+Resumo em uma frase:
+Aprendemos como ordenar listas em Java, tanto com tipos simples como String, quanto com objetos personalizados, usando a interface Comparable e o método compareTo() para definir o critério de comparação.
