@@ -1,0 +1,48 @@
+Resumo: Listas, Interfaces e Coleções em Java
+Neste projeto, utilizamos coleções Java para manipular listas de objetos de forma eficiente e flexível. Abaixo, um resumo dos principais conceitos e práticas aplicados:
+
+1. Uso de List e ArrayList
+Utilizamos o tipo List<Tipo> para declarar listas, o que permite maior flexibilidade na implementação.
+
+A classe ArrayList é uma das implementações mais comuns da interface List.
+
+Exemplo:
+
+java
+Copiar
+Editar
+List<Titulo> lista = new ArrayList<>();
+Podemos substituir facilmente ArrayList por outras implementações, como LinkedList, sem alterar o restante do código:
+
+java
+Copiar
+Editar
+List<Titulo> lista = new LinkedList<>();
+2. Programação Orientada a Interfaces
+Programar para interfaces (ex: List) e não para implementações específicas (ex: ArrayList) é uma boa prática de design.
+
+Isso torna o código mais robusto, flexível e adaptável.
+
+3. Hierarquia das Coleções em Java
+Collection é a interface mãe de quase todas as coleções, sem ordenação específica.
+
+List é uma subinterface de Collection que define listas ordenadas.
+
+Outras coleções importantes:
+
+Set: coleções sem elementos duplicados (HashSet, LinkedHashSet).
+
+Map: estrutura chave-valor, semelhante a dicionários (HashMap).
+
+4. Importância das Interfaces na Orientação a Objetos
+Interfaces definem contratos que diferentes implementações podem cumprir.
+
+Exemplo prático: Comparable para ordenar objetos personalizados.
+
+Usar interfaces permite aproveitar recursos avançados da Orientação a Objetos, como herança e polimorfismo.
+
+5. Classes utilitárias
+Collections (com "s") é uma classe utilitária com métodos estáticos, por exemplo para ordenar listas (Collections.sort()).
+
+Esse conhecimento é essencial para o desenvolvimento de sistemas Java robustos, mantendo a flexibilidade e facilidade para evoluir o código ao longo do tempo.
+
