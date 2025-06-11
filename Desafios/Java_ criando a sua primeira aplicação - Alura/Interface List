@@ -1,0 +1,21 @@
+Considere o seguinte trecho de código:
+
+List<String> nomes = new ArrayList<>();
+Copiar código
+Sobre o código anterior, escolha TODAS as alternativa corretas:
+
+Selecione 2 alternativas
+
+A declaração acima está incorreta, já que a interface List não pode ser usada para criar objetos.
+
+
+A declaração acima está correta, mas a interface List não oferece nenhum método para adicionar elementos à lista.
+
+
+A declaração acima está correta, e cria um objeto do tipo ArrayList capaz de armazenar Strings.
+
+
+É possível trocar o objeto sendo instanciado de ArrayList para LinkedList, sem que nenhum erro de compilação ocorra no código.
+
+
+A declaração acima está incorreta, já que ArrayList é uma interface e não pode ser instanciada diretamente.
