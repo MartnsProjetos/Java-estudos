@@ -1,0 +1,151 @@
+ranscrição
+Criamos as duas classes, de compras e de cartão de crédito, montamos as listas, e trabalhamos com os construtores. Também pensamos em cenários de compras com saldo maior ou menor ao limite.
+
+Agora, precisamos testar. Para isso, criamos a nossa classe principal clicando com o botão direito na pasta src e escolhendo a opção "Java Class", nomeamos essa classe de Principal.
+
+Principal.java
+
+Principal.java
+
+public class Principal {
+    public static void main(String[] args) {
+
+        }
+}Copiar código
+Dentro das chaves, escrevemos public static void main(String[] args) {}. E dentro do main, colamos uma estrutura (disponibilizada no GitHub do projeto) onde temos um while() que perguntar diversas vezes sobre as compras, e a variável cartao (referência para um cartão de crédito), já foi construída pensando no limite.
+
+Para testar, clicamos no botão "▶". No terminal, obtemos a primeira solicitação:
+
+Digite o limite do cartão:
+
+Digitamos o número 100 e teclamos "Enter". Obtemos:
+
+Digite a descrição da compra:
+
+Escrevemos "brinco" e na próxima pergunta, temos:
+
+Digite o valor da compra:
+
+Colocamos que o valor da nossa compra foi de 50 reais. Ao teclarmos "Enter" obtemos a mensagem informando que a compra foi realizada com sucesso e se caso desejarmos seguir com as compras devemos digitar o número 1.
+
+Preenchemos novamente as mesmas perguntas, mas inserindo informações diferentes:
+
+Digite a descrição da compra: cordão
+
+Digite o valor da compra: 30
+
+Mais uma vez a mensagem informando que a compra foi efetuada e comunicando para digitar 1 se desejamos continuar, ou 0 se queremos sair. Teclamos o número 1 para continuar. Preenchemos:
+
+Digite a descrição da compra: tornozeleira
+
+Digite o valor da compra: 40
+
+Observe que não conseguimos finalizar a compra. É exibido o valor do nosso saldo que é de R$20, sendo maior que os R$40 da nossa tornozeleira e a lista de compras.
+
+Saldo insuficiente!
+
+COMPRAS REALIZADAS:
+
+brinco - 50.0
+
+cordão - 30.0
+
+Entretanto, o brinco que é o mais caro aparece no topo da lista. Isso acontece porque não informamos como comparar as compras. Aprendemos que quando precisamos que uma classe criada por nós seja ordenável, temos alguns critérios de comparação.
+
+Para ordenar, antes de fazermos o for() em compras no arquivo Principal.java usamos o Collections.sort() passando cartao.getCompras().
+
+Principal.java
+
+// código omitido
+
+  Collections.sort(cartao.getCompras())
+  for (Compra c : cartao.getCompras()) {
+            System.out.println(c.getDescricao() + "  -  "  +c.getValor());
+    }
+
+// código omitidoCopiar código
+Agora, para que o collections sort funcione, precisamos implementar um comparable e definir a regra de ordenação, e vamos fazer isso na classe de Compra. Vamos passar que a nossa classe de compras implementa o comparable de compra.
+
+Compra.java
+
+public class Compra implements Comparable<Compra> {
+        private String descricao;
+        private double valor;
+
+// código omitido
+
+}Copiar código
+Lembrando que ao usarmos o implements do comparable precisamos implementar o método compareTo(). Para isso, clicamos no ícone de lâmpada do lado esquerdo da linha, e escolhemos a opção "implements methods"; na janela seguinte clicamos no botão "Ok".
+
+Ao fazermos isso, no final do arquivo é gerado uma estrutura inicial do método:
+
+Compras.java
+
+// código omitido
+
+  @Override
+    public int compareTo(Compra o) {
+            return 0;
+    }
+}Copiar código
+Qual será o nosso critério de comparação? Comentamos que, por exemplo, string já possui uma ordenação natural: a alfabética. Desejamos ordenar pelo valor, vamos testar usando o double.
+
+Nomeamos a variável de outraCompra, e no retorno tentamos incluir um this.valor.compareTo. Perceba que não aconteceu nem o autocomplete, então não podemos fazer dessa forma usando o valor, dado que double é um tipo primitivo.
+
+Contudo, conseguimos usar a classe wrapper que mencionamos algumas vezes neste curso. Essa classe, assim como a string, já possui uma forma de ordenação. Para ajustarmos isso, após o retorno escreveremos Double.valueOf() passando this.valor.
+
+Na sequência, colocamos o método compareTo() para comparar esse valor com o Double.valueOf() de outraCompra.
+
+Compras.java
+
+// código omitido
+
+  @Override
+    public int compareTo(Compra outraCompra) {
+            return Double.valueOf(this.valor).compareTo(Double.valueOf(outraCompra.valor));
+    }
+}Copiar código
+Assim, não precisamos ficar calculando na classe se o saldo é maior que o limite ou não. Usamos o que já está pronto de forma mais rápida.
+
+Em suma, pegamos a representação em classe (o double) do valor e comparamos com o valor da outra compra. Rodamos a aplicação e depois vamos ao terminal verificar se essa ordenação deu certo.
+
+Preenchemos as perguntas com as mesmas informações que colocamos do brinco, do cordão e da tornozeleira anteriormente.
+
+Digite o limite do cartão: 100
+
+Digite a descrição da compra: brinco
+
+Digite o valor da compra: 50
+
+Após finalizarmos essa compra, teclamos o número 1 para seguir para a próxima. Colocamos:
+
+Digite a descrição da compra: cordão
+
+Digite o valor da compra: 30
+
+Mais uma vez teclamos o número para seguir com as compras. Informamos:
+
+Digite a descrição da compra: tornozeleira
+
+Digite o valor da compra: 40
+
+Ele nos informa que o saldo é insuficiente e que é de R$20. Na lista de compras, perceba que ele ordenou primeiro o cordão e depois o brinco.
+
+COMPRAS REALIZADAS:
+
+cordão - 30.0
+
+brinco - 50.0
+
+Com isso, implementamos uma lista, adicionamos compras nessa lista e a ordenamos por valor.
+
+Assim finalizamos o desafio.
+
+O que vamos fazer?
+
+✓ Criar uma aplicação para lançamento de compras com cartão de crédito
+✓ Menu para lançamento de compras
+✓ Exibição da lista de compras realizadas e ordenadas por valor
+Espero que tenha conseguido concluir esse desafio, caso tenha ficado com dúvidas pode postar no fórum ou no nosso Discord. Compartilhe conosco caso tenha realizado esse desafio de uma maneira diferente!
+
+Espero que tenha agregado bastante nos seus estudos. Obrigada!
