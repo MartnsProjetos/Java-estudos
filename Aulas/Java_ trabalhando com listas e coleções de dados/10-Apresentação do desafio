@@ -1,0 +1,97 @@
+Na última aula mencionamos que você teria um desafio, e estou aqui justamente para passar ele.
+
+Começamos trabalhando com listas, a fazer o controle de adicionar vários objetos usando o collections, e a ordenar. Então a ideia é você fazer, por exemplo, uma aplicação de compras.
+
+Desafio: aplicação de compras.
+
+Você vai informar qual o limite do seu cartão de crédito e realizar compras até não desejar mais ou até o limite ser atingido. Vou mostrar um exemplo de como ficaria a aplicação, mas isso é sugestivo, você pode montar da forma que preferir.
+
+A instrutora está com o terminal integrado ao IntelliJ aberto. Nele, temos um texto "Digite o limite do cartão".
+
+No caso, vamos colocar que o nosso limite é de R$1000.
+
+Digite o limite do cartão: 1000
+
+Após teclarmos "Enter", ele solicita uma descrição da compra. Digitamos "sapato".
+
+Digite a descrição da compra: sapato
+
+Logo após, ele questiona:
+
+Digite o valor da compra: 150
+
+Quando teclamos "Enter", obtemos:
+
+Compra realizada!
+
+Digite 0 para sair ou 1 para continuar
+
+Vamos continuar para realizar a compra de um armário ultrapassando o limite. Preenchemos:
+
+Digite a descrição da compra: armários
+
+Digite o valor da compra: 900
+
+Como retorno, obtemos:
+
+Saldo insuficiente!
+
+COMPRAS REALIZADAS:
+
+sapato - 150.0
+
+Saldo do cartão: 850.0
+
+Process finished with exit code 0
+
+Ele nos informa que o saldo que temos disponível é insuficiente, e exibe as compras que fizemos e o saldo disponível.
+
+Rodando novamente a aplicação clicando no botão "▶" no menu superior, retornamos para a primeira solicitação "Digite o limite do cartão:".
+
+A outra ideia é que ao finalizar a compra com limite disponível, que as compras sejam exibidas por ordem de valor e não na ordem lançada na lista. Assim, precisamos usar algum recurso de ordenação para realizar isso.
+
+Preenchemos as perguntas com os seguintes valores e informações:
+
+Digite o limite do cartão: 1000
+
+E fazemos as compras:
+
+Digite a descrição da compra: sapato
+
+Digite o valor da compra: 50
+
+Após isso, será exibida a mensagem de compra realizada e se desejamos sair ou continuar. No caso, digitamos o número um para continuar. Preenchemos novamente:
+
+Digite a descrição da compra: camisa
+
+Digite o valor da compra: 15
+
+Mais uma vez digitamos o número um para continuar e escrevemos:
+
+Digite a descrição da compra: calça
+
+Digite o valor da compra: 30
+
+Agora, digitamos o número zero para sair. Como retorno, obtemos:
+
+COMPRAS REALIZADAS:
+
+camisa - 15.0
+
+calça - 30.0
+
+sapato - 50.0
+
+Saldo do cartão: 905.0
+
+Foi exibido na ordem de valor. A ideia é você realizar esse tipo de desafio.
+
+O que vamos fazer?
+Criar uma aplicação para lançamento de compras com cartão de crédito
+Menu para lançamento de compras
+Exibição da lista de compras realizadas e ordenadas por valor
+O menu é para realizar as compras, ou seja, essas compras deverão ser armazenadas em uma lista e depois essa lista deve ser exibida e ordenada por valor.
+
+Boa sorte! Tente aplicar todos os conceitos que aprendemos ao longo do curso. No próximo vídeo vou te ajudar nessa implementação, mas antes tente construir para explorar os seus conhecimentos.
+
+Até mais!
