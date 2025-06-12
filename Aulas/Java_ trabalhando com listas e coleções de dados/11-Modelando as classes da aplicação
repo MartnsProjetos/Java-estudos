@@ -1,0 +1,216 @@
+A primeira coisa que precisamos fazer é pensar nas classes cartão de crédito e na de compras. Isso porque vamos ter que considerar o construtor e os atributos.
+
+Vamos começar?
+
+No IntelliJ, estou com o projeto já instalado com uma pasta nomeada de src. Clicamos com o botão direito nesta pasta e escolhemos as opções "New > Java Class" e colocamos o nome dessa classe de CartaoDeCredito. Criamos primeiro a classe do cartão de crédito porque precisamos informar o limite antes de realizarmos as compras.
+
+CartaoDeCredito
+
+public class CartaoDeCredito {
+
+}
+Copiar código
+Quais atributos podemos inserir na classe? O primeiro será o limite do cartão, e depois baseado na lista de compras realizadas controlamos o saldo. Dentro das chaves, escrevemos private double limite; e na linha seguinte private double saldo;.
+
+Também precisamos da lista de compras, que será relacionada ao cartão de crédito para verificar se há saldo ainda ou se já alcançou o limite. Criamos, então, um private List de uma classe que vamos criar que será a Compra, e a colocamos entre um sinal de menor e outro de maior: <Compra>.
+
+CartaoDeCredito
+
+public class CartaoDeCredito {
+        private double limite;
+        private double saldo;
+        private double List<Compra> compras;
+}
+Copiar código
+O <Compra> está na cor vermelha porque ainda não o criamos. Para gerar, clicamos no ícone de lâmpada do lado esquerdo da linha e escolhemos a opção "Create class 'Compra'".
+
+Será exibido um pop-up intitulado "Create Class Compra" com um campo chamado de "Destination package" (em português, "pacote de destino") e dois botões no canto inferior direito: "Ok" e "Cancel". Vamos simplesmente clicar em "Ok" para deixar o pacote padrão.
+
+Logo após, temos outro pop-up intitulado "Add File to Git" com dois botões no canto inferior direito do pop-up: "Add" e "Cancel". Clicamos em "Add" para adicionar. Somos redirecionados para o arquivo Compra.
+
+Compra
+
+public class Compra {
+
+}
+Copiar código
+Voltando ao CartaoDeCredito, notamos que o "List" está escrito na cor vermelha, para ajustar precisamos importá-lo. Após isso, precisamos pensar no construtor e getters e setters.
+
+Para criarmos esse novo cartão de crédito, precisamos já ter um limite definido. Assim, no momento de construírmos um objeto desse tipo precisamos informar o limite de saldo, logo, isso precisa fazer parte do nosso construtor. Vamos construir o construtor incluindo esse campo.
+
+Para isso, teclamos "Alt + Insert". Será mostrado um pop-up intitulado "Generate" onde clicamos em "Constructor". E na janela seguinte, intitulada "Choose Fields to Initialize by Constructor" informamos que precisamos gerá-lo com um limite, logo, selecionamos "limite:double" e depois o botão "Ok" no canto inferior direito.
+
+CartaoDeCredito
+
+import java.util.List;
+
+public class CartaoDeCredito {
+        private double limite;
+        private double saldo;
+        private List<Compra> compras;
+        
+        public CartaoDeCredito(double limite) {
+                this.limite = limite;
+        
+        }
+}
+Copiar código
+Assim ele já torna obrigatório sempre informar um limite. Também vamos inicializar a variável saldo com esse limite, assim que criarmos não temos compra ainda, logo, o saldo terá o mesmo valor que o limite. Escrevemos, então, this.saldo = limite; e posteriormente vamos decrementado esse valor do saldo.
+
+Na linha seguinte, inicializamos a lista de compras como um novo ArrayList. Digitamos após o saldo, this.compras = new ArrayList<>();. Esse é o nosso construtor!
+
+CartaoDeCredito
+
+import java.util.List;
+
+public class CartaoDeCredito {
+        private double limite;
+        private double saldo;
+        private double List<Compra> compras;
+        
+        public CartaoDeCredito(double limite) {
+                this.limite = limite;
+                this.saldo = limite;
+                this.compras = new ArrayList<>();
+        
+        }
+}
+Copiar código
+O que precisamos de getters e setters? Desejamos visualizar a lista de compras, e podemos querer verificar o limite ou saldo. Mas e de setter? Não desejamos deixar nenhuma classe externa alterar o limite, dado que ele foi estabelecido inicialmente, no momento de construção do objeto. Logo, não vamos fazer o setter para o limite e nem para o saldo.
+
+Após o fechamos de chaves do CartaoDeCredito, teclamos "Alt + Insert" e escolhemos a opção "Getter". Na janela seguinte, selecionamos todos os campos: "limite:double", "saldo:double" e "compras:List<Compra>". E depois clicamos no botão "Ok" no canto inferior direito.
+
+CartaoDeCredito
+
+import java.util.List;
+
+public class CartaoDeCredito {
+        private double limite;
+        private double saldo;
+        private double List<Compra> compras;
+        
+        public CartaoDeCredito(double limite) {
+                this.limite = limite;
+                this.saldo = limite;
+                this.compras = new ArrayList<>();
+        
+        }
+        
+        public double getLimite() {
+                return limite;
+        }
+
+        public double getSaldo() {
+                return saldo;
+        }
+}
+Copiar código
+Seria interessante termos um método para adicionar a compra. Mas vamos entender isso melhor depois, agora vamos para a classe Compra analisar o que precisamos. No caso, precisamos de descrição e valor sendo os atributos que vamos criar., a descrição será do tipo string e o valor do tipo double.
+
+Também vamos fazer isso no construtor: a cada momento que digitarmos uma descrição e um valor, será uma nova compra. Em seguida, precisamos inserir essas informações no cartão de crédito, logo, já passamos isso no construtor.
+
+Após o valor, teclamos "Alt + Insert" e escolhemos a opção "Constructor". Na janela seguinte, selecionamos os dois campos: "descricao:String" e "valor:double". E depois clicamos no botão "Ok" no canto inferior direito.
+
+Compra
+
+public class Compra {
+        private String descricao;
+        private double valor;
+        
+        public Compra(String descricao, double valor) {
+                this.descricao = descricao;
+                this.valor = valor;
+        }
+}
+Copiar código
+Também usamos apenas os getters para as compras. Ou seja: só podemos setar um valor e uma descrição no momento da construção. Novamente, então, após o valor, teclamos "Alt + Insert" e escolhemos a opção "Getter". Na janela seguinte, selecionamos os dois campos: "descricao:String" e "valor:double" e clicamos no botão "Ok".
+
+Por fim, de boa prática, podemos fazer o ToString(), para ele nos gerar um determinado valor. Teclamos mais uma vez "Alt + Insert" e depois selecionamos "toString()" e logo após os dois campos, e em seguida, o botão "Ok".
+
+Compra
+
+public class Compra {
+        private String descricao;
+        private double valor;
+        
+        public Compra(String descricao, double valor) {
+                this.descricao = descricao;
+                this.valor = valor;
+        }
+        
+        public String getDescricao() {
+                return descricao;
+        }
+
+        public double getValor() {
+                return valor;
+        }
+        
+        @Override
+        public String toString() {
+                return "Compra{" +
+                "descricao='" + descricao + '\'' +
+                ", valor=" + valor +
+                '}';
+        }
+}
+Copiar código
+Vamos realizar alguns ajustes para deixar melhor formatado. Na frente do return "Compra" ao invés de abrir chaves {, vamos inserir os dois pontos :: "Compra:". Depois podemos remover algumas partes para trazer a descricao = " + descricao para após os dois pontos.
+
+Após mais alguns ajustes, ficamos com (lembrando que você pode formatar da forma que preferir):
+
+Compra
+
+// código omitido
+        
+        @Override
+        public String toString() {
+                return "Compra: descricao = " + descricao +
+                " valor = " + valor;
+        }
+}
+Copiar código
+Precisamos criar um método para adicionarmos essa compra na lista. Para tal, no arquivo CartaoDeCredito gerar um método booleano para lançar a compra. Isso porque pode ser que o saldo seja insuficiente, assim, quando chamamos o método de lançar a compra, será retornado um verdadeiro ou falso.
+
+Essa é uma das formas de realizar essa implementação, você pode aplicar de forma diferente se preferir.
+
+Abaixo do construtor CartaoDeCredito, escrevemos public boolen lancaCompra(Compra compra) {}. Precisamos verificar se temos limite para efetuar a compra, em outras palavras: o saldo disponível é maior que o valor da compra? Usamos if(this.saldo > compra.getValor()), se o saldo for maior que o valor da compra, podemos efetuá-la.
+
+Dentro das chaves, vamos subtrair do saldo o valor dessa compra e depois retornamos true. Caso o saldo seja menor que o valor da compra, retornamos false.
+
+CartaoDeCredito
+
+// código omitido
+        
+        public boolean lancaCompra(Compra compra) {
+                if(this.saldo >= compra.getValor()) {
+                     this.saldo -= compra.getValor();
+                     return true;
+                }
+                
+                return false;
+        }
+        
+// código omitido
+Copiar código
+Lançamos a compra, e falta agora adicionar na lista quando conseguimos retornar. Logo, vamos subtrair do algo e adicionar na lista antes de retornarmos o true. Digitamos this.compras;add(compra) para adicionar essa compra.
+
+CartaoDeCredito
+
+// código omitido
+        
+        public boolean lancaCompra(Compra compra) {
+                if(this.saldo >= compra.getValor()) {
+                     this.saldo -= compra.getValor();
+                     this.compras.add(compra);
+                     return true;
+                }
+                
+                return false;
+        }
+        
+// código omitido
+Copiar código
+Mais adiante vamos preparar o menu e verificar se essa implementação irá funcionar. Lembrando que você pode fazer de uma forma completamente diferente, esse é apenas um exemplo.
+
+Vamos analisar mais sobre isso no próximo vídeo. Até mais!
