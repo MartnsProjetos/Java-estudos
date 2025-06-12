@@ -1,0 +1,105 @@
+A compreensão profunda de Collections.sort,LinkedList, Comparable, compareTo, sort e ArrayLists capacitam a ordenação eficiente de dados, enquanto a interface Comparable e o método compareTo oferecem controle sobre a ordem desejada.
+
+Para consolidar e aprimorar essas habilidades, propomos atividades práticas (não obrigatórias).
+
+Vamos lá?
+
+Crie uma lista de números inteiros e utilize o método Collections.sort para ordená-la em ordem crescente. Em seguida, imprima a lista ordenada.
+Crie uma classe Titulo com um atributo nome do tipo String. Implemente a interface Comparable na classe para que seja possível ordenar uma lista de objetos Titulo.
+No Exercício 2, crie alguns objetos da classe Titulo e adicione-os a uma lista. Utilize o método Collections.sort para ordenar a lista e, em seguida, imprima os títulos ordenados.
+Crie uma lista utilizando a interface List e instancie-a tanto como ArrayList quanto como LinkedList. Adicione elementos e imprima a lista, mostrando que é possível trocar facilmente a implementação.
+Modifique o Exercício 4 para declarar a variável de lista como a interface List, demonstrando o uso de polimorfismo.
+Caso precise de ajuda, opções de solução das atividades estarão disponíveis na seção “Ver opinião do instrutor”.
+
+Ver opinião do instrutor
+Opinião do instrutor
+
+1)
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Integer> numeros = new ArrayList<>();
+        numeros.add(5);
+        numeros.add(2);
+        numeros.add(8);
+        numeros.add(1);
+
+        Collections.sort(numeros);
+
+        System.out.println("Lista ordenada: " + numeros);
+    }
+}
+Copiar código
+2)
+public class Titulo implements Comparable<Titulo> {
+    String nome;
+
+    @Override
+    public int compareTo(Titulo outroTitulo) {
+        return this.nome.compareTo(outroTitulo.nome);
+    }
+}
+Copiar código
+3)
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Titulo> listaTitulos = new ArrayList<>();
+        listaTitulos.add(new Titulo("D"));
+        listaTitulos.add(new Titulo("A"));
+        listaTitulos.add(new Titulo("B"));
+
+        Collections.sort(listaTitulos);
+
+        for (Titulo titulo : listaTitulos) {
+            System.out.println(titulo.nome);
+        }
+    }
+}
+
+Copiar código
+4)
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> listaArrayList = new ArrayList<>();
+        listaArrayList.add("Elemento 1");
+        listaArrayList.add("Elemento 2");
+
+        List<String> listaLinkedList = new LinkedList<>();
+        listaLinkedList.add("Elemento A");
+        listaLinkedList.add("Elemento B");
+
+        System.out.println("ArrayList: " + listaArrayList);
+        System.out.println("LinkedList: " + listaLinkedList);
+    }
+}
+Copiar código
+5)
+import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> listaPolimorfica;
+
+        listaPolimorfica = new ArrayList<>();
+        listaPolimorfica.add("Elemento 1");
+        listaPolimorfica.add("Elemento 2");
+        System.out.println("ArrayList: " + listaPolimorfica);
+
+        listaPolimorfica = new LinkedList<>();
+        listaPolimorfica.add("Elemento A");
+        listaPolimorfica.add("Elemento B");
+        System.out.println("LinkedList: " + listaPolimorfica);
+    }
+}
+Copiar código
