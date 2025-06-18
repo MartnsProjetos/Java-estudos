@@ -1,0 +1,258 @@
+Transcrição
+Jacqueline: Incluímos elementos no nosso projeto à medida que temos necessidade. Primeiro, vamos buscar uma biblioteca para colocar no projeto. Depois, se precisamos de mais elementos, podemos colocá-los também.
+
+Muitas vezes, quando usamos um framework, já vem muitos elementos acoplados. No nosso caso, não é preciso. Precisamos de uma pessoa só para fazer essa desserialização, isto é, pegar o JSON e transformar em um objeto Java.
+
+Baixando a biblioteca GSON
+Jacqueline: Vamos acessar o site MVN Repository, um repositório onde podemos buscar bibliotecas, pacotes e APIs do que precisamos.
+
+Existem algumas bibliotecas que fazem essa desserialização, como a biblioteca Jackson e a GSON da Google. Optamos por usar a GSON.
+
+Paulo: Esse é um trabalho comum no dia a dia. Se você precisa converter JSON em objetos Java, você busca no Google uma biblioteca para te ajudar.
+
+Existem pessoas que não buscam e escrevem o código na mão. Mas, essas tarefas costumam já estar prontas no mundo dessas plataformas grandes, como Java, .NET, Python, JavaScript. Pois, outra pessoa já precisou disso também.
+
+Por isso, você vai achar várias bibliotecas que fazem o que você precisa. Mas, qual usar? Você vai usar aquela que o seu time já conhece.
+
+Pode ser que um colega da empresa já citou, que você sabe que possui um grande suporte na internet ou que muitas pessoas se referenciam. Às vezes, você seleciona uma biblioteca menos conhecida, mas porque é muita usada no time. A cultura da empresa onde você trabalha é importante.
+
+Atualmente, a maioria dos projetos envolve equipes que não são pequenas. E não são somente equipes de 100 pessoas que desenvolvem. Mesmo cinco ou seis pessoas já têm conhecimento e podem te dar uma sugestão de bibliotecas.
+
+Você pergunta: "Jaque, preciso converter. Uso o GSON, Jackson ou XStream?". Ela pode te responder que prefere GSON, porque já passou por essa situação antes e foi muito fácil usar essa biblioteca.
+
+Nessa formação passamos por momentos reais de decisão de uma pessoa na empresa. Qual biblioteca usar? Como colocá-la no projeto? Será que vale a pena colocá-la?
+
+Jacqueline: Na caixa de pesquisa do MVN Repository, vamos buscar "Gson". O primeiro resultado nos mostra essa biblioteca Java da Google usada para converter objetos Java nas suas representações JSON e também o contrário.
+
+Vamos selecionar esse primeiro resultado do Gson para visualizar o histórico de versões disponíveis. Inclusive, algumas têm uma sinalização de vulnerabilidade, ou seja, alguém detectou um problema e depois saiu uma nova versão.
+
+Nesse curso, vamos usar a versão mais recente no momento de gravação, a 2.10.1. Após clicar na versão escolhida, temos uma série de abas com atalhos de código.
+
+Havíamos explicado que em algum momento você vai precisar trabalhar com algumas ferramentas para fazer o build (construção) ou gerenciar dependências.
+
+Por exemplo, se você usasse o Maven, você selecionaria a aba "Maven" e incluiria o trecho de código disponibilizado no seu arquivo de definições pom.xml. Também temos abas de atalhos para Gradle, Kotlin, entre outras opções.
+
+No nosso caso, queremos literalmente baixar o JAR. Por isso, não vamos usar as abas. Ao invés disso, vamos clicar em "jar(276 KB)" em Files (arquivos) para baixar o gson-2.10.1.jar.
+
+Paulo: Dentro do JAR baixado temos arquivos .CLASS como aprendemos no primeiro curso. São aqueles arquivos .JAVA já compilados.
+
+Uma curiosidade é que essa é uma das bibliotecas de código aberto, por isso, poderíamos ler o código-fonte de quem escreveu no GitHub do GSON. Assim, poderíamos ler como funciona, ter acesso a exemplos, testes e até ajudar a resolver um bug.
+
+Você pode acessar a página do Gson User Guide no GitHub. Nesse guia, temos como começar a trabalhar com a biblioteca e uma documentação mínima explicamos o que fazer. Existem muitos projetos que estão no GitHub.
+
+Jacqueline: Conseguimos ter acesso a todas as informações relacionadas ao GSON pelo GitHub e também pela guia da documentação Gson.
+
+Incluindo GSON como dependência do projeto
+Jacqueline: Após baixar a biblioteca, precisamos colá-la no projeto. Mas, como indicar que nosso projeto vai usar o GSON?
+
+No IntelliJ, vamos acessar o menu superior "File > Project Structure" (ou use atalho "Ctrl + Alt + Shift + S") para visualizar a estrutura do projeto.
+
+Na janela "Project Structure", vamos clicar na opção "Modules" e depois a aba "Dependencies" (dependências), onde podemos indicar do que o nosso projeto depende e incluir um arquivo.
+
+Para isso, podemos clicar no botão "Add" que possui um símbolo de "+" (ou use atalho "Alt + Insert") que nos dá opções para adicionar um JAR, biblioteca ou módulo. No nosso caso, vamos selecionar "JARs or Directories", pois já fizemos o download do JAR.
+
+Vamos escolher o arquivo baixado gson-2.10.1.jar que já colocamos dentro de uma pasta chamada "dependência". Após incluir a dependência, podemos clicar no botão "OK" no canto inferior direito.
+
+A partir desse momento, já podemos digitar "Gson" no código que vai aparecer a sugestão da classe Gson.
+
+Paulo: Se tentássemos escrever isso antes, a IDE avisaria que não tem nenhum pacote no projeto onde podemos encontrar isso. Afinal, essa classe não existe no java.util, java.lang ou java.net.
+
+Inclusive, se você abrir com unzip esse JAR, você vai encontrar esse gson.class dentro do diretório "com.google.gson".
+
+Honestamente, a forma como fizemos para agrupar bibliotecas foi muito manual. Pegamos um JAR e colocamos dentro do nosso projeto.
+
+Com o tempo, você vai perceber que projeto usam sistemas de gerenciamento de pacotes - não só em Java. No Java, temos o Maven, Gradle, Ant. No Node para o JavaScript, temos o npm. No Python, temos o pip.
+
+Atualmente, o setup e o build de um projeto é tão complexo e usamos tantas bibliotecas de fora que não dá para baixar cada arquivo e movê-los um a um. Por isso, existem ferramentas para organização. Contudo, não são o foco dessa formação.
+
+Se você já trabalha com Java, certamente já se deparou com Maven ou Gradle, pois são ferramentas com muitas funcionalidades. Uma das principais é auxiliar com o gerenciamento desses arquivos .JAR com cada versão das bibliotecas que vamos precisar na hora de preparar o projeto para rodar. Senão teríamos que escrever em um arquivo para mandar baixar cada arquivo e colá-lo no diretório correto.
+
+A automação do seu projeto tanto para build (construir) quanto para deploy (implantar) vai aparecer com frequência em outras formações da Alura.
+
+Jacqueline: Exatamente. No nosso caso, fizemos manualmente.
+
+Transformando JSON em objeto
+Jacqueline: Ao final do main() no arquivo PrincipalComBusca.java, vamos declarar Gson e chamá-lo também de gson para fazer um new Gson() - como já fizemos inúmeras vezes.
+
+PrincipalComBusca.java:
+
+public class PrincipalComBusca {
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+// código omitido…
+
+        System.out.println(response.body());
+
+        Gson gson = new Gson();
+    }
+}
+Copiar código
+Se digitamos gson em uma nova linha para tentar descobrir que método devemos usar, já temos alguns métodos listados como toJson() e fromJson(). Ou seja, são métodos que vão ler um JSON e devolver algo ou vice-versa.
+
+Antes de continuar, vamos dar uma lida na documentação do Gson.
+
+Paulo: Outro mecanismo também é "chutar" para saber o que acontece. Faz parte explorar dessa forma, mas o ideal é dar uma lida na documentação. Pois, a explicação vai estar lá, especialmente e é algo básico.
+
+Jacqueline: Sim, devemos conferir a documentação para não perder tempo. No navegador, vamos clicar no tópico "Object Examples" no Gson User Guide do GitHub. Pois, é o que precisamos para transformar um JSON em um objeto, por exemplo, do tipo string ou tipo.
+
+Temos um exemplo de um objeto, onde faz um new Gson() como fizemos e usa o método toJson() para serializar.
+
+// CÓDIGO DE EXEMPLO DE OBJETOS DA DOCUMENTAÇÃO GSON
+
+class BagOfPrimitives {
+  private int value1 = 1;
+  private String value2 = "abc";
+  private transient int value3 = 3;
+  BagOfPrimitives() {
+    // no-args constructor
+  }
+}
+
+// Serialization
+BagOfPrimitives obj = new BagOfPrimitives();
+Gson gson = new Gson();
+String json = gson.toJson(obj);
+
+// ==> json is {"value1":1,"value2":"abc"}
+Copiar código
+Já a desserialização é com o método fromJson(), passando o nome da classe com .class.
+
+// CÓDIGO DE EXEMPLO DE OBJETOS DA DOCUMENTAÇÃO GSON
+
+// Deserialization
+BagOfPrimitives obj2 = gson.fromJson(json, BagOfPrimitives.class);
+// ==> obj2 is just like obj
+Copiar código
+A desserialização é o que vamos fazer no nosso código. Vamos dizer que queremos pegar aquele JSON e transformar na classe Titulo.
+
+Voltamos ao arquivo PrincipalComBusca.java no IntelliJ. Em uma nova linha, vamos criar um Titulo chamado meuTitulo que vai ser igual à gson.fromJson() que vai ter a resposta. Nesse caso, é o response.body.
+
+Podemos atribuir response.body em uma variável para representar o JSON. Em uma nova linha antes de new Gson(), vamos digitar String json vai receber response.body que havíamos usado anteriormente para imprimir.
+
+Com isso, podemos reposicionar o System.out.println() para a linha abaixo da declaração da variável json e passar esse json para imprimir.
+
+Agora, com o método fromJson(), queremos transformar esse json em Titulo.class.
+
+Depois, queremos visualizar se foi possível fazer essa conversão. Por isso, vamos fazer outro System.out.println(), passando só o nome - antes de verificar todos os outros atributos.
+
+Ou seja, vamos imprimir uma string "Título: " somado ao meuTitulo.getNome().
+
+PrincipalComBusca.java:
+
+public class PrincipalComBusca {
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+// código omitido…
+
+        String json = response.body();
+        System.out.println(json);
+
+        Gson gson = new Gson();
+        Titulo meuTitulo = gson.fromJson(json, Titulo.class);
+        System.out.println("Título: " + meuTitulo.getNome());
+    }
+}
+Copiar código
+Paulo: A variável que queremos transformar é Titulo? Não é Filme?
+
+Jacqueline: Ainda não exploramos se esse site traz séries ou filmes. Por isso, tratamos genericamente como título.
+
+Após executar a aplicação com "Shift + F10", digitamos o filme "dogville" no terminal.
+
+Digite um filme para busca:
+
+dogville
+
+Foi possível buscar o filme, mas o título veio como nulo:
+
+{"Title":"Dogville", "Year":"2003", "Rated":"R", "Released":"23 Apr 2004" (restante omitido…)}
+
+Título: null
+
+Paulo: O getnome() está nulo. O "zero" de uma variável referência para objeto é null, a qual inclusive é uma palavra-chave no Java. Se você tentar acessar algo desse objeto nulo, pode ter uma NullPointerException.
+
+Mas, sabemos o porquê está nulo. O JSON que foi retornado veio com as chaves em inglês, como "Title" e "Year" - não veio "Nome" ou "Ano de Lançamento". Ao mapear, não foi encontrado nenhum "Titulo" e houve uma falha silenciosamente. No JSON, os campos que existem são mapeados, enquanto os que não existem são ignorados. Faz sentido, só precisamos dessas informações.
+
+Acredito que deve ter alguma forma nessa biblioteca de avisar que o "Title" se refere a "Nome" e "Year" é "Ano de Lançamento". Ou seja, mudar o formato de conversão.
+
+Jacqueline: Exatamente. Vamos tentar identificar esse nome, abrindo a classe Titulo em "screenmatch > modelos > Titulo.java".
+
+Para esse atributo de nome que é o nome do filme, vamos usar uma anotação que a biblioteca GSON oferece: @SerializedName(), onde passamos o nome que vem no JSON. No nosso caso, é o Title entre aspas duplas.
+
+Também vamos fazer isso com o ano de lançamento. Uma linha antes de anoDeLancamento, vamos colocar outra anotação @SerializedName() com Year entre aspas duplas.
+
+Titulo.java:
+
+package br.com.alura.screenmatch.modelos;
+
+import com.google.gson.annotations.SerializedName;
+
+public class Titulo implements Comparable<Titulo> {
+    @SerializedName("Title")
+    private String nome;
+    @SerializedName("Year")
+    private int anoDeLancamento;
+
+// código omitido…
+
+}
+Copiar código
+Paulo: Toda vez que você colocou a anotação com o arroba, apareceu um import no começo do arquivo. Então, essas anotações agem como classes e funcionam como interfaces.
+
+Essas anotações não mudam o comportamento da compilação, é só uma forma de ensinar o GSON como é esse nome no projeto para não precisar escrever em código. Porque no Java é muito comum aparecer esses metadados, como o @Override Anotações são metadados, ou seja, um dado sobre outro dado.
+
+Serializar é um verbo usado quando transformamos objetos ou estruturas de memória em texto - não importa se é JSON, binário ou XML. Com a anotação @SerializedName avisamos ao GSON qual o nome deve procurar no formato serializado.
+
+Jacqueline: Exato. Para saber se essa anotação funciona, precisamos ter o toString() no Titulo.java. Você provavelmente já implementou esse método nessa classe.
+
+Vamos rapidamente fazer um toString() ao final da classe Titulo para não precisar fazer essa concatenação na main() do PrincipalComBusca.java. Usamos o atalho "Alt + Insert" para escolher "generate toString()".
+
+Na janela "Generate toString()", vamos usar somente nome:String e anoDeLancamento:int. Vamos só apagar a primeira linha do retorno com Titulo{}para ficar mais enxuto, pois só queremos o nome e o ano de lançamento.
+
+public class Titulo implements Comparable<Titulo> {
+
+// código omitido…
+
+    @Override
+    public String toString() {
+        return "nome='" + nome + '\'' +
+                ", anoDeLancamento=" + anoDeLancamento;
+    }
+}
+Copiar código
+No arquivo PrincipalComBusca.java, queremos imprimir o meuTitulo. Por isso, vamos substituir a concatenação que estava dentro do último System.out.println() por meuTitulo.
+
+PrincipalComBusca.java:
+
+public class PrincipalComBusca {
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+// código omitido…
+
+        Gson gson = new Gson();
+        Titulo meuTitulo = gson.fromJson(json, Titulo.class);
+        System.out.println(meuTitulo);
+    }
+}
+Copiar código
+Como alteramos o toString(), já está preparado para mostrar os dados do filme.
+
+No terminal, buscamos pelo filme "dogville" novamente.
+
+Digite um filme para busca:
+
+dogville
+
+Agora, sim, o GSON conseguiu mostrar o nome e o ano de lançamento.
+
+{"Title":"Dogville", "Year":"2003", "Rated":"R", "Released":"23 Apr 2004" (restante omitido…)}
+
+nome='Dogville', anoDeLancamento=2003
+
+Mas, vamos nos questionar: essa é a melhor alternativa? Ou seja, ir na classe e colocar um @SerializedName?
+
+Paulo: Existem outras formas.
+
+Jacqueline: Hoje buscamos dessa API, mas se precisamos buscar de outra? O nome do filme ao invés de aparecer como "Title" pode ser "Movie Name".
+
+Por isso, precisamos pensar em uma alternativa para melhorar esse código, apesar de ter funcionado.
