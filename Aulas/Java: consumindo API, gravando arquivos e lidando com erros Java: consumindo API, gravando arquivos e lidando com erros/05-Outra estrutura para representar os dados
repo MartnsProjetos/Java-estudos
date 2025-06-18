@@ -1,0 +1,306 @@
+Transcrição
+Jacqueline: Como citamos, se colocamos a anotação @SerializedName na própria classe da nossa aplicação, há a possibilidade do nome ser diferente se precisamos buscar esses dados de outro lugar. Com isso, teríamos que fazer modificações no código para atender essa diferença.
+
+Quando o ideal seria mudar o mínimo possível. Por exemplo, só trocar o tipo da desserialização do JSON em PrincipalComBusca.java.
+
+Teria como fazer uma forma de conversão personalizada? Sim, temos uma explicação de como fazê-lo no tópico Custom Serialization and Deserialization da documentação do GSON no GitHub.
+
+Poderíamos registrar e implementar como no primeiro exemplo, mas existe um jeito mais simples de fazer essa serialização e desserialização personalizada. Podemos criar uma classe, uma estrutura no meio do caminho. Por exemplo, como se fosse o título do OMDb em específico, o qual tem a forma como os títulos vêm dessa API. A partir desse tipo, transformamos no nosso título.
+
+Criando um Record
+Jacqueline: Para fazer essa alternativa, vamos criar um arquivo chamado TituloOmdb dentro da pasta "screenmatch > modelos". Na realidade, o que precisamos? Só queremos fazer tradução de um campo para o outro. Não queremos ter uma classe "TitulosOmdb", instanciar ou mudar essa classe em algum momento. Por isso, não precisamos criar como classe.
+
+Podemos criar como uma estrutura que teve preview no Java 14 e foi homologada no Java 17, o Record. Nele, só declaramos o cabeçalho, já que é imutável. Pois, não queremos mexer com os dados, simplesmente traduzir para transferir de um lugar para o outro.
+
+Com o botão direito, clicamos em "modelos > New > Java Class", escolhemos "Record" e nomeamos como TituloOmdb.
+
+TituloOmdb.java:
+
+package br.com.alura.screenmatch.modelos;
+
+public record TituloOmdb(){
+}Copiar código
+Paulo: Não é nem classe, nem interface, é uma estrutura nova e mais simples.
+
+Jacqueline: O único que precisamos fazer é definir os atributos do Record. Daquela listagem que veio no JSON, quais são os três atributos que precisamos? O ano, nome e a duração.
+
+Como vem tudo em texto, vamos colocar String title, String year e String runtime.
+
+package br.com.alura.screenmatch.modelos;
+
+public record TituloOmdb(String title, String year, String runtime){
+}Copiar código
+Não precisamos escrever mais nada nessa classe, porque é uma classe especial. De maneira escondida, já foi implementado um construtor padrão, os getters e setters, o toString().
+
+Usando GsonBuilder()
+Agora, podemos entender como esse Record vai funcionar. Para isso, vamos entrar no arquivo PrincipalComBusca.java da pasta "screenmatch > principal".
+
+Primeiro, vamos duplicar a linha do Titulo que está após a criação do new Gson(). Vamos comentar a primeira cópia para guardar meuTitulo, pois depois vamos querer transformá-lo.
+
+Na segunda cópia, vamos substituir meuTitulo por meuTituloOmdb. Assim, o meuTituloOmdb vai ser um TituloOmdb, assim como o método fromJson() vai transformar o json em um TituloOmdb.class.
+
+Em seguida, vamos fazer o println() do meuTituloOmdb para verificar o que vai acontecer.
+
+PrincipalComBusca.java:
+
+import br.com.alura.screenmatch.modelos.TituloOmdb;
+
+public class PrincipalComBusca {
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+// código omitido…
+
+        Gson gson = new Gson();
+        //Titulo meuTitulo = gson.fromJson(json, Titulo.class);
+        TituloOmdb meuTitulo = gson.fromJson(json, TituloOmdb.class);
+        System.out.println(meuTituloOmdb);
+    }
+}Copiar código
+Vamos rodar a aplicação com "Shift + F10" e buscar pelo filme "Matrix" no terminal.
+
+Digite um filme para busca:
+
+matrix
+
+Apesar de não ter escrito toString(), o retorno já vem como "title", "year" e "runtime".
+
+{"Title":"Matrix", "Year":"1993", "Rated":"N/A", "Released":"01 Mar 1993" (restante omitido…)}
+
+TituloOmdb[title=null, year=null, runtime=null]
+
+Paulo: O toString() do Record é mais inteligente, pois já vieram os atributos, mas ainda estão nulos.
+
+Jacqueline: Por que estão nulos? Tem uma diferença. No TituloOmdb.java, colocamos os atributos com letra minúscula. Enquanto no JSON, estão com a primeira letra em maiúscula.
+
+Vamos só colocar title com "T" maiúscula no Record e executar novamente a PrincipalComBusca.java para verificar se o problema é a letra maiúscula.
+
+TituloOmdb.java:
+
+package br.com.alura.screenmatch.modelos;
+
+public record TituloOmdb(String Title, String year, String runtime){
+}Copiar código
+No terminal, vamos digitar "Matrix" novamente.
+
+Digite um filme para busca:
+
+matrix
+
+Note como o título veio como "Matrix", ou seja, o problema é a letra maiúscula:
+
+{"Title":"Matrix", "Year":"1993", "Rated":"N/A", "Released":"01 Mar 1993" (restante omitido…)}
+
+TituloOmdb[Title=Matrix, year=null, runtime=null]
+
+Mas, vamos deixar com letra maiúscula? Não. Falamos de boas práticas desde o início da formação. O padrão de variável é com letra minúscula.
+
+Primeiro, vamos manter o title do TituloOmdb.java em minúscula.
+
+TituloOmdb.java:
+
+package br.com.alura.screenmatch.modelos;
+
+public record TituloOmdb(String title, String year, String runtime){
+}Copiar código
+Para resolver, em PrincipalComBusca.java, podemos fazer umbuilder dizendo qual é o padrão de nomenclatura do JSON. No tópico "JSON Field Naming Support" na documentação do GSON, temos uma política de nomenclatura dos campos (field naming policy).
+
+// CÓDIGO DE EXEMPLO DA DOCUMENTAÇÃO GSON
+
+Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+String jsonRepresentation = gson.toJson(someObject);
+System.out.println(jsonRepresentation);Copiar código
+Ou seja, precisamos fazer um new GsonBuilder(), dizendo que o nosso título JSON vem com a primeira letra maiúscula, isto é, UPPER_CAMEL_CASE.
+
+Ao invés de fazer um new Gson(), vamos copiar a linha que chama um new GsonBuilder().setFieldNamingPolicy(). Vamos só quebrar as linhas antes dos pontos para ter uma melhor divisão.
+
+PrincipalComBusca.java:
+
+public class PrincipalComBusca {
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+// código omitido…
+
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                .create();
+        //Titulo meuTitulo = gson.fromJson(json, Titulo.class);
+        TituloOmdb meuTitulo = gson.fromJson(json, TituloOmdb.class);
+        System.out.println(meuTituloOmdb);
+    }
+}Copiar código
+Paulo: Então já vem pronto esse builder. Nem precisa fazer um monte de @, pois já tem as configurações necessárias na biblioteca GSON.
+
+É importante que você entenda as bibliotecas muito conhecidas e muito usadas provavelmente já têm aquela configuração, classe ou método que faz o que você precisa.
+
+Por exemplo, muitos JSON vêm com a primeira letra maiúscula e no Java é minúscula, por isso, não coincidem. Será que alguém já pensou nisso? Sim, podemos chamar um builder, uma forma de configurar onde podemos dizer como vem o JSON.
+
+Jacqueline: Exatamente. Dificilmente vamos ser a primeira pessoa a se deparar com certo problema.
+
+Paulo: Especialmente algo tão corriqueiro quanto consumir um API Web.
+
+Jacqueline: Lembre-se de fazer um import da classe GsonBuilder() e do FieldNamingPolicy com "Alt + Enter".
+
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+// código omitido…Copiar código
+Paulo: Com isso, ambos não estão mais em vermelho. Agora o main() está compilando, porque adicionamos uma importação automática no começo do arquivo.
+
+São classes que estão dentro daquele JAR que baixamos e colocamos no sistema.
+
+Jacqueline: Teoricamente, agora deve ser possível traduzir todos os campos que solicitamos.
+
+Após executar novamente a aplicação, vamos buscar pelo filme "Matrix".
+
+Digite um filme para busca:
+
+matrix
+
+Foi retornado os campos de título, ano e duração como esperados:
+
+{"Title":"Matrix", "Year":"1993", "Rated":"N/A", "Released":"01 Mar 1993" (restante omitido…)}
+
+TituloOmdb[title=Matrix, year=1993, runtime=60 min]
+
+Paulo: Esse filme não dura só 60 minutos, mas se o dado no OMBd está errado é outro problema.
+
+Imprimindo Meu título
+Jacqueline: O que podemos fazer agora? Essa linha comentada do meuTitulo ficou pendente. Vamos recortá-la e colocá-la abaixo do println().
+
+Desde o início, queríamos um Titulo do meuTitulo.
+
+Paulo: O Titulo tem mais atributos e métodos. Se fosse um filme, tem o avalia() e toString(). Enquanto o TituloOmdb é como um objeto temporário somente para transferir dados - pode ser chamado de Data Transfer Object (DTO) ou velho object.
+
+Tem até um padrão usado para quando criamos um objeto que serve somente para consumir APIs. Porque, o objeto que você realmente quer é um pouco diferente. Você precisa de um DTO que faz esse intermédio.
+
+De novo, aprendemos na prática padrões e recursos de orientação a objetos.
+
+Jacqueline: Exato. Podemos apagar as duas barras (//) para a linha do meuTitulo deixar de ser um comentário. Também vamos apagar o que está após o =.
+
+Em seguida, podemos dizer que o meuTitulo é igual ao new Titulo() que vai receber um TituloOmdb. Assim, vamos criar um construtor onde passamos um TituloOmdb e nos seja devolvido um Titulo do meu tipo.
+
+public class PrincipalComBusca {
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+// código omitido…
+
+        Titulo meuTitulo = new Titulo(meuTituloOmdb);
+
+    }
+}Copiar código
+Paulo: Ou poderíamos passar o meuTitulo.getNome(), meuTitulo.getYear(). Enfim, existem várias soluções.
+
+Jacqueline: Repara que quando usamos o Record, não colocamos a palavra get no método. Nesse caso, só seria referenciado como meuTituloOmdb.tile().
+
+Mas, para facilitar o nosso trabalho, vamos só passar o TituloOmdb e receber meuTitulo. Afinal, já aprendemos como trabalhar com construtores.
+
+O meuTituloOmdb fica sublinhado em vermelho, porque não temos um construtor no Titulo.javaque receba um TituloOmdb e devolva um Titulo. Por isso, vamos clicar em TituloOmdb e aceitar a sugestão de "Create constructor" (ou "Alt + Shift + Enter").
+
+Com isso, já cria um Titulo() que recebe TituloOmdb meuTituloOmdb em Titulo.java.
+
+Titulo.java:
+
+// código omitido…
+
+    public Titulo(TituloOmdb meuTituloOmdb) {
+    }Copiar código
+Como é a implementação? Começamos a fazer um "de-para" dos dados, pois vem todos como string.
+
+Paulo: Preferimos colocar como string, pois às vezes vem a abreviação de minutos escrita junto a duração. Daria erro se tentássemos converter para inteiro.
+
+Jacqueline: Primeiro, queremos pegar o this.nome que vai receber meuTituloOmdb.title(). O título é tranquilo, porque vem em texto. Mas, e o resto?
+
+O this.anoDeLancamento teria que receber meuTituloOmdb.year(). Mas isso não vai funcionar.
+
+A IDE dá a alternativa de empacotar usando Integer.parseInt(). Citamos rapidamente as classes wrapper que é para representar os tipos primitivos em formato de classe.
+
+Além do parseInt(), existe outro wrapper que podemos usar chamado valueOf() onde passamos uma string para tentar converter ao inteiro.
+
+Nesse caso, vamos optar pelo valueOf() que espera receber uma string. Para isso, vamos escrever Integer.valueOf() entre meuTituloOmdb.year().
+
+Vamos fazer o mesmo para this.duracaoEmMinutos. Isto é, Integer.valueOf() usando meuTituloOmdb.runtime(). Contudo, já sabemos que vai ter problema, pois o runtime também tem um texto com a abreviação de minutos após a duração. Por exemplo, "60 min".
+
+Lembre-se que a classe string tem vários métodos. Nesse caso, podemos pegar somente um pedaço da string, ou seja, pegar somente as duas ou três primeiras posições que seriam os números da duração.
+
+Paulo: Ou tirar as últimas três posições para tirar o "min".
+
+Jacqueline: Vamos experimentar.Após .runtime(), vamos pegar uma substring() para dizer onde começa e termina o index. Nesse caso, vamos colocar na posição 0 a 2 para descobrir se o index começa a contar do zero igual à maioria das estruturas.
+
+Paulo: Assim, vamos pegar a primeira, segunda e terceira posições?
+
+Jacqueline: Sim, a posição "0", "1" e "2". Porque assim pegamos filmes com 120 minutos, por exemplo.
+
+Titulo.java:
+
+// código omitido…
+
+    public Titulo(TituloOmdb meuTituloOmdb) {
+        this.nome = meuTituloOmdb.title();
+        this.anoDeLancamento = Integer.valueOf(meuTituloOmdb.year());
+        this.duracaoEmMinutos = Integer.valueOf(meuTituloOmdb.runtime().substring(0, 2));
+    }Copiar código
+Paulo: Devemos acrescentar a duracaoEmMinutos no nosso toString(), senão não vai aparecer a duração do meuTitulo.
+
+Jacqueline: Exatamente. No retorno do toString() ao final da classe Titulo, vamos concatenar uma vírgula, "duração" com um espaço antes e depois, seguido de duracaoEmMinutos.
+
+// código omitido…
+
+    @Override
+    public String toString() {
+        return "nome='" + nome + '\'' +
+                ", anoDeLancamento=" + anoDeLancamento + "," +
+                " duração " + duracaoEmMinutos;
+
+    }Copiar código
+Agora, em PrincipalComBusca.java, vamos imprimir o meuTitulo. Vamos digitar "sout" para fazer um System.out.println() do texto "Titulo já convertido". Seguido de outro System.out.println() do meuTitulo.
+
+PrincipalComBusca.java:
+
+public class PrincipalComBusca {
+    public static void main(String[] args) throws IOException, InterruptedException {
+
+// código omitido…
+
+        Titulo meuTitulo = new Titulo(meuTituloOmdb);
+            System.out.println("Titulo já convertido");
+            System.out.println(meuTitulo);
+    }
+}Copiar código
+Vamos executar a aplicação. No terminal, vamos novamente buscar o "Matrix".
+
+Digite um filme para busca:
+
+matrix
+
+Após a busca, já temos a impressão do título já convertido, o nome e o ano de lançamento.
+
+{"Title":"Matrix", "Year":"1993", "Rated":"N/A", "Released":"01 Mar 1993" (restante omitido…)}
+
+TituloOmdb[title=Matrix, year=1993, runtime=60 min]
+
+Título já convertido
+
+nome='Matrix', anoDeLancamento=1993, duração 60
+
+Já conseguimos pegar um dado e transformar em outro.
+
+Vamos tentar com outro filme para ter certeza se deu tudo certo? Executamos novamente e buscamos pelo filme "Divertidamente".
+
+Digite um filme para busca:
+
+divertidamente
+
+Já não funcionou com o filme "Divertidamente".
+
+{"Title":"Divertidamente", "Year":"2018-", "Rated":"N/A", "Released":"11 Mar 2018" (restante omitido…)}
+
+TituloOmdb[title=Divertidamente, year=2018, runtime=N/A]
+
+Exception in thread "main" java.lang.NumberFormatException: For input string: "2018-"
+
+Paulo: A seguir, vamos entender melhor essas exceções. Repare que nos é avisado que o formato do número não veio como esperado.
+
+Jacqueline: Isso porque o ano veio com um traço no final, "2018-". O método valueOf() não sabe como resolver isso. Realmente está errado, o ano não deveria ter esse traço.
+
+Na próxima aula, vamos explorar como devemos lidar ao acontecer um erro que para a nossa aplicação. Não é o que queremos. Queremos continuar ou receber uma mensagem "não conseguimos buscar esse filme".
