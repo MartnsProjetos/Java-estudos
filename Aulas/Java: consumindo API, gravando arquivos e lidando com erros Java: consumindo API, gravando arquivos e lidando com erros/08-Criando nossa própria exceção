@@ -1,0 +1,160 @@
+Transcrição
+Jacqueline: Nós tratamos a exceção exibindo a mensagem de que ocorreu um erro na busca, mas seria interessante resolver o problema para poder pesquisar um filme que tenha espaço no nome. Há várias maneiras de solucionar, vamos optar por uma bem simples.
+
+Na declaração da variável endereco, usaremos o replace() para substituir o espaço por um sinal de mais. Assim, as palavras serão unidas e passaremos pelo erro.
+
+Paulo: Daria para ir além. Essa URL é encodada em um formato específico. Existe uma classe chamada URL Encoder, que poderíamos usar nesse caso. Mas para resolver o erro no nosso projeto, a sua opção é o suficiente.
+
+Jacqueline: Podemos melhorar vários pontos do código, mas vamos prosseguir dessa maneira para conferir se resolvemos o problema da busca. Ao rodar o programa e procurar por "top gun", não haverá erro e conseguiremos consultar o filme. Há um erro na duração, mas podemos corrigir mais adiante.
+
+Vamos rodar o programa novamente e pesquisar por "divertidamente". Ainda temos o problema de conversão do ano de lançamento. Nesse caso, podemos criar nossa própria exceção e tratá-lo de outra forma. Essa exceção é lançada quando tentamos rodar o construtor de Titulo.
+
+No arquivo Titulo.java, vamos remover o @SerializeName("Title") e @SeriazeName("Year"), que não fez diferença no nosso código.
+
+No construtor, passamos um TituloOmbd. Vamos verificar o ano de lançamento informado e lançar uma exceção se ele tiver mais que quatro caracteres. Usaremos uma estrutura if para verificar o tamanho de meuTituloOmbg.year, com o método length():
+
+// ...
+
+public Titulo(TituloOmdb meuTituloOmdb) {
+        this.nome = meuTituloOmdb.title();
+
+        if(meuTituloOmdb.year().length() > 4) {
+
+        }
+        this.anoDeLancamento = Integer.valueOf(meuTituloOmdb.year());
+        this.duracaoEmMinutos = Integer.valueOf(meuTituloOmdb.runtime().substring(0, 2));
+}
+
+// ...Copiar código
+Dentro do if, utilizaremos as palavras-chave throw new para lançamento uma nova exceção. O Java já indica algumas sugestões de exceções, mas nós queremos lançar uma exceção nossa.
+
+Paulo: Geralmente, se já existe uma exceção da biblioteca padrão do Java que encaixa na semântica do nosso projeto, é preferível usá-la. Mas também podemos criar nossa própria classe para representar um erro muito específico da nossa aplicação.
+
+Jacqueline: Exato! No caso, vou criar ErroDeConversaoDeAnoException(). Dentro dos parênteses, podemos incluir uma mensagem explicativa:
+
+// ...
+
+public Titulo(TituloOmdb meuTituloOmdb) {
+        this.nome = meuTituloOmdb.title();
+
+        if(meuTituloOmdb.year().length() > 4) {
+                throw new ErroDeConversaoDeAnoException("Não consegui converter o ano " +
+                                "porque tem mais de 04 caracteres.");
+        }
+        this.anoDeLancamento = Integer.valueOf(meuTituloOmdb.year());
+        this.duracaoEmMinutos = Integer.valueOf(meuTituloOmdb.runtime().substring(0, 2));
+}
+
+// ...Copiar código
+A IDE indicará um erro, porque ela não reconhece a classe é ErroDeConversaoDeAnoException — afinal, ainda não a criamos. Passando o mouse por cima desse erro, temos a opção para criá-la. Basta clicar em "Create class "ErroDeConversaoDeAnoException".
+
+Vamos adicionar um novo pacote chamado br.com.alura.screenmatch.excecao e o Java automaticamente criará uma classe que estende Throwable com um construtor:
+
+package br.com.alura.screenmatch.excecao;
+
+public class ErroDeConversaoDeAnoException extends Throwable {
+    public ErroDeConversaoDeAnoException(String s) {
+
+    }
+}Copiar código
+Paulo: Todas as exceções são necessariamente filhas de Throwable, são lançáveis. Do contrário, não poderíamos usar a palavra-chave throw. Se retirarmos o extends Throwable, nada vai funcionar.
+
+Ao estender de Throwable, estamos gerando uma exceção que nos obriga a usar o try/catch. Em vez disso, podemos estender de exceção não checadas (unchecked), em que o try/catch é opcional. Se houver um erro, a execução será encerrada.
+
+Jacqueline: Exatamente. Logo, vamos estender de RuntimeException:
+
+package br.com.alura.screenmatch.excecao;
+
+public class ErroDeConversaoDeAnoException extends RuntimeException {
+    public ErroDeConversaoDeAnoException(String s) {
+
+    }
+}Copiar código
+Criaremos um atributo privado chamado mensagem. No construtor, receberemos uma string, que será atribuída ao atributo:
+
+package br.com.alura.screenmatch.excecao;
+
+public class ErroDeConversaoDeAnoException extends RuntimeException {
+    private String mensagem;
+
+    public ErroDeConversaoDeAnoException(String mensagem) {
+        this.mensagem = mensagem;
+    }
+}Copiar código
+Em seguida, vamos sobrescrever o método getMessage(). Ao digitar "getMessage", a IDE automaticamente criará o @Override que retorna o getMessage() da superclasse:
+
+package br.com.alura.screenmatch.excecao;
+
+public class ErroDeConversaoDeAnoException extends RuntimeException {
+    private String mensagem;
+
+    public ErroDeConversaoDeAnoException(String mensagem) {
+        this.mensagem = mensagem;
+    }
+
+    @Override
+    public String getMessage() {
+        return super.getMessage();
+    }
+}Copiar código
+No lugar de super.getMessage(), retornaremos o this.mensagem:
+
+package br.com.alura.screenmatch.excecao;
+
+public class ErroDeConversaoDeAnoException extends RuntimeException {
+    private String mensagem;
+
+    public ErroDeConversaoDeAnoException(String mensagem) {
+        this.mensagem = mensagem;
+    }
+
+    @Override
+    public String getMessage() {
+        return this.mensagem;
+    }
+}Copiar código
+Criamos nossa própria exceção, de modo que resolvemos o erro da classe Titulo. Agora, se a string do ano de lançamento tiver mais que quatro caracteres, lançaremos a exceção ErroDeConversaoDeAnoException.
+
+Paulo: Estamos usando duas palavras-chave — throw e new. Assim, lançamos a exceção e definimos seus detalhes. Por exemplo, há exceções que indicam a porta da conexão que tentamos abrir, o login que falhou por erro nas credenciais, qual arquivo não existe ou que não temos permissão de escrita. As exceções podem ser específicas ou genéricas, como "Problema com banco de dados" ou "Arquivo não encontrado."
+
+Trata-se de uma questão de modelagem de objetos que aprendemos com o tempo. Será que devemos criar a própria exceção ou posso usar um que já existe? Devo dar um catch nesse bloco grande ou é melhor ser mais específico?
+
+Jacqueline: Exatamente! Ao rodar o projeto e buscar por "divertidamente", ainda não obtemos a ErroDeConversaoDeAnoException, porque não colocamos o catch específico no arquivo principal. Em vez disso, foi executado aquele bloco catch genérico, com a mensagem "Aconteceu algo, não sei o que".
+
+Atualmente, temos três catch. Um para NumberFormatException, outro para IllegalArgumentException e, por fim, um genérico para qualquer outra exceção.
+
+Como comentamos, esse catch genérico não é recomendado, então vamos substituí-lo pelo ErroDeConversaoDeAnoException. Dentro do bloco, vamos imprimir a mensagem, com getMessage():
+
+// ...
+
+        //try {
+            Titulo meuTitulo = new Titulo(meuTituloOmdb);
+            System.out.println("Titulo já convertido");
+            System.out.println(meuTitulo);
+        } catch (NumberFormatException e) {
+            System.out.println("Aconteceu um erro: ");
+            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Algum erro de argumento na busca, verifique o endereço");
+        } catch (ErroDeConversaoDeAnoException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("O programa finalizou corretamente!");
+    }
+}Copiar código
+Ao executar o programa e buscar por "divertidamente", obtemos a seguinte mensagem no terminal:
+
+Não consegui converter o ano porque tem mais de 04 caracteres.
+
+O programa finalizou corretamente!
+
+Conseguimos fazer o catch com nossa exceção personalizada, que nós mesmos criamos.
+
+Paulo: Normalmente, o catch é mais interessante do que apenas um System.out.println(). Se a formatação do ano veio errado, poderíamos aplicar uma solução — por exemplo, definir como 0 ou buscar de outra base de dados.
+
+Usamos o catch quando temos uma forma de contornar o problema. Só imprimir uma mensagem não é muito útil. O catch pode ser muito mais elaborado para resolver, de fato, o problema.
+
+Jacqueline: Essa é uma ideia de modelagem do que podemos fazer para prevenir situações de conversão e de busca. É interessante pensar nisso antecipadamente como pessoas desenvolvedoras. Vamos nos aprofundar mais nesse assunto.
+
+Paulo: Além do desafio de organizar as classes. Por enquanto, está tudo dentro desse arquivo PrincipalComBusca.java. A conexão com HTTP, a conversão do JSON, o tratamento. Métodos com linhas demais ficam desorganizados e não respeitam princípios de orientação a objetos, com encapsulamento e responsabilidades bem definidas.
