@@ -1,0 +1,142 @@
+Transcrição
+Jacqueline: Resolvemos a questão da conversão de número. Vamos fazer alguns outros testes.
+
+Paulo: Quero relembrar, Jacque. A exceção tem uma sintaxe meio complicada. O bloco catch recebe um parâmetro e nós demos o nome de "e". Hoje em dia, há variações disso.
+
+Tem vezes em que usaremos vários catch, acho que é o que vamos estudar nesta aula. Tem vezes que encontraremos outras estruturas, como o throw. É importante nos familiarizarmos com esses conceitos. Quando eu aprendi, achei um pouco confuso, porque é bem diferente dos demais estruturas que aprendemos até agora, como if e for.
+
+O tratamento de exceções existe em outras linguagens modernas, mas pode aparecer de uma forma mais fácil de entender. No Java, ela é bem robusta, tem muitas opções.
+
+No arquivo PrincipalComBusca.java, encontramos o problema na linha em que tentamos converter o título. Ao se deparar com a exceção, o programa não não roudou as demais linhas do bloco try, ele foi direto para a execução do bloco catch, depois prosseguiu para o System.out.println() fora desse bloco normalmente.
+
+Jacquline: Exatamente. Quando encontrou o erro, ele ignorou as outras linhas do try e foi para o catch.
+
+Paulo: Faz sentido, né? Nós tentamos executar um bloco e, se ocorrer algo erro nesse processo, checamos se o catch resolve.
+
+Jacqueline: Sim! Então, faremos mais alguns testes na nossa aplicação. Ao rodar o programa e buscar pelo filme "top gun", obtemos um erro com o stack trace no terminal:
+
+Exception thread "main" java.lang.IllegalArgumentException Create breakpoint: Illegal character in query at index 30: https://www.omdbapi.com/?t=top gun&apikey=6585022c
+    at java.base/java.net.URI.create(URI.java:906)
+    at br.com.alura.screenmatch.principal.PrincipalComBusca.main(PrincipalComBusca.java:26)
+
+...
+Copiar código
+Analisando o stack trace, descobrimos que um erro foi encontrado na linha 26 do arquivo PrincipalComBusca.java, quando tentamos criar o endereço. Podemos clicar em "PrincipalComBusca:26" na terceira linha do stack trace para checar esse trecho no código.
+
+Esse erro ocorre porque passamos um caractere de espaço entre "top" e "gun".na URI:
+
+https://www.omdbapi.com/?t=top gun&apikey=6585022c
+Copiar código
+Paulo: Oficialmente, em endereços da web, não existem espaços. Quando digitamos o caractere de espaço, o navegador troca por %20. Ele faz um encoding para adapta e obter uma string sem caracteres especiais, como espaço, acentos, cedilha, entre outros. Então, o erro ocorreu porque temos um caractere inválido.
+
+Jacqueline: Inclusive, a posição está especificada. A posição 30 (index 30), que corresponde ao espaço. Em breve, vamos tratar esse problema, para podermos buscar filmes cujo nome tem mais de uma palavra.
+
+Antes disso, faremos uma alteração no código. Em vez de abrir o bloco try logo antes de converter o título, vamos abri-lo antes de criar o HttpClient. Para formatar a indentação, usaremos o atalho "Ctrl + Alt + I":
+
+// ...
+
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(endereco))
+                .build();
+            HttpResponse<String> response = client
+                .send(request, HttpResponse.BodyHandlers.ofString());
+            String json = response.body();
+            System.out.println(json);
+
+            Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                .create();
+
+            TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
+            System.out.println(meuTituloOmdb);
+            //try {
+            Titulo meuTitulo = new Titulo(meuTituloOmdb);
+            System.out.println("Titulo já convertido");
+            System.out.println(meuTitulo);
+        } catch (NumberFormatException e) {
+            System.out.println("Aconteceu um erro: ");
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("O programa finalizou corretamente!");
+    }
+}
+Copiar código
+Contudo, ao rodar o programa e buscar por "top gun", nenhuma exceção foi capturada. Continuamos obtendo o mesmo erro no terminal, com o stack trace em vermelho.
+
+Na aula anterior, tínhamos um NumberFormatException. Dessa vez, ocorreu um IllegarArgumentException, é outra classe de exceção! Então, vamos colocar outro catch no código, para capturar esse outro tipo e exibir outra mensagem:
+
+// ...
+
+
+            //try {
+            Titulo meuTitulo = new Titulo(meuTituloOmdb);
+            System.out.println("Titulo já convertido");
+            System.out.println(meuTitulo);
+        } catch (NumberFormatException e) {
+            System.out.println("Aconteceu um erro: ");
+            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+                System.out.println("Algum erro de argumento na busca, verifique o endereço");
+        }
+
+        System.out.println("O programa finalizou corretamente!");
+    }
+}
+Copiar código
+Paulo: Estamos colocando dois catch no mesmo bloco try. Poderíamos fazer um try com um catch, depois outro try com outro catch. Há várias formas de organizar, conforme o que considerarmos um trecho de bloco em que as linhas dependem umas das outras. Se uma linha específica não funcionar, não adianta executar o restante do bloco.
+
+Jacqueline: Exato! Por exemplo, se nem conseguimos buscar o filme, não adianta tentarmos prosseguir no código.
+
+Portanto, adicionamos outro catch. Ao executar o programa, vamos buscar por "top gun" e recebemos a seguinte mensagem no terminal:
+
+Algum erro de argumento na busca, verifique o endereço
+
+O programa finalizou corretamente.
+
+É muito comum encontrar mais de um catch para tratar exceções diferentes. Mas também temos a opção de inserir uma estrutura genérica, caso não saibamos que tipo de erro pode ocorrer. Basta usar a classe mãe Exception:
+
+// ...
+
+
+            //try {
+            Titulo meuTitulo = new Titulo(meuTituloOmdb);
+            System.out.println("Titulo já convertido");
+            System.out.println(meuTitulo);
+        } catch (NumberFormatException e) {
+            System.out.println("Aconteceu um erro: ");
+            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException e) {
+                System.out.println("Algum erro de argumento na busca, verifique o endereço");
+        } catch (Exception e) {
+            System.out.println("Aconteceu algo, não sei o que");
+        }
+
+        System.out.println("O programa finalizou corretamente!");
+    }
+}
+Copiar código
+Porém, não gostamos muito dessa abordagem, porque não sabemos que exceção será capturada, então não temos uma solução. Não faz muito sentido indicar que ocorreu um erro, que não sabemos o que é e finalizar o programa corretamente. Então, não é comum encontrar essa estrutura, mas essa seria uma forma de capturar exceções genericamente.
+
+Vamos consultar a página da classe Exception na documentação do Java. No início dessa página, na seção "Direct Known Subclasses", temos uma lista extensa de todas as classes filhas!
+
+Além disso, descobrimos que a classe Expcetion vem de outra classe, chamada Throwable. Vamos conferir a página da classe Throwable também. Nessa página, notaremos que existem duas subclasses: Error e Exception. Qual a diferença entre um erro e uma exceção?
+
+Exceções podem ser previstas, tratáveis e antecipadas. Já os erros não são tão simples. Ao acessar a página da classe Error, temos suas subclasses também. Um exemplo é quando não há memória o suficiente na máquina. Não há como tratar esse problema como se faz com uma exceção. Então, sempre que possível, tratamos as exceções.
+
+Paulo: Quando ocorre um erro na busca do Top Gun, apenas temos uma mensagem de que pesquisamos errado. No caso, estamos usando esses problemas apenas para efeito de didática, mas o correto seria converter para uma URL válida.
+
+Nós escolheremos onde colocar o bloco try/catch e como prosseguir quando encontramos um problema. Atualmente, nosso projeto apenas exibe uma mensagem no terminal, mas o ideal é que o haja uma solução no catch.
+
+Jacqueline: Vamos conferir a página da RuntimeException, que é uma exceção que ocorre em tempo de execução. No início da tela, temos a seguinte hierarquia:
+
+java.lang.Object
+    java.lang.Throwable
+        java.lang.Exception
+            java.lang.RuntimeException
+Copiar código
+Pode parecer confuso, mas são os assuntos que temos estudado: encapsulamento, polimorfismo, reaproveitamento de métodos. É nessa seção que encontramos a IllegalArgumentException com a qual nos deparamos há pouco. Acessando a página dela, notaremos que ela é classe mãe de outras exceções, ou seja, a hierarquia é enorme.
+
+Mas nós também podemos criar nossas próprias exceções! Faremos isso no próximo vídeo.
