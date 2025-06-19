@@ -1,0 +1,101 @@
+Transcrição
+Paulo: No console, temos uma mensagem de erro em vermelho com 6 linhas:
+
+Exception in thread "main" java.lang.NumberFormatException CreateBreakpoint: For input string "2018-"
+    at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+    at java.base/java.lang.Integer.parseInt(Integer.java:668)
+    at java.base/lang.Integer.valueOf(Integer.java:999)
+    at br.com.alura.screenmatch.modelos.Titulo.<init>(Titulo.java:22)
+    at br.com.alura.screenmatch.principal.PrinciapalComBusca.main(PrincipalComBusca.java:40)Copiar código
+Nós já nos deparamos com erros parecidos em outros cursos, mas nos contentamos em ler apenas a primeira linha até agora. Esse texto em vermelho é chamado de stack trace, o rastro da pilha de execução. Ele é muito importante em todas as linguagens de programação e, enquanto devs, devemos encará-lo sem medo.
+
+Em um primeiro momento, pode parecer assustador. Temos várias linhas de informações, com parênteses, pontos e termos desconhecidos como "thread" ou java.lang. Contudo, é necessário reconhecer esse erro, pois nessas linhas encontraremos praticamente tudo que precisamos para detectar o problema no código.
+
+É claro que podemos fazer o debug linha a linha no código até achar o erro, mas a stack trace nos permite encontrá-lo mais facilmente, mostrando a pilha de execução de baixo para cima.
+
+A linha que começa a gerar o problema é a linha 40 do arquivo PrincipalComBusca.java, como indicado na última linha do stack trace. Podemos clicar em "PrincipalComBusca.java:40" entre parênteses ao final da mensagem e a IDE automaticamente mostrará a seguinte linha:
+
+Titulo meuTitulo = new Titulo(meuTituloOmdb);Copiar código
+É o construtor que está gerando as chamadas em sequência que ocasionam o lançamento de uma exceção. Na penúltima linha do stack trace, descobrimos que o próximo elemento chamado é o <init>, que é como representamos a invocação do construtor. Ao clicar em "(Titulo.java:22)", a linha 22 de Titulo.java será exibida:
+
+this.anoDeLancamento = Integer.valueOf(meuTituloOmdb.year());Copiar código
+Nas demais linhas do stack trace, notamos que as chamadas da base interna do Java — na classe Integer, invocamos o método valueOf(), que chamou o método parseInt(), que chamou o forInputString() e assim a exceção foi lançada.
+
+As exceções no Java têm nome. No caso, temos NumverFormatException, uma exceção de formato de número. Além disso, temos até uma explicação de foi o input "2018-" que causou o erro, pois não pode ser convertido para número inteiro.
+
+O Java costuma agir defensivamente, parando a execução quando ocorre imprevistos, porém temos a opção de especificar o que deve ser feito em pontos em que uma exceção pode ser lançada. Nós tentamos executar um bloco de código e, caso haja uma exceção, vamos capturá-la.
+
+Trata-se do mecanismo try/catch (tentar/capturar), que usamos em situações em que o resultado pode ser diferente do esperado. Assim, definimos o que será feito se ocorrer um erro. Um exemplo seria mostrar uma mensagem mais amigável, já que nem sempre há uma solução simples.
+
+Jacqueline: Exato. Então, agora que sabemos qual a exceção lançada, faremos uma tentativa. Vamos desenvolver um bloco try/catch no arquivo PrincipalComBusca.java.
+
+Após imprimir meuTituloOmdb no console, tentaremos instanciar meuTitulo. Em seguida, vamos capturar a NumberFormatException. Nós daremos o nome "e" para essa exceção, assim podemos utilizar seus métodos e atributos. Dentro do catch, exibiremos o texto "Aconteceu um erro" e exibiremos a mensagem da exceção, com getMessage():
+
+// ...
+
+TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
+System.out.println(meuTituloOmdb);
+try {
+    Titulo meuTitulo = new Titulo(meuTituloOmdb);
+} catch (NumberFormatException e) {
+    System.out.println("Aconteceu um erro: ");
+    System.out.println(e.getMessage());
+}
+
+System.out.println("Titulo já convertido");
+System.out.println(meuTitulo);
+
+// ...Copiar código
+Com essa alteração, teremos um erro na variável meuTitulo logo abaixo do bloco try, pois há um problema de escopo.
+
+Paulo: Toda variável que declaramos dentro de um bloco (como um método ou um laço for) só vale dentro daquelas chaves, daquele escopo. Os atributos, por exemplo, valem para a classe inteira, porque foram declarados fora dos métodos. No caso, o meuTitulo é declarado dentro do try e só existe dentro do try. Nenhum elemento de fora consegue acessá-lo.
+
+O try e o catch são palavras-chave reservadas do Java. Inclusive, aparecem com uma cor diferenciada na IDE.
+
+Jacqueline: Vamos mover as duas linhas que estão após o catch para dentro do try. Afinal, não faz sentido tentar imprimir essa variável se nem conseguimos convertê-la.
+
+// ...
+
+TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
+System.out.println(meuTituloOmdb);
+try {
+    Titulo meuTitulo = new Titulo(meuTituloOmdb);
+    System.out.println("Titulo já convertido");
+    System.out.println(meuTitulo);
+} catch (NumberFormatException e) {
+    System.out.println("Aconteceu um erro: ");
+    System.out.println(e.getMessage());
+}
+
+// ...Copiar código
+Paulo: No final do arquivo, vamos imprimir uma mensagem apenas para validar que o programa foi finalizado corretamente.
+
+// ...
+
+        TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
+        System.out.println(meuTituloOmdb);
+        try {
+            Titulo meuTitulo = new Titulo(meuTituloOmdb);
+            System.out.println("Titulo já convertido");
+            System.out.println(meuTitulo);
+        } catch (NumberFormatException e) {
+            System.out.println("Aconteceu um erro: ");
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("O programa finalizou corretamente!");
+    }
+}Copiar código
+Jacqueline: Então, vamos rodar o programa e conferir se ele interrompe a execução quando encontra um valor inesperado. Novamente, informaremos o filme "divertidamente", que sabemos que tem um erro no ano de lançamento.
+
+Aconteceu um erro:
+
+For input string: "2018-"
+
+O programa finalizou corretamente!
+
+Dessa vez, temos o aviso de que houve um erro, temos a mensagem da exceção e o programa finalizou corretamente sem o stack trace.
+
+Paulo: O erro foi lançado, mas diferença é que especificamos como proceder nesse caso. Capturamos uma exceção e prosseguirmos na execução do restante do código, apenas não fizemos tudo que gostaríamos por causa desse erro. Antes, ao se deparar com uma exceção, o programa para a execução.
+
+Jacqueline: Essa é uma abordagem muito utilizada. Nós tentamos prever um erro e fazemos o tratamento para não encerrar a aplicação. A seguir, estudaremos mais sobre exceções.
