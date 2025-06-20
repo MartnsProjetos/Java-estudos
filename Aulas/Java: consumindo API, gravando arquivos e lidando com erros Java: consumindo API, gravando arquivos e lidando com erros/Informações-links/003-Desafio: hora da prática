@@ -1,0 +1,93 @@
+Aprendemos técnicas que fornecem uma maneira eficiente e legível de manipular e armazenar dados em Java de maneira estruturada, com ênfase na eficiência e clareza na representação dos dados no formato JSON.
+
+Agora, para praticar todos esses conceitos em Java, sugerimos uma lista de atividades (não obrigatórias). Vamos lá?
+
+Crie um programa em Java que escreva a seguinte mensagem em um arquivo chamado "arquivo.txt": "Conteúdo a ser gravado no arquivo." Utilize as classes do pacote java.io.
+Defina uma classe chamada Titulo com os atributos necessários. Em seguida, crie um programa que instancia um objeto Titulo, serializa esse objeto para JSON usando a biblioteca Gson e imprime o resultado.
+Modifique o programa anterior para que o JSON gerado seja formatado de maneira mais elegante. Utilize o método setPrettyPrinting para alcançar esse resultado.
+Defina uma classe chamada Veiculo com os atributos necessários. Em seguida, crie um programa que instancia um objeto Veiculo, serializa esse objeto para JSON usando a biblioteca Gson e imprime o resultado.
+Caso precise de ajuda, opções de solução das atividades estarão disponíveis na seção “Ver opinião do instrutor”.
+
+Ver opinião do instrutor
+Opinião do instrutor
+
+1)
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class WriteToFile {
+    public static void main(String[] args) {
+        String data = "Conteúdo a ser gravado no arquivo.";
+
+        try (FileWriter writer = new FileWriter("arquivo.txt")) {
+            writer.write(data);
+            System.out.println("Dados gravados com sucesso.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+Copiar código
+2)
+import com.google.gson.Gson;
+
+class Titulo {
+    // Defina a classe do objeto Titulo aqui
+
+    public static void main(String[] args) {
+        Titulo titulo = new Titulo(); 
+
+        Gson gson = new Gson();
+        String json = gson.toJson(titulo);
+
+        System.out.println(json);
+    }
+}
+Copiar código
+3)
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+class Titulo {
+    // Defina os atributos da classe aqui
+
+    public static void main(String[] args) {
+        Titulo titulo = new Titulo(); 
+
+        // Configuração do Gson com Pretty Printing
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(titulo);
+
+        System.out.println(json);
+    }
+}
+Copiar código
+4)
+import com.google.gson.Gson;
+
+class Veiculo {
+    private String marca;
+    private String modelo;
+    private int anoFabricacao;
+    private double preco;
+
+    // Construtores, getters e setters ocultos
+
+    public static void main(String[] args) {
+        // Crie uma instância do objeto Veiculo
+        Veiculo carro = new Veiculo();
+        carro.setMarca("Toyota");
+        carro.setModelo("Corolla");
+        carro.setAnoFabricacao(2022);
+        carro.setPreco(75000.00);
+
+        Gson gson = new Gson();
+        String jsonVeiculo = gson.toJson(carro);
+
+        // Imprima o JSON resultante
+        System.out.println("Objeto Veiculo serializado para JSON:");
+        System.out.println(jsonVeiculo);
+    }
+}
+
+Copiar código
