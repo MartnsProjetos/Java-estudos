@@ -1,0 +1,33 @@
+Considere o seguinte trecho de código:
+
+public class ExemploArquivo {
+  public static void main(String[] args) {
+    try {
+      FileWriter writer = new FileWriter("arquivo");
+
+      writer.write("Hello");
+      writer.close();
+      writer.write(" World!");
+      writer.close();
+    } catch (Exception e) {
+      System.out.println("Erro!");
+    }
+  }
+}Copiar código
+Escolha TODAS as alternativas CORRETAS que indicam o resultado ao executar o código anterior:
+
+Selecione 2 alternativas
+
+O arquivo será salvo contendo o texto "Hello".
+
+
+O arquivo será salvo contendo o texto "Hello World!".
+
+
+Será impresso no console o texto "Erro!".
+
+
+O arquivo será salvo, mas estará vazio.
+
+
+O arquivo não será salvo, pois ao instanciar o FileWriter faltou a extensão no nome do arquivo.
