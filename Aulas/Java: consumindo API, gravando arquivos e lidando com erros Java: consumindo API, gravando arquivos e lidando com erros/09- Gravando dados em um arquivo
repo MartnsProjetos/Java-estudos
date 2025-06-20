@@ -1,0 +1,88 @@
+Transcrição
+Jacqueline: Nós podemos escrever a nossa busca em um arquivo. Em muitas situações será necessário escrever ou ler arquivos, e existem diversas formas de fazer isso no Java.
+
+Paulo: O interessante sobre leitura e escrita de arquivo é que utilizamos bastante o java.net para conectar o HttpClient, classes mais voltadas para puxar informações. Usamos também a coleção java.util e a classe Scanner.
+
+Essa parte trabalha de maneira muito próxima à leitura de arquivos, do teclado que fizemos do Scanner, bem como dos bytes, se fôssemos ler arquivos de uma conexão HTTP.
+
+Nosso objetivo não é apenas ensinar como ler arquivo em Java, mas te fazer raciocinar sobre isso e entender que a leitura de escrita em arquivos obedece a uma hierarquia de classes, encapsulamentos, construtores, exceptions.
+
+Em alguns casos, há até mesmo interfaces em que isso está muito bem-desenhado, de modo que seja fácil mudar uma parte do "motor" sem precisar reaprender a "dirigir o carro".
+
+Essa é uma analogia interessante para a questão de encapsulamento: deve ser possível trocar os pneus do carro sem precisar alterar também o visor, a marcha, o acelerador, e o restante do sistema.
+
+Queremos evitar esse tipo de situação. Desde os primórdios, o Java foi pensado usando padrões e boas práticas, de modo que se for criado algum arquivo para ser lido, tudo se encaixa e conversa bem.
+
+Evidentemente, algumas bibliotecas foram mais e outras menos pensadas conforme os padrões estabelecidos.
+
+Talvez o principal norteador dessa aula, e talvez até desse curso, não seja aprender JSON. Obviamente, é importantíssimo aprendê-lo, mas queremos que você consiga criar esse raciocínio em cima de bibliotecas, e saiba como usar e estruturar.
+
+O objetivo é que, por meio de pesquisas no JavaDoc, você consiga entender o código que a Jacqueline passou e a dica do Paulo, e com isso, resolver determinado problema.
+
+O processo leva um tempo, mas esse é o nosso objetivo!
+
+Gravando dados em um arquivo
+Jacqueline: Após converter o título no arquivo PrincipalComBusca.java, podemos escrever a nossa busca em um arquivo .txt. Vamos utilizar a classe FileWriter do pacote java.io para escrever o arquivo.
+
+Vamos declarar a variável escrita e instanciar uma nova classe FileWriter. Nesse caso, já podemos criar a classe com o nome do arquivo. No construtor com string FileWriter(), vamos solicitar a criação de um arquivo chamado filmes.txt, por exemplo.
+
+// Código suprimido.
+
+                TituloOmdb meuTituloOmdb = gson.fromJson(json, TituloOmdb.class);
+                System.out.println(meuTituloOmdb);
+                //  try {
+                Titulo meuTitulo = new Titulo(meuTituloOmdb);
+                System.out.println("Titulo já convertido");
+                System.out.println(meuTitulo);
+
+                FileWriter escrita = new FileWriter("filmes.txt");
+            } catch (NumberFormatException e) {
+                System.out.println("Aconteceu um erro: ");
+                System.out.println(e.getMessage());
+
+// Código suprimido.
+Copiar código
+Em seguida, vamos pedir para escrever utilizando o método write(). Queremos escrever o que está na busca, nesse caso, meuTitulo, então vamos declará-lo com o método toString(). Dessa forma, a representação textual será escrita.
+
+// Código suprimido.
+
+                FileWriter escrita = new FileWriter("filmes.txt");
+                escrita.write(meuTitulo.toString());
+            } catch (NumberFormatException e) {
+                System.out.println("Aconteceu um erro: ");
+                System.out.println(e.getMessage());
+
+// Código suprimido.
+Copiar código
+Para finalizar, vamos utilizar o método close() para indicar que terminamos de escrever o arquivo.
+
+// Código suprimido.
+
+                FileWriter escrita = new FileWriter("filmes.txt");
+                escrita.write(meuTitulo.toString());
+                escrita.close();
+            } catch (NumberFormatException e) {
+                System.out.println("Aconteceu um erro: ");
+                System.out.println(e.getMessage());
+
+// Código suprimido.
+Copiar código
+Feito isso, vamos executar o código para conferir se, ao buscar um filme, o texto será escrito no arquivo filmes.txt. Vamos buscar, por exemplo, pelo filme "dogville" na execução do arquivo PrincipalComBusca.java.
+
+O texto será buscado, convertido, e o processo será finalizado corretamente, conforme indicado em "Run".
+
+Agora vamos abrir a aba de projetos ("Project"). Note que foi gerado um arquivo intitulado filmes.txt, localizado em "screenmatch > src". Nesse arquivo, já foi impresso exatamente o que definimos no método toString().
+
+filmex.txt:
+
+nome='Dogville', anoDeLancamento=2003, duração17
+Copiar código
+Paulo: Acredito que podemos aprimorar esse exercício.
+
+Em vez de jogar o texto dessa maneira, poderíamos jogá-lo como .json. Ou melhor ainda: colocar vários filmes. Em vez de um arquivo .txt, teríamos um arquivo filmes.json repleto de filmes escolhidos, cujos dados seriam coletados do Omdb.
+
+Esse é um bom desafio, envolvendo tanto laços quanto escrita em arquivo. Além disso, o JSON que por enquanto utilizamos apenas para converter de texto para objeto, agora pode ser utilizado também para converter de objeto para texto.
+
+Podemos usar também a classe ArrayList do pacote java.util, que costuma ser muito utilizada. Então há bastante coisa acontecendo!
+
+Jacqueline: Exatamente. Vamos fazer isso? Nos vemos no próximo vídeo!
