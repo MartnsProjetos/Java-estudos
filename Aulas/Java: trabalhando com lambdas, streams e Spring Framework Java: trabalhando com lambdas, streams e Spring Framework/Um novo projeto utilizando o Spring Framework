@@ -1,0 +1,125 @@
+Transcrição
+Jacqueline: Na formação de Java com Orientação a Objetos aprendemos fundamentos importantes, como buscar dados de uma API OMDb e trabalhamos essas informações e com coleções
+
+Agora, nosso objetivo é continuar esse desenvolvimento, porém trabalhando com dados mais complexos.
+
+Na formação, por exemplo, usamos os dados do filme Top Gun. Para as séries funciona da mesma forma, a diferença é que será mais trabalhoso.
+
+Iasmin: Verdade, Jacque. Isso porque, além das informações gerais da série, também precisaremos trabalhar com as informações das temporadas e episódios.
+
+Jacqueline: Ao escolhermos uma série, como Girlmore girls, e indicarmos na url a temporada, a aplicação já traz uma lista de episódios.
+
+Durante o curso, trabalharemos com séries que possuem listas de temporadas e listas de episódios. Assim, vamos aumentando a complexidade do conteúdo.
+
+O diferencial é que não criaremos o projeto com o Build System do IntelliJ. Usaremos frameworks, nesse caso o Spring e o Maven.
+
+Criando o projeto com Spring
+Iasmin: Como sabemos que chegaremos em um nível mais avançado, começamos com configurações de mesmo nível.
+
+Jacqueline: Exatamente! O Spring é um framework muito utilizado por pessoas desenvolvedoras de Java no mercado.
+
+Um framework é um conjunto de bibliotecas, ferramentas e convenções que facilitam o trabalho de desenvolvimento.
+
+Isso porque abstraem acesso a banco de dados, tratamento de requisições HTTP, validação de dados, tudo para que possamos focar melhor no que é referente a regra de negócio.
+
+Ao longo do curso perceberemos isso na prática. Começaremos com um projeto pequeno e em sequência acrescentaremos novos módulos do Spring para aumentar a complexidade.
+
+Posteriormente, podemos pegar essa aplicação, que a princípio será de linha de comando, e transformá-la em aplicação web.
+
+Isso se torna mais fácil quando já iniciamos com o framework, porque o Spring não é apenas para fazer API REST. Podemos fazer arquitetura de microservices, aplicação serverless, Batch. Há muito que se pode fazer com o Spring.
+
+Iasmin: Começaremos fazendo um Spring sem web, é isso Jacque?
+
+Jacqueline: Sim, essa é uma novidade. Todos conhecem o Spring web, aprenderemos agora o Spring sem web.
+
+Para isso, no navegador, acessamos o site de inicialização Spring Initializr para criação de projetos Spring Boot. Nessa página, encontramos as configurações necessárias para iniciar o projeto de forma rápida.
+
+Na página inicial, é preciso realizar algumas configurações para iniciar o projeto. Primeiro, escolhemos o tipo de gerenciador de dependências. Nesse caso, usaremos o Maven.
+
+Em seguida, escolhemos a linguagem Java e escolhemos sempre a última versão.
+
+Na época em que o vídeo foi gravado a última versão disponível era a 3.1.1.
+
+Logo abaixo, encontramos os campos de preenchimento referentes aos metadados, ou seja, as informações do projeto. Preenchemos da seguinte forma:
+
+Group: br.com.alura
+
+Artifact: screenmatch
+
+Name: screenmatch
+
+Description: Primeiro projeto Spring sem web
+
+Package name: br.com.alura.screenmatch
+
+Packaging: Jar
+
+Java: 17
+
+Na lateral superior direita, encontramos o botão "Add Dependencies", mas não vamos adicionar nenhuma dependência agora, somente quando for necessário.
+
+Após preencher essas informações, clicamos no botão "Generate", no canto inferior esquerdo. Em seguida, o Spring gera um arquivo compactado e realiza o download.
+
+No nosso caso, foi gerado um arquivo chamado screenmatch.zip. O próximo passo é recortar o arquivo apertando "Ctrl + X". Em seguida, colaremos em uma pasta do computador chamada "Curso".
+
+Em seguida, clicamos com o botão direito na pasta e depois em "Extrair Tudo". Feito isso, teremos a pasta com a estrutura de um projeto Maven.
+
+Abrimos o IntelliJ e na barra de menu superior, clicamos em "File > Open" e selecionamos o arquivo baixado.
+
+A princípio, esse projeto tem uma estrutura de pastas Source, Main, Java. Além disso, também encontramos a pasta principal com o nome completo da aplicação, uma parte de testes e o arquivo Pom.xml.
+
+Vale lembrar que disponibilizaremos todo esse material. Com o tempo, tudo se tornará mais simples e familiar, pois o trabalho com Spring será semelhante.
+
+ScreenmatchApplication.java
+
+Observe que o SreenmatchApplication possui uma classe principal que tem o Public Static Void Main. Esse é o ponto de entrada da nossa aplicação. Ele tem um Spring Application.run que executará algo.
+
+    public static void main(String[] args) {
+        SpringApplication.run(ScreenmatchApplication.class, args);
+    }
+Copiar código
+Podemos executar essa aplicação de várias formas, como clicando na seta verde ao lado esquerdo de Public Static Void Main e na barra de menu superior.
+
+Optamos pela primeira opção, então clicamos no ícone de play na linha 9 e depois em "Run" para descobrirmos o que acontece ao rodar um projeto spring do zero.
+
+No terminal, notamos que é exibido o Spring Boot, a versão, um log informando que a aplicação foi iniciada e o tempo de 7 segundos.
+
+Como não temos nada implementado, tivemos como retorno uma mensagem de "process finish with code zero", ou seja, terminou com o código, isso indica que está tudo certo. Não há nada para ser feito, mas o projeto já está no ar, pronto para ser trabalhado.
+
+Dissemos anteriormente que faremos uma aplicação de linha de comando. Para isso, na classe principal public class ScreenmatchApplication, precisamos informar que ela implementa a interface de linha de comando.
+
+Portanto, escrevemos implements CommandLineRunner. Essa interface permitirá realizar algumas chamadas no método principal, semelhante ao que fazemos na formação de Orientação a Objetos, na qual o método main realizava várias ações.
+
+Quando uma interface é implementada, temos um contrato. Portanto, preciso implementar os métodos ainda não implementados, que nesse caso, é o run.
+
+Quando o método run é implementado, o que o código indica que quando o public static void main chamar o SpringApplication.run, ele invocará esse método run que estamos implementando.
+
+**Iasmin: ** Esse método run vai atuar como um método main, pois faremos tudo que seria feito em um main comum, como na formação anterior.
+
+Jacqueline: Exatamente! Então, como primeiro passo, normalmente passaríamos um "Hello, World!". Nesse caso, faremos isso, porém faremos um System.out.println informando Primeiro projeto Spring sem web, este log será exibido no terminal.
+
+@SpringBootApplication
+public class ScreenmatchApplication implements CommandLineRunner {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ScreenmatchApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("Primeiro projeto Spring sem web.");
+    }
+}
+Copiar código
+Executamos o código para verificar se está tudo funcionando corretamente. Repare que na lateral inferior direita é exibido no terminal "Primeiro projeto Spring sem web.".
+
+Assim damos inicio ao nosso primeiro projeto Spring sem web!
+
+Iasmin: Isso mesmo, Jacque! É interessante lembrar que no Spring Initializer, nós apenas clicamos em alguns botões e já tivemos um projeto bastante configurado, praticamente pronto para rodar.
+
+Em seguida, para fazer o "Hello, World!", foi apenas necessário sobrescrever o método run. É bem simples e tranquilo usar esses frameworks.
+
+Jacqueline: O passo seguinte é começar realmente a modelar a aplicação e implementar a proposta de consumir séries, trabalhar com listas e coleções de temporadas, episódios e aumentar o escopo do nosso projeto.
+
+Iasmin: Até lá!
+
