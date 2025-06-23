@@ -1,0 +1,116 @@
+Transcrição
+Jacqueline: Iniciamos o projeto Spring. No entanto, precisamos consumir a API desejada para buscar os dados retornados em um formato JSON, similar ao que realizamos na formação anterior, mas com algumas particularidades.
+
+Criando o pacote de serviços
+Jacqueline: Como vamos consumir a API e trazer os dados, ou seja, um serviço, criaremos então um pacote de serviços chamado service.
+
+Para isso, no arquivo br.com.alura.screenmatch, clicamos com o botão direito e depois em "New > Package". Nomeamos de service.
+
+Feito isso, criaremos uma classe que poderá consumir essa API e outras. Em service, clicamos com o botão direito e depois em "New > Java Class". Nomeamos de ConsumoApi.
+
+Agora, precisamos usar métodos para fazer requisição e resposta.
+
+Iasmin: Isso mesmo, Jacque! Da mesma forma que acessamos o navegador e digitamos a url, que é a requisição, agora precisamos fazer uma requisição e pegar a resposta, ou seja, o response, para trabalhá-lo.
+
+Jacqueline: Então, na classe ConsumoApi, criamos um método público utilizando public String e o nomeamos de obterDados.
+
+Para obter esses dados, precisamos de um endereço. Sendo assim, nos parênteses passamos o parâmetro String endereco.
+
+Como este código já foi mostrado anteriormente, disponibilizaremos sua versão completa nos materiais do curso.
+
+Para otimizar tempo, copiamos e colamos o código abaixo:
+
+package br.com.alura.screenmatch.service;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class ConsumoApi {
+
+    public String obterDados(String endereco) {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(endereco))
+                .build();
+        HttpResponse<String> response = null;
+        try {
+            response = client
+                    .send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        String json = response.body();
+        return json;
+    }
+}
+Copiar código
+Jacqueline: Temos um HttpClient, que pode ser considerado o cliente e o HttpRequest, onde criamos uma URI para especificar para qual endereço faremos a requisição.
+
+Depois, tentamos receber uma resposta. Para isso, o cliente enviará a requisição e receberemos essa resposta. Assim, o retorno do método devolve a String json, que é o corpo da resposta, o response.body().
+
+Também temos os trycatch, o tratamento das exceções, porque pode ocorrer algum erro ao passar um endereço errado, por exemplo.
+
+Consumindo dados de séries
+Jacqueline: Agora, consumiremos a API. Para isso, usaremos a classe principal.
+
+Iasmin: A intenção será acessar o método run e chamar essa classe ConsumoAPI, certo, Jacque? Isso acaba tornando nosso código muito mais modularizado, de fácil manutenção e mais legível também.
+
+Jacqueline: Exatamente. Então, começamos apagando a linha abaixo de public void run(). No lugar, escrevemosConsumoAPI consumoApi = new ConsumoApi(). Instanciamos a classe.
+
+Feito isso, na linha abaixo, criamos uma variável com var json, que já é conhecido por nossa inferência de tipo.
+
+Iasmin: Inclusive, como temos vários ConsumoApi repetidos, podemos utilizar o var na linha de código acima, né?
+
+Jacqueline: Verdade, Iasmin! Então, na linha acima, apagamos o ConsumoApi e passamos var. Assim a ferramenta reconhece que pelo new estamos instanciando uma variável do tipo consumoApi.
+
+Feito isso, voltamos para o json, que será igual à consumoApi.obterDados(). Assim, será devolvido uma string que estamos passando na variável json.
+
+Nos parênteses, precisamos passar o endereço da série que queremos buscar.
+
+https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c
+Copiar código
+Lembrando que, para se cadastrar no OMDB, é importante ter a sua própria API Key. Estamos utilizando uma chave gratuita que expira ao consultar muitos dados.
+
+Copiamos esse endereço e passamos nos parênteses. Em sequência, queremos imprimir os dados adquiridos pelo json, então escrevemos System.out.println(json).
+
+//Código omitido
+
+@Override
+public void run(String... args) throws Exception {
+    var consumoApi = new ConsumoApi();
+    var json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c");
+    System.out.println(json);
+
+}
+Copiar código
+Agora, verificaremos se o código trará os dados do Gilmore Girls para o meu terminal. Para isso executamos a aplicação, dessa vez, clicaremos no botão indicado pelo ícone de play localizado na barra de menu superior direita.
+
+Analisando o terminal encontramos todas as informações referentes a primeira temporada, como os episódios, ano de lançamento, avaliação.
+
+Comentamos anteriormente que ter uma classe de serviço específica é bacana. Isso porque, agora, por exemplo, podemos pegar o json e chamar para consumir dados de um lugar completamente aleatório.
+
+Vamos testar! No fim do código passamos json igual à consupoApi.obterDados() e passar como parâmetro uma API que devolverá uma imagem de café. Para isso, colamos a url referente ao café e na linha abaixo escrevemos System.out.println(json).
+
+    @Override
+    public void run(String... args) throws Exception {
+        var consumoApi = new ConsumoApi();
+        var json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c");
+//		System.out.println(json);
+//		json = consumoApi.obterDados("https://coffee.alexflipnote.dev/random.json");
+        System.out.println(json);
+}
+}
+Copiar código
+Ao executar o código, visualizamos no terminal tanto as informações da série quanto a imagem do café, devolvida por um json. Ao clicar na imagem, ela abre no navegador.
+
+O legal de usar as boas práticas e ter uma classe específica para consumir uma API, é que não importa o tipo da API. A classe estará pronta, portanto, independente do tipo de API ela conseguirá realizar o mesmo trabalho, ou seja, buscar uma informação e devolver o json.
+
+É bem interessante pensarmos nesse tipo de boa prática de separar responsabilidades, deixá-la consumir a API em uma classe separada.
+
+No vídeo seguinte continuaremos trazendo melhorias para a aplicação. Até lá!
