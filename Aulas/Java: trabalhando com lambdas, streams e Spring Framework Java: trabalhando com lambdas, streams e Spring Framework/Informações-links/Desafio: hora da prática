@@ -1,0 +1,210 @@
+Vimos diversos conceitos relacionados às práticas de programação do dia a dia: criar um projeto com Spring, consumir APIs, trabalhar na serialização e desserialização de dados, utilizar dependências em um projeto e utilizar Generics.
+
+Para fixar esses conteúdos, propomos uma lista de exercícios para você relembrar as informações mais importantes e colocar tudo em prática. Vamos lá?
+
+1 - Crie um novo projeto com Spring Boot, usando o site start.spring.io. Esse projeto será o contador, e funcionará na linha de comando. Você deve pedir para um usuário digitar um número e depois imprimir na tela uma contagem de 1 até o número digitado pelo usuário.
+
+Por exemplo, se o usuário digitar 5, deve aparecer no terminal 1 2 3 4 5 .
+
+2 - Suponha que decidimos mudar de ideia e utilizar novamente a biblioteca Gson no nosso projeto ScreenMatch. Agora que estamos trabalhando com o Maven, os passos para adicionar a biblioteca são diferentes do que já foi feito antes. Explique quais passos você iria realizar nesse caso.
+
+3 - Agora iremos trabalhar com serialização e desserialização. Para isso, você pode reaproveitar seu projeto do exercício 1. Adicione a dependência do Jackson ao seu pom.xml, pois iremos utilizá-la bastante nos próximos exercícios. Também crie uma classe Tarefa, com os seguintes atributos:
+
+public class Tarefa {
+    private String descricao;
+    private boolean concluida;
+    private String pessoaResponsavel;
+
+    // Construtores, getters e toString
+}
+Copiar código
+Para que o Jackson funcione corretamente, é importante que sua classe tenha todos os getters e um construtor padrão. Também é legal criar um método toString().
+
+4 - Lembre-se: serializar um objeto é conseguir representá-lo de alguma forma em um arquivo. Aqui, você deve instanciar um objeto do tipo Tarefa e fazer com que o conteúdo do objeto vá para o arquivo tarefa.json. Para isso, utilize o Jackson para te auxiliar na tarefa. Observação: para criar novos arquivos, podemos utilizar new File("tarefa.json").
+
+5 - Agora, você fará o oposto da atividade anterior: a desserialização de um arquivo, que é ler os valores de um arquivo específico e transformar em um objeto. Leia o conteúdo do arquivo tarefa.json, produzido no exercício anterior, e o transforme em um objeto do tipo Tarefa. Exiba o conteúdo do objeto na tela.
+
+6 - Vamos criar objetos genéricos. Imagine que você trabalha em um site que oferece várias coisas: venda de produtos, serviços de instalação desses produtos e assinatura de alguns itens. Todas essas coisas têm algo em comum: podem ser avaliadas pelos consumidores. Crie uma classe genérica de Avaliação, de modo que possamos ter, por exemplo: Avaliacao<Servico>, Avaliacao<Produto> e Avaliacao<Assinatura>. Essa classe deve ter o item genérico de avaliação, a nota e um comentário sobre a nota.
+
+Tendo criado a classe genérica, você também pode criar um método para calcular as médias das notas recebidas, independente do tipo de item avaliado.
+
+Ver opinião do instrutor
+Opinião do instrutor
+
+1 - Depois de criar seu projeto, a classe ContadorApplication ficará assim:
+
+@SpringBootApplication
+public class ContadorApplication implements CommandLineRunner {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ContadorApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("Bem vindo ao contador!");
+        System.out.println("----------------------");
+        System.out.println("Digite um número para contagem: ");
+        Scanner entrada = new Scanner(System.in);
+        var numero = entrada.nextInt();
+
+        for(int i = 1; i<=numero; i++){
+            System.out.print(i + " ");
+        }
+    }
+}
+
+Copiar código
+2 - Ao invés de baixarmos a biblioteca manualmente, podemos simplesmente copiar o código da dependência e colar no nosso pom.xml. No site Maven Repository , encontramos o código da versão mais atual do GSON:
+
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.11.0</version>
+</dependency>
+Copiar código
+Assim, no lugar da dependência do Jackson utilizamos a dependência do GSON.
+
+3 - Adicione as seguintes dependências ao pom.xml para configurar o Jackson na sua aplicação e recarregue o Maven:
+
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.15.2</version>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.datatype</groupId>
+    <artifactId>jackson-datatype-jsr310</artifactId>
+    <version>2.15.2</version>
+</dependency>
+Copiar código
+Também cria a classe Tarefa, que fica assim:
+
+public class Tarefa {
+   private String descricao;
+   private boolean concluida;
+   private String pessoaResponsavel;
+
+
+   public Tarefa(){}
+
+
+   public String getDescricao() {
+       return descricao;
+   }
+
+
+   public boolean isConcluida() {
+       return concluida;
+   }
+
+
+   public String getPessoaResponsavel() {
+       return pessoaResponsavel;
+   }
+
+
+   public Tarefa(String descricao, boolean concluida, String pessoaResponsavel) {
+       this.descricao = descricao;
+       this.concluida = concluida;
+       this.pessoaResponsavel = pessoaResponsavel;
+   }
+
+
+   @Override
+   public String toString() {
+       return "Tarefa{" +
+               "descricao='" + descricao + '\'' +
+               ", concluida=" + concluida +
+               ", pessoaResponsavel='" + pessoaResponsavel + '\'' +
+               '}';
+   }
+}
+Copiar código
+4 - Para serializar o objeto Tarefa, você pode instanciá-lo no método run() e usar a classe ObjectMapper para ler os dados e adicioná-los ao arquivo tarefa.json:
+
+@Override
+   public void run(String... args) throws Exception {
+
+
+      Tarefa tarefa = new Tarefa("assistir aula 1", false, "João");
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.writeValue(new File("tarefa.json"), tarefa);
+      System.out.println("Dados salvos no arquivo tarefa.json!");
+
+
+   }
+Copiar código
+5 - Agora, para desserializar os dados, você pode usar o ObjectMapper também, de forma bem parecida com a feita anteriormente:
+
+@Override
+   public void run(String... args) throws Exception {
+      ObjectMapper objectMapper = new ObjectMapper();
+      Tarefa tarefaLida = objectMapper.readValue(new File("tarefa.json"), Tarefa.class);
+      System.out.println("Tarefa lida do JSON:");
+      System.out.println(tarefaLida);
+
+
+   }
+Copiar código
+6 - Uma implementação possível para a classe Avaliacao é:
+
+public class Avaliacao<T> {
+    private T item;
+    private double nota;
+    private String comentario;
+
+    public Avaliacao(T item, double nota, String comentario) {
+        if (nota < 0 || nota > 10) {
+            throw new IllegalArgumentException("A nota deve estar entre 0 e 10.");
+        }
+        this.item = item;
+        this.nota = nota;
+        this.comentario = comentario;
+    }
+
+    public T getItem() {
+        return item;
+    }
+
+    public double getNota() {
+        return nota;
+    }
+
+    public void setNota(double nota) {
+        if (nota < 0 || nota > 10) {
+            throw new IllegalArgumentException("A nota deve estar entre 0 e 10.");
+        }
+        this.nota = nota;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public static <T> double calcularMediaNotas(List<Avaliacao<T>> avaliacoes) {
+        if (avaliacoes.isEmpty()) {
+            throw new IllegalArgumentException("A lista de avaliações está vazia.");
+        }
+        double soma = 0;
+        for (Avaliacao<T> avaliacao : avaliacoes) {
+            soma += avaliacao.getNota();
+        }
+        return soma / avaliacoes.size();
+    }
+
+    @Override
+    public String toString() {
+        return "Avaliacao{" +
+               "item=" + item +
+               ", nota=" + nota +
+               ", comentario='" + comentario + '\'' +
+               '}';
+    }
+}
+Copiar código
+Repare o uso do “tipo” T, que mostra que estamos trabalhando com avaliações genéricas.
