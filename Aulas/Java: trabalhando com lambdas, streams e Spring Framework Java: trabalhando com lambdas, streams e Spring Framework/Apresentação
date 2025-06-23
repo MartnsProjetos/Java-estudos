@@ -1,0 +1,32 @@
+Transcrição
+Jacqueline: Olá! Boas-vindas ao curso de Spring Boot API. Sou a Jacqueline Oliveira, engenheira de software e instrutora na Alura.
+
+Audiodescrição: Jacqueline é uma mulher de pele clara, cabelos longos e loiros e olhos escuros. Está com uma camiseta na cor azul-marinho. Ao fundo, uma parede clara com iluminação azul. À esquerda, uma prateleira com livros.
+
+Iasmin: Oi, tudo bem? Eu sou a Iasmin Araújo, Scuba Team na Escola de Programação e também te desejo boas-vindas a mais um curso de Java!
+
+Audiodescrição: Iasmin é uma mulher de pele clara, olhos verdes e cabelos longos na cor castanho-escuro. Está com uma camiseta preta, fone de ouvido branco e em uma cadeira gamer preta e branca. Ao fundo, uma parede lisa com a iluminação azul.
+
+Pré-requisitos
+Jacqueline: Para esse curso, é muito importante que você já tenha concluído a formação Java com Orientação a Objetos.
+
+Isso porque, o objetivo desse curso é trazer aprofundamento em novos recursos da linguagem, essenciais no dia a dia da pessoa back-end.
+
+O que você irá aprender
+Iasmin: Nesse curso, criaremos um projeto utilizando Spring Boot.
+
+Adicionaremos dependências no projeto, como o Jackson. E faremos o gerenciamento dessas dependências utilizando o Maven.
+
+Vamos explorar as funções lambda e utilizar a API de streams do Java para fazer operações com coleções e manipular os dados de diversas formas.
+
+Além disso, vamos relembrar alguns conceitos importantes, como interface, generics, API de datas e outras classes muito importantes no Java.
+
+Jacqueline: Para isso, trabalharemos novamente com a Screen Match, uma aplicação de streaming de filmes e séries.
+
+Atuaremos em uma aplicação linha de comando com foco nas séries. Assim, poderemos desenvolver melhor as coleções, considerando que uma série pode ter várias temporadas com vários episódios.
+
+Iasmin: Por fim, teremos desafios no fim do curso para colocar em prática todo o aprendizado adquirido nas aulas.
+
+Jacqueline: Além dos vídeos, atividades e desafios, você também tem acesso a outros recursos na plataforma, como o podcast, o Fórum e o canal no Discord.
+
+Estamos ansiosas para começar. Vamos lá?
