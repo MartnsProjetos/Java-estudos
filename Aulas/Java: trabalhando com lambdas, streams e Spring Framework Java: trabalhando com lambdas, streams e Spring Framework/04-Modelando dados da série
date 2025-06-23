@@ -1,0 +1,206 @@
+Transcrição
+Jacqueline: Mapeamos o título, o total de temporadas e as avaliações, agora precisaremos converter.
+
+Para isso, no pacote service criamos a classe chamada ConverteDados.
+
+Iasmin: Seguir as boas práticas permite criarmos um novo serviço para converter dados e ter flexibilidade. Se quisermos converter outros tipos de dados, poderemos fazer isso utilizando esse serviço.
+
+Jacqueline: Exatamente! Como você mencionou anteriormente, no Json usamos o fromJson e toJson. Para fazer isso no Jackson, precisamos de uma classe chamada ObjectMapper.
+
+ConverteDados.java
+
+Então, na classe converte-dados declaramos ObjectMapper mapper igual à new ObjectMapper().
+
+Feito isso, na linha abaixo, passamos um método chamado obterDados(). Nos parênteses, passamos String json para ser devolvido o tipo de classe que queremos, nesse caso, o dados-serie. Então, no início dessa linha passamos public DadosSerie.
+
+public class ConverteDados {
+        private ObjectMapper mapper = new ObjectMapper();
+        
+        public DadosSerie obterDados(String json)
+        }
+Copiar código
+Iasmin: Porém esse código não está seguindo as boas práticas. Se fossemos converter uma nova classe como DadosEpisodio ou DadosAtor, por exemplo, teríamos que criar outro método parecido com este somente para obter dados.
+
+Podemos deixar esse código um pouco mais genérico, você não acha?
+
+Jacqueline: Perfeito! Então, excluímos o método public DadosSerie. Para relembrar um pouco a formação, criaremos uma interface com um cabeçalho de um método ObterDados, para ficar bem genérico.
+
+public class ConverteDados {
+        private ObjectMapper mapper = new ObjectMapper();
+        
+        }
+Copiar código
+No pacote service, clicamos com o botão direito e depois em "New > Java Classe > Interface". Nomeamos de IConverteDados.
+
+A nomenclatura pode variar, não há uma regra padrão. Muitas pessoas utilizam o "I" quando se trata de uma interface.
+
+IConverteDados.java
+
+Feito isso, em public interface IConverteDados, adicionamos chaves e declaramos o método ObterDados(String json). Como não sabemos qual será o retorno, no início dessa mesma linha escrevemos <T> T.
+
+Usamos o <T> T justamente quado não sabemos qual entidade será devolvida.
+
+Podemos melhorar esse código. Quando chamar o ObterDados podemos informar qual tipo de retorno queremos. Então, dentro dos parênteses de obterDados() adicionamos o segundo parâmetro Class<T> class.
+
+package br.com.alura.screenmatch.service;
+
+public interface IConverteDados {
+    <T> T  obterDados(String json, Class<T> classe);
+}
+Copiar código
+Iasmin: Como não especificamos o tipo no início do cabeçalho do método, em algum momento teremos que indicar o tipo que queremos. Por isso passaremos essa classe.
+
+Jacqueline: Exato, Iasmin! Assim, temos o cabeçalho do iConvertDados pronto. Ele receberá um json, que é uma string, uma classe e no conversor de dados tentaremos transformá-lo na classe que foi indicada. Para isso, acessamos novamente o ConverteDados.java.
+
+ConverteDados.java
+
+Na linha 5, após a ConverteDados, escrevemos implements IConverteDados.
+
+public class ConverteDados implements IConverteDados {
+        private ObjectMapper mapper = new ObjectMapper();
+        
+        }
+Copiar código
+Feito isso, a ferramenta mostra o ícone de uma lâmpada vermelha. Clicamos nela para implementar o método.
+
+Feito isso é gerado um override no qual precisamos identificar o que será devolvido.
+
+public class ConverteDados implements IConverteDados {
+        private ObjectMapper mapper = new ObjectMapper();
+        
+        @Override 
+        public <T> T obterDados(String json, Class<T> classe) { 
+                return mapper }
+        }
+}
+Copiar código
+Iasmin: Nesse caso devolveremos uma instância genérica também. Para isso será preciso ler o valor do json e transformá-lo nessa estrutura genérica.
+
+Jacqueline: Então, após return passamos mapper que é o objeto do Jackson que faz a conversão, e pediremos para realizar a leitura do json e tente transformar na classe que a pessoa passou. Então escrevemos .readValue(json, classe).
+
+Assim conseguimos fazer com o Jackson exatamente o que foi feito com o Json.
+
+Novamente a lâmpada vermelha aparece na lateral esquerda do código. Ao clicá-la, notamos que como o readValue lança uma exceção, precisamos cobri-lo com um try/catch, ou jogar na assinatura do método.
+
+Faremos a primeira opção, para isso clicamos na lâmpada e selecionamos a opção "Surround with try/cath". Feito isso o ConverteDados está pronto. Para qualquer classe que quisermos representar usaremos o mesmo converteDados.
+
+package br.com.alura.screenmatch.service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ConverteDados implements IConverteDados {
+    private ObjectMapper mapper = new ObjectMapper();
+
+    @Override
+    public <T> T obterDados(String json, Class<T> classe) {
+        try {
+            return mapper.readValue(json, classe);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+Copiar código
+ScrenmatchApplication.java
+
+Jacqueline: Primeiro, em var json, na linha 18, apagamos o trecho Season1 da url, afinal, queremos apenas os dados da série e não da temporada.
+
+Feito isso, precisamos do conversor. No fim do código, passamos ConverteDados conversor igual à new ConverteDados().
+
+Em seguida, criamos uma variável DadosSerie dados igual à conversor.obterDados(json, DadosSerie.class).
+
+Em seguida, imprimiremos esse dado para verificar se estão representados mostrando os dados da série. Então, escrevemos System.out.println(dados).
+
+//Trecho omitido 
+
+@Override
+public void run(String... args) throws Exception {
+    var consumoApi = new ConsumoApi();
+    var json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c");
+//		System.out.println(json);
+//		json = consumoApi.obterDados("https://coffee.alexflipnote.dev/random.json");
+    System.out.println(json);
+    ConverteDados conversor = new ConverteDados();
+    DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
+    System.out.println(dados);
+}
+}
+Copiar código
+Recapitulando: no consumoApi obtemos os dados da série Gilmore Girls, atribuímos para a variável json e imprimimos. Depois, instanciamos um conversor e mandamos transformar para DadosSerie, por fim imprimimos os dados da série.
+
+Em seguida, executamos a aplicação. Repare que ela apresenta um erro referente a propriedade Year que não foi reconhecida. Isso existe no nosso código, mas não foi mapeado.
+
+Sendo assim, precisamos informar o sistema que o que não foi mapeado não deve ser convertido.
+
+DadosSerie.java
+
+Para isso, acessamos o arquivo DadosSerie.java. Na linha 5, acima de DadosSerie(), escrevemos @JsonIgnoreProperties(ignoreUnknown = true). Assim, definimos que tudo o que não for encontrado seja ignorado.
+
+package br.com.alura.screenmatch.model;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore Properties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record DadosSerie (@JsonAlias("Title") String titulo,
+                                                    @JsonAlias("totalSeasons") Integer totalTemporadas,
+                                                    @JsonAlias("imdbRating") String avaliacao) {
+}
+Copiar código
+Ao rodar o código novamente, temos o resultado esperado. Encontramos o título, total de séries e avaliação. Deu certo!
+
+Criando um repositório no GitHub
+Porém, no mundo corporativo ninguém faz uma aplicação do início ao fim sozinho, trabalhamos sempre em conjunto. Para isso, precisamos de ferramentas que permitam essas ações, como o Git e o GitHub, onde versionamos e compartilhamos o código para trabalharmos juntos.
+
+Criaremos um repositório no GitHub para compartilhar o projeto com a Iasmin, assim ela também poderá codificar.
+
+Explicaremos esse passo à passo de forma suscinta. Deixaremos um material complementar no Para Saber mais para que você possa entender mais afundo sobre o tema. Além disso, aqui na Alura temos cursos de GitHub.
+
+No navegador, fazemos o login na conta do GitHub. Na lateral superior direita da tela, clicamos no botão "Create new" identificado pelo ícone com o símbolo "+". Depois, selecionamos a opção "New repository", para criarmos um novo repositório.
+
+Somos encaminhados para a página do repositório. No campo "Repository name" definimos como "screenmatch-sem-web". Abaixo, selecionamos a opção "Public" e clicamos no botão "Create repository", na lateral inferior direita.
+
+Quando criamos o repositório é gerado um passo a passo que precisa ser feito para conectar a aplicação com o repositório remoto.
+
+Seguiremos esses passos, primeiro vamos iniciar um repositório na aplicação local, depois fazer o commit, definir que será usado o branch -M main, associá-los e fazer o push, ou seja, enviar as minhas alterações.
+
+Podemos fazer isso no IntelliJ de várias formas. Uma delas é clicando no botão "VCS", na barra de menu superior, e depois em "Create Git Repository". Também podemos fazer isso pelo terminal.
+
+Seguiremos a segunda opção. Então, com o terminal aberto, passamos o comando git init para inicializar um repositório.
+
+git init
+Copiar código
+Feito isso o repositório é criado. Em seguida, passamos o comando git status.
+
+git status
+Copiar código
+Repare que o terminal mostra haver arquivos que precisam ser versionados. Então, passamos o comando git add ., pois queremos versionar todos os arquivos.
+
+git add .
+Copiar código
+O próximo passo é fazer um commit. Então, passamos git commit -m "Inicio projeto Spring".
+
+git commit -m "Inicio projeto Spring"
+Copiar código
+Após, passamos o comando git branch -M main.
+
+git branch -M main
+Copiar código
+O próximo passo é associar o nosso repositório local ao repositório do GitHub. Passamos o comando git remote add origin seguido do link do repositório.
+
+git remote add origin
+Copiar código
+Por fim, para enviar as alterações para o repositório remoto passamos o comando git push -u origin main.
+
+git push -u origin main
+Copiar código
+Após executar estas ações, a IDE fará o push das alterações para o repositório remoto.
+
+Vale lembrar que todas estas tarefas também podem ser realizadas diretamente pela IDE, que possui um menu dedicado ao Git. Dentro desse menu, é possível visualizar a branch local, verificar quando foi feito o último push e uma variedade de comandos.
+
+Feito isso, se atualizarmos a página do GitHub já encontramos o projeto no repositório. Com o projeto disponível no GitHub, outras pessoas podem clonar e trabalhar no mesmo projeto.
+
+Iasmin: Ótimo, Jacque! Agora vou conseguir baixar o projeto e executá-lo na máquina.
+
+Na próxima aula continuaremos melhorando o projeto juntos. *Até lá!
