@@ -1,0 +1,119 @@
+Transcrição
+Jacqueline: Agora, vamos pegar as informações das séries, que foi apresentada como uma string, e desserializar em uma classe. Queremos transformar o json em uma classe ou em um objeto da aplicação.
+
+Diferente da formação anterior, agora usaremos a biblioteca Jackson que possui algumas características diferentes, mas o mesmo propósito de serializar e desserializar.
+
+Desserializando dados
+ScreenmatchApplication.java
+
+Jacqueline: Primeiro, comentamos as duas linhas de código referente a imagem do café, que testamos na aula anterior.
+
+Agora, teoricamente precisamos pegar os dados da série e transformá-los em uma classe.
+
+Como usaremos o Jackson, precisamos descobrir qual é a dependência e como incluí-lo no projeto. Para isso, no navegador, acessamos o MVN Repository .
+
+Na barra de busca, localizada no topo da tela, pesquisamos por "Jackson DataBind". Clicamos no primeiro resultado e somos encaminhados para outra tela. Encontramos várias versões, clicamos na mais recente, nesse caso a 2.15.2.
+
+Anteriormente, quando trabalhamos com o JSON, tivemos que fazer o download do JAR, adicionar na aplicação para assim trabalhar com ele.
+
+Nesse caso é diferente. Quando usamos um gerenciador de dependências, como o Maven ou Gradle, já é indicado como isso deverá ser feito. Precisamos apenas copiar um trecho de código e adicioná-lo ao projeto.
+
+Iasmin: É como se fossemos colocar um hiperlink no nosso .xml. Basta adicionar a dependência, assim o Maven já saberá de onde precisa buscar para adicionar a dependência no IntelliJ.
+
+Jacqueline: Exatamente! Assim fica mais fácil. Sempre que alguém for usar o projeto, o arquivo será lido e especificado o que é preciso, a partir disso já resolverá todas essas questões de dependência.
+
+Então, copiamos o trecho de código.
+
+<dependency> 
+    <groupId>com.fasterxml.jackson.core</groupId> 
+    <artifactId>jackson-databind</artifactId> 
+    <version>2.15.2</version>
+</dependency>
+Copiar código
+Em seguida, acessamos o projeto, no arquivo pom.xml que é considerado o coração do projeto Maven, pois possui todas as informações, como a versão do Spring, o ID do grupo, o artefato, a versão do Java.
+
+Nas tags de dependências, temos as duas que são incluídas na construção do projeto Spring, a spring-boot-starter e a spring-boot-starter-test.
+
+Para não precisarmos adicionar várias dependências, os starters já fazer o agrupamento. Sendo assim, nesse caso a única depencência que precisamos é a spring-boot-starter. Aprenderemos mais sobre os starters em breve.
+
+Abaixo da dependência spring-boot-starter-test, colamos o trecho de código. Repare que ao fazer isso, na lateral superior direita da ferramenta, é exibido um símbolo do Maven com um círculo composto por duas setas em azul. Ele permite carregarmos as mudanças do Maven.
+
+Isso significa que precisaremos clicar nesse botão para que ele possa fazer o download dessa dependência. Faremos um teste clicando no botão. Repare que no terminal, na lateral inferior esquerda, é feita a sincronização para fazer o download dessas dependências.
+
+Na lateral esquerda do terminal, notamos um sinal de check na cor verde que indica que o download foi realizado com sucesso.
+
+Iasmin: Jacque, para onde essas dependências foram?
+
+Jacqueline: Na lateral esquerda, se clicarmos no menu External Libraries, é exibido todas as dependências que o projeto está usando.
+
+Iasmin: Muitas delas vem do starter, certo?
+
+Jacqueline: Exatamente! Embora tenhamos três dependências, nessa pasta encontramos essas outras dependências devido ao starter. Além disso, também encontramos o download do Jackson na versão que escolhemos. Agora, podemos modelar a classe.
+
+Iasmin: Bora, lá! Queremos ver as séries apresentadas.
+
+Jacqueline: Seguindo as boas práticas, começando criando um novo pacote. Para isso, clicamos com o botão direito em br.com.alura.screenmatch e clicamos em "New > Package" e o nomeamos de model.
+
+Em seguida, criamos nossa classe clicando com o botão direito no pacote e depois em "New > Java Class". Nomeamos de DadosSerie e escolhemos a opção record.
+
+Iasmin: Essa é uma boa escolha, afinal, vamos apenas obter os dados e representá-los, não precisaremos trabalhar com a classe e criar métodos, por exemplo.
+
+Jacqueline: Exatamente! Agora, com o navegador aberto na API da série, apagamos o trecho "Season=1" da url e apertamos "Enter".
+
+Feito isso, encontramos informações como título, avaliação e o total de temporadas. Como são informações importantes, podemos modelar esses três campos. O que você acha?
+
+Iasmin: Acho ótimo! Se quisermos adicionar mais coisas podemos fazer isso depois.
+
+DadosSerie.java
+
+Jacqueline: Em public record DadosSerie(), passamos como parâmetro String titulo, seguido de Integer total Temporadas e String avaliacao.
+
+Considerando o conhecimento adquirido na formação anterior, percebemos que não será possível transformar title em título automaticamente. Precisamos indicar o atributo.
+
+Iasmin: Assim como se estivéssemos dando um apelido, certo?
+
+Jacqueline: Sim! Inclusive, nesse caso, podemos usar justamente a notação JsonAlias, que é um apelido. Então, antes de String título escrevemos @JsonAlias("Title").
+
+Fazemos o mesmo nas outras duas linhas abaixo, passando respectivamente totalSeasons e imdbRating entre aspas duplas nos parênteses de cada linha.
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+
+public record DadosSerie(@JsonAlias("Title") String titulo,
+                         @JsonAlias("totalSeasons") Integer totalTemporadas,
+                         @JsonAlias("imdbRating") String avaliacao) {
+}
+Copiar código
+Iasmin: É importante sempre digitar exatamente como está no json de resposta. Caso não, o Java não irá encontrar e não conseguiremos mapear a aplicação para apelido.
+
+Jacqueline: Também é necessário que você saiba que o Jackson tem o JsonAlias e a notação JsonProperty.
+
+A diferença é que o JsonProperty pode ser utilizado tanto no processo de serialização quanto de desserialização.
+
+Isso significa que, se no fim do código escrevermo o trecho @JsonProperty("imdbVotes") String votos, ao gerar um json com dados sequenciais será incluído o nome "imdb votes". Então, tenta ler imdb votes e escrever também.
+
+Já o JsonAlias é utilizado apenas para ler o json. Sendo assim, lerá o title, porém quando for escrever utilizará o nome original do atributo, que é título.
+
+Outro recurso interessante é que se buscássemos por outras APIs, poderíamos procurar por um array de nomes.
+
+Suponhamos que em vez de imdb utilizamos lmdb, um nome fictício, que ao invés de title fosse título.
+
+Nesse caso, na primeira linha, poderíamos passar como @JsonAlias("Title", "Titulo") String titulo com palavras que devem ser procuradas para ser possível desserializar tudo isso para a classe.
+
+Iasmin: Também podemos traçar um paralelo com o json, que possui um serialized name e o Jackson o JsonAlias. Assim, notamos que as bibliotecas são bem semelhantes.
+
+Jacqueline: As bibliotecas possuem suas nuances. Sendo assim, tendo conhecimento sobre uma, acaba se tornando mais fácil trabalhar com a outra.
+
+Como nesse caso queremos apenas o Title, apagamos o array Titulo e também a linha de votos, que utilizamos apenas como demonstração.
+
+Em seguida, apertamos o comando "Ctr + Alt + O" para remover o import de property.
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+
+public record DadosSerie(@JsonAlias("Title") String titulo,
+                         @JsonAlias("totalSeasons") Integer totalTemporadas,
+                         @JsonAlias("imdbRating") String avaliacao) {
+}
+Copiar código
+Temos uma parte do código concluída, o mapeamento de como ficará do json para a classe. Contudo, o processo de conversão que era feito com o fromJSON e o toJSON, ainda não foi implementado.
+
+Iasmin: Faremos isso na aula seguinte! Até lá.
