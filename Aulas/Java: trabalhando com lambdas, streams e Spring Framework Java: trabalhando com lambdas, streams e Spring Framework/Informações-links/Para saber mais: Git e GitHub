@@ -1,0 +1,24 @@
+O desenvolvimento colaborativo é essencial para quem trabalha com programação. E uma das ferramentas mais populares nesse contexto é o Git e o GitHub.
+
+O Git é um sistema de controle de versão distribuído, que permite que várias pessoas trabalhem em um mesmo projeto de forma simultânea, sem que haja conflitos entre as alterações feitas. Ele registra todas as modificações feitas nos arquivos, permitindo que você volte a versões anteriores, caso necessário.
+
+Já o GitHub é uma plataforma que utiliza o Git para hospedar projetos e facilitar o trabalho em equipe. Nele, é possível compartilhar código, colaborar com outros desenvolvedores, revisar e aprovar alterações, além de ter um histórico completo de todas as modificações feitas no projeto.
+
+Para facilitar o desenvolvimento colaborativo, o Git e o GitHub são ferramentas amplamente utilizadas nesse contexto. Com o Git, é possível controlar as versões do código e gerenciar as alterações feitas por cada membro da equipe. Já o GitHub oferece recursos para hospedar projetos, facilitar a colaboração, revisar e aprovar alterações, além de fornecer um histórico completo de todas as modificações feitas no projeto.
+
+Aqui estão alguns comandos básicos do Git para você começar:
+
+git init: inicializa um repositório Git em um diretório.
+
+git add <arquivo>: adiciona um arquivo ao repositório.
+
+git commit -m "mensagem": cria um novo commit com as alterações feitas.
+
+git push: envia as alterações para o repositório remoto.
+
+git pull: atualiza o repositório local com as alterações do repositório remoto.
+
+Se deseja conhecer mais sobre o Git e Github, confira também:
+
+O que é Git e Github: como configurar e primeiros passos
+Git e GitHub: Controle e compartilhe seu código
