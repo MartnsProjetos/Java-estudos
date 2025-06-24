@@ -1,0 +1,170 @@
+Transcrição
+Iasmin: Vamos prosseguir com o desenvolvimento colaborativo. Já que temos os dados da série modelados, iremos agora modelar os episódios e as temporadas.
+
+Clonando o projeto com git clone
+Iasmin: Para realizar esse procedimento, é necessário acessar o repositório da Jaque no GitHub e efetuar o clone do repositório. Para isso, clicamos no botão verde "Code" localizado no canto superior direito. Em seguida, selecionamos o ícone ao lado direito do link para copiá-lo.
+
+Abrimos o terminal clicando com o botão direito e escolhendo a opção "Abrir terminal" no explorador de arquivos, digitamos git clone e colamos o link que copiamos:
+
+git clone https://github.com/jacqueline-oliveira/screenmatch-sem-web.git
+Copiar código
+Após baixar o projeto, podemos fechar o terminal e observem que agora temos uma pasta chamada screenmatch-sem-web na área de trabalho do computador.
+
+Selecionamos a pasta com o botão direito e escolhemos as opções "Mostrar mais opções > Open Folder as IntelliJ IDEA Community Edition Project". Será exibida uma janela com a pergunta "Trust and Open Project screenmatch-sem-web?" (Confiar e abrir o projeto screenmatch-sem-web) e vamos clicar em "Trust Project" para baixarmos.
+
+Dessa forma, fica evidente como as ferramentas Git e GitHub tornam o desenvolvimento colaborativo mais simples, não é verdade, pessoa Jaque?
+
+Jacqueline: Sim, como dissemos anteriormente, é raro criarmos um projeto inteiro do zero sozinhos, seja front-end, back-end ou dados. Sempre há uma equipe trabalhando em conjunto. E a prática de usar o Git para puxar alterações e fazer merge faz parte do dia a dia de qualquer pessoa envolvida no desenvolvimento.
+
+Analisando o arquivo pom.xml
+Iasmin: Ao clicarmos no arquivo pom.xml localizado no lado esquerdo do IntelliJ, podemos notar as dependências adicionadas pela pessoa Jaque. Ao abrir o projeto no IntelliJ, todas as dependências já foram baixadas automaticamente.
+
+Isso já nos mostra uma diferença em relação à biblioteca JSON, na qual a pessoa Jaque teria que baixá-la em seu computador e eu no meu, além de inseri-la no programa. Caso contrário, enfrentaríamos diversos conflitos. Então usar o Maven nos auxilia nisso.
+
+Verificando o link que está consumindo a API
+Iasmin: No navegador vamos analisar o link que estamos usando para consumindo a API.
+
+https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c
+Copiar código
+No link acima, obtemos:
+
+("Title":"Gilmore Girls","Year":"2000-2007", "Rated": "TV-PG", "Released":"05 Oct 2000", "Runtime": "575 min", "Genre":"Comedy, Drama", "Director":"N/A", "writer": "Amy Sherman-Palladino", "Actors": "Lauren Graham, Alexis Bledel, Keiko Agena", "Plot": "A dramedy centering around the relationship between a thirtysomething single mother and her teen daughter living in Stars Hollow, Connecticut.","Language":"English", "Country":"United States", "Awards" : "Won 1 Primetime Emmy. 23 wins & 85 nominations total", "Poster": "https://m.media- amazon.com/images/M/MV5BMTQ3NDA1ZWYtYjBmMCNmJjLWI1NjgtYjg2NDhmMTY2YWQ4Xk EyXkFqcGdeQXVyNzA5NjUyNjM@._V1_SX300.jpg","Ratings": [["Source": "Internet Movie Database", "Value":"8.2/18"}], "Metascore": "N/A", "imdbRating": "8.2", "imdbvotes":"135,128","imdbID": "tte238784","Type":"series", "totalSeasons":" 7", "Response":"True"}
+
+Adquirimos informações gerais sobre a série Gilmore Girls. Caso desejemos detalhes mais específicos, como a Jaque mencionou, podemos adicionar &season=1 após o nome da série para obter informações mais detalhadas sobre a primeira temporada. Além disso, há outra maneira de obter detalhes mais específicos sobre cada episódio, acrescentando &episode=2.
+
+https://www.omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c
+Copiar código
+Obtemos:
+
+{"Title":"The Lorelais' First Day at Chilton","Year":"2000", "Rated": "TV-PG", "Released": "12 Oct 2000", "Season":"1", "Episode":"2","Runtime": "44 min", "Genre":"Comedy, Drama", "Director":"Arlene Sanford", "writer": "Amy Sherman-Palladino", "Actors": "Lauren Graham, Alexis Bledel, Melissa McCarthy", "Plot":"Rory's first day at Chilton, where she has a confrontation with Paris. Emily tries to install an internet connection at Lorelai's house without asking first.", "Language":"English", "Country":"United States", "Awards" : "N/A", "Poster": "https://m.media- amazon.com/images/M/MV5BYTU2Mzg1NzktMTBkNieeMmU1LThkZGQtNjUxMTJ10WFkMzB1XkEyXkFqcGdeQXVyMjg2MTMYNTM@._V1_SX300.jpg","Ratings": [{"Source":"Internet Movie Database", "Value":"8.0/18"}], "Metascore": "N/A", "imdbRating": "8.0", "imdbvotes":"1295", "imdbID":"tt0588209", "seriesID": "tt0238784", "Type": "epis ode", "Response":"True"}
+
+Assim obtemos informações específicas de cada episódio da série.
+
+Penso que agora podemos começar a modelar essas informações à aplicação, não é mesmo, Jaque?
+
+Jacqueline: Conforme mencionado, é uma situação que ocorrerá com frequência. Em algumas ocasiões, teremos APIs que nos disponibilizarão documentações detalhadas, o que é bastante comum, resultando em múltiplos detalhes e abordagens para consultar uma mesma informação.
+
+Modelando os dados no projeto
+Iasmin: Vamos voltar ao IntelliJ.
+
+Já que desejamos representar dados vamos ao pacote Model novamente, nesse pacote clicamos com o botão direito e escolhemos as opções "New > Java Class" e nomeamos o arquivo de "Dados Episodio", e marcamos "Record".
+
+O IntelliJ nos ajuda com o GitHub também, já aparece para nós adicionarmos ao Git. Isso facilita bastante o nosso trabalho, então clicamos no botão "Ok".
+
+Seremos redirecionados para o arquivo DadosEpisodio:
+
+DadosEpisodio
+
+package br.com.alura.screenmatch.model;
+
+public record DadosEpisodio() {
+
+}
+Copiar código
+Após fazer isso, vamos poder adicionar os atributos. Para descrever um episódio precisaremos de um título e também do número do episódio. Para isso, dentro dos parênteses de DadosEpisodio() colocamos String titulo e Integer numero.
+
+Incluímos também a avaliação, para saber quais são os melhores e piores episódios, e vamos deixar como String, por enquanto, pois não temos muita certeza de como esses dados estão chegando.
+
+E também a data de lançamento. Desejamos saber qual é o mais antigo, qual é o mais novo, para escolher adequadamente os episódios. Inserir também uma String, para a data, portanto, adicionamos mais uma String, para o relacionamento.
+
+DadosEpisodio
+
+package br.com.alura.screenmatch.model;
+
+public record DadosEpisodio(String titulo,
+                                                        Integer numero,
+                                                        String avaliacao,
+                                                        String dataLancamento) {
+}
+Copiar código
+Com essa etapa concluída, estamos prontos para representar os dados, porém é necessário estabelecer a correspondência entre a API e a aplicação. Para realizar essa tarefa, como a Jaque mencionou, vamos utilizar o JsonAlias.
+
+Antes de String titulo digitamos @JsonAlias("") passando o Title. Analisando os dados que temos do navegador, temos que o episódio é episode, a avaliação é imdbRating e a data de lançamento é a Released. Aplicamos a mesma lógica para os outros campos.
+
+DadosEpisodio
+
+package br.com.alura.screenmatch.model;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+
+public record DadosEpisodio(@JsonAlias("Title") String titulo,
+                            @JsonAlias("Episode") Integer numero,
+                            @JsonAlias("imdbRating") String avaliacao,
+                            @JsonAlias("Released") String dataLancamento) {
+}
+Copiar código
+Por fim, é necessário deixar de lado as propriedades que não estamos representando. Para esse fim, utilizaremos o JsonIgnoreProperties definido como true. Portanto, configuramos ignoreUnknown como true.
+
+DadosEpisodio
+
+package br.com.alura.screenmatch.model;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record DadosEpisodio(@JsonAlias("Title") String titulo,
+                            @JsonAlias("Episode") Integer numero,
+                            @JsonAlias("imdbRating") String avaliacao,
+                            @JsonAlias("Released") String dataLancamento) {
+}
+Copiar código
+Agora, com esses dados representados, vamos precisar fazer uma conversão. Da mesma forma que fizemos com DadosSerie.
+
+Na classe SpringmatchApplication, simplesmente utilizamos esse conversor que já está criado e invocamos o método ObterDados com a classe DadosEpisodio.
+
+Dessa forma, poderemos observar o funcionamento desses métodos mais genéricos. Na linha 27 digitamos DadosEpisodio, o qual chamaremos de DadosEpisodio. Chamamos o conversor e o método ObterDados passando o JSON e a classe DadosEpisodio.class.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class)
+Copiar código
+Ainda não alteramos nosso endereço. Será necessário fazer essa modificação na aplicação também.
+
+Jacqueline: Sim, usar exatamente aquele que inserimos no navegador, incluindo a temporada e o episódio para mantermos a mesma representação.
+
+Iasmin: Após exibir os dados básicos, teremos que atualizar a variável JSON. Ela será preenchida com consumoAPI.obterDados, usando o mesmo endereço que usamos no navegador, aquele que incluía tanto a temporada quanto o episódio.
+
+Portanto, vamos inserir esse endereço no parênteses, delimitando-o com aspas. Agora que realizamos essa etapa, penso que podemos prosseguir para a impressão.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+System.out.println(dados);
+json = consumoApi.obterDados("https://omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c")
+DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class)
+Copiar código
+Jacqueline: Exato, imprimimos os dados do episódio para verificar se tudo está correto.
+
+Iasmin: Para isso, usamos o System.out.println para dadosEpisodio.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+System.out.println(dados);
+json = consumoApi.obterDados("https://omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c")
+DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class)
+System.out.println(dadosEpisodio)
+Copiar código
+Rodando o projeto
+Agora, clicamos do lado superior direito no botão de play para executar o projeto.
+
+A execução do IntelliJ está em andamento e será aberta no terminal. Agora possuímos nossas informações. Contamos com os dados gerais e também os dados do episódio.
+
+Jacqueline: Excelente. Utilizando a mesma classe conversor e a classe consumoAPI, conseguimos adquirir informações de maneira abrangente sobre a série, assim como de forma altamente detalhada sobre um episódio específico.
+
+Iasmin: Parece que ainda há algo que precisa ser considerado, não é mesmo, Jaque? Isso ocorre porque quando alguém utiliza nossa aplicação para buscar informações sobre os episódios, não estará interessada apenas em uma única temporada.
+
+A pessoa desejará informações abrangentes sobre todos os episódios de todas as temporadas. Portanto, é necessário representar também essa dimensão das temporadas que estão vindo no JSON, concorda?
+
+Jacqueline: Inclusive, aprendemos que o MDB permite fazermos isso ao passarmos o season, já buscamos todos os episódios. Portanto, o próximo passo é modelar a temporada para trazer também não apenas a série, mas também um episódio individual e inclusive as temporadas completas de nossas séries.
+
+Iasmin: Então no próximo vídeo vamos criar a classe DadosTemporada.
+
+Até mais!
+
+Jacqueline: Até!
