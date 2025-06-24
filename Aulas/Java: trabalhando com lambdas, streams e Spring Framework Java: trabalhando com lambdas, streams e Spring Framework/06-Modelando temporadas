@@ -1,0 +1,230 @@
+Transcrição
+Iasmin: Como discutido anteriormente, estamos planejando criar uma classe chamada DadosTemporada. Isso é necessário porque, ao utilizar nosso programa para obter informações sobre uma série, as pessoas desejam acessar detalhes de todos os episódios de cada temporada.
+
+Modelando Temporadas
+Iasmin: Para concretizar isso, vamos criar a classe DadosTemporada dentro do pacote Model, seguindo o padrão estabelecido. Essa classe terá a estrutura de uma Record e, posteriormente, será incorporada ao repositório Git clicando em "Ok".
+
+DadosTemporada
+
+package br.com.alura.screenmatch.model;
+
+public record DadosTemporada() {
+
+}
+Copiar código
+Acredito que a classe DadosTemporada possa ser composta por dois elementos principais: um número que identifica a temporada e uma lista contendo os episódios correspondentes.
+
+Gostaria de verificar se você acha necessário adicionar mais algum atributo, Jaque, ou se esses dois atributos já abrangem as informações necessárias.
+
+Jacqueline: Através do nome da série, seremos capazes de associar o número da temporada e a lista de episódios relacionados a ela. Então só essas informações estão boas.
+
+Iasmin: Portanto, vamos incluir um valor inteiro no parênteses e um número e, em seguida, uma lista de DadosEpisodio, List<DadosEpisodio>. Importaremos essa lista pressionando “Alt + Enter" e a nomearemos como "episodios".
+
+DadosTemporada
+
+package br.com.alura.screenmatch.model;
+
+import java.util.List;
+
+public record DadosTemporada(Integer numero,
+                             List<DadosEpisodio> episodios) {
+
+}
+Copiar código
+Agora, precisaremos realizar o mapeamento novamente. Compreendo que, por vezes, possa parecer um processo um tanto repetitivo executar essa tarefa várias vezes pode ser cansativo.
+
+Jacqueline: Contudo, vale ressaltar que isso é algo que realizaremos apenas uma vez, não é, Yasmin? Uma vez que todo o mapeamento esteja completo, não será necessário mantê-lo constantemente. Portanto, trata-se de uma tarefa que demanda atenção, mas, uma vez concluída, todo o mapeamento estará pronto de forma adequada.
+
+Iasmin: Vamos empregar o JsonAlias "season" para o número correspondente. Em relação aos episódios, adotaremos o JsonAlias("Episodes"). Por fim, incorporaremos @JsonIgnoreProperties(ignoreUnknown = true). Ao efetuar essas etapas, estaremos uma vez mais traduzindo os dados da API para a nossa aplicação.
+
+DadosTemporada
+
+package br.com.alura.screenmatch.model;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.List;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record DadosTemporada(@JsonAlias("Season") Integer numero,
+                             @JsonAlias("Episodes") List<DadosEpisodio> episodios) {
+}
+Copiar código
+Vamos ao arquivo ScreenmatchApplication.java.
+
+Agora, nosso próximo passo consiste em converter esses dados da temporada para a classe correspondente. Para realizar isso, não há segredos; basta efetuar uma alteração no link e, em seguida, criar uma instância de DadosTemporada que poderemos imprimir.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+System.out.println(dados);
+json = consumoApi.obterDados("https://omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c");
+DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
+System.out.println(dadosEpisodio);
+Copiar código
+Contudo, é importante ressaltar que nesse ponto estaremos exibindo os detalhes de apenas uma temporada. Presumo que nosso objetivo seja obter informações de todas as temporadas, não é, Jaque?
+
+Jacqueline: Exatamente isso, podemos fazer algo muito interessante. Poderíamos, por exemplo, verificar quantas temporadas essa série possui e fazer uma iteração para buscar todas as temporadas. Acredito que seria uma boa abordagem.
+
+Iasmin: Sabemos quantas temporadas ela possui pois, em DadosSerie, já visualizamos esses dados. Se formos na classe DadosSerie do lado esquerdo, temos um inteiro de total de temporadas. Sabendo disso, podemos iterar por ele.
+
+Voltamos ao arquivo ScreenmatchApplication.java.
+
+Como aprendemos na formação de Orientação a Objetos, podemos usar uma estrutura de repetição para percorrer todas as temporadas. Nesse caso, vamos usar o for, mas também poderíamos usar um while ou um do-while, fica a seu critério.
+
+No caso, usaremos um for e, para cada int i = 1, enquanto o i for menor ou igual a dados.totalDeTemporadas, incrementamos o i. Podemos notar que estamos indo de i = 1 até o número de temporadas, correto? Isso porque não temos uma temporada zero para começar em i = 0, que é mais comum.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+        System.out.println(dados);
+        json = consumoApi.obterDados("https://omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c");
+        DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
+        System.out.println(dadosEpisodio);
+        
+        for(int i = 1; i<=dados.totalTemporadas(); i++) {}
+    }
+}
+Copiar código
+Depois de declarar o for, vamos precisar atualizar o link conforme formos iterando. Copiamos a linha 28 e colamos dentro do for, porém vamos alterá-la. Vamos ter um json, gilmore girls e manter o season, porém o número da season sempre será alterado. Ele vai de 1 até o total de temporadas que temos.
+
+Então, vamos quebrar essa string, fechando as aspas e concatenando com a nossa chave i e apikey.
+
+Neste momento, vamos remover a referência ao episódio, uma vez que buscamos apenas as informações da temporada. Portanto, vamos deletar a menção ao episódio e abrir aspas novamente. Com isso, já temos os links atualizados.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+        System.out.println(dados);
+        json = consumoApi.obterDados("https://omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c");
+        DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
+        System.out.println(dadosEpisodio);
+        
+        for(int i = 1; i<=dados.totalTemporadas(); i++) {
+            json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&season=" + i + "&apikey=6585022c");
+            }
+    }
+}
+Copiar código
+Em seguida, podemos ter uma instância de DadosTemporada. Faremos a importação dessa classe pressionando "alt+enter". Agora utilizaremos o conversor de forma bastante genérica. Isto é algo que já fizemos uma vez. Portanto, repetiremos o processo, substituindo o arquivo necessário.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+        System.out.println(dados);
+        json = consumoApi.obterDados("https://omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c");
+        DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
+        System.out.println(dadosEpisodio);
+        
+        for(int i = 1; i<=dados.totalTemporadas(); i++) {
+            json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&season=" + i + "&apikey=6585022c");
+            DadosTemporadas dadosTemporada =
+        }
+    }
+}
+Copiar código
+Jacqueline: Percebemos a vantagem de termos tomado essa decisão de fazer tudo de forma genérica, não é?
+
+Iasmin: Sim.
+
+Sendo assim, vamos ter um método obterDados, passando o JSON e a classe DadosTemporada.class.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+        System.out.println(dados);
+        json = consumoApi.obterDados("https://omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c");
+        DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
+        System.out.println(dadosEpisodio);
+        
+        for(int i = 1; i<=dados.totalTemporadas(); i++) {
+            json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&season=" + i + "&apikey=6585022c");
+            DadosTemporadas dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+            }
+    }
+}
+Copiar código
+Podemos adicionar essas temporadas a uma lista para imprimir depois, o que nos permitirá salvá-las. O que você acha, Jaque?
+
+Jacqueline: Sim, acho que é uma excelente ideia, até melhor. Assim, criamos uma lista com dados de temporadas, adicionando a cada temporada.
+
+Iasmin: Então, após o System.out.println de dadosEpisódio, vamos teclar "Enter" e criar uma lista de DadosTemporadas. Pressionamos "Alt + Enter" para importar a lista e nomeá-la temporadas. Na sequência colocamos = new ArrayList<>(). Lembrando do conhecimento em Java OO.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+        System.out.println(dados);
+        json = consumoApi.obterDados("https://omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c");
+        DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
+        System.out.println(dadosEpisodio);
+        
+        List<DadosTemporada> temporadas = new ArrayList<>();
+        
+        for(int i = 1; i<=dados.totalTemporadas(); i++) {
+            json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&season=" + i + "&apikey=6585022c");
+            DadosTemporadas dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+            }
+    }
+}
+Copiar código
+Agora vamos adicionar a temporada que acabamos de buscar na API a esta lista de temporadas. Faremos isso através de temporadas.add(dadosTemporada).
+
+Podemos imprimir as temporadas que buscamos. Para fazer isso, já que também aprendemos antes, teremos temporadas.forEach(System.out::println);.
+
+ScreenmatchApplication.java
+
+// código omitido
+
+        System.out.println(dados);
+        json = consumoApi.obterDados("https://omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c");
+        DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
+        System.out.println(dadosEpisodio);
+        
+        List<DadosTemporada> temporadas = new ArrayList<>();
+        
+        for(int i = 1; i<=dados.totalTemporadas(); i++) {
+            json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&season=" + i + "&apikey=6585022c");
+            DadosTemporadas dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+            temporadas.add(dadosTemporada);
+            
+            }
+            temporadas.forEach(System.out::println);
+    }
+}
+Copiar código
+Fazendo isso, conseguimos buscar todos os episódios de todas as temporadas. Isso deixa mais claro para a pessoa usuária o que está acontecendo na série.
+
+Jacqueline: Também oferece agilidade. Se estivéssemos no navegador, teríamos que estar trocando, passando os links. Mas a nossa aplicação já vai fazer isso automaticamente e rapidamente.
+
+Iasmin: Essa é uma característica diferencial da nossa aplicação, do ScreenMatch.
+
+Vamos executar clicando no botão de play na parte superior. Isso abrirá o terminal para nós na parte inferior.
+
+O retorno abaixo foi parcialmente transcrito. Para conferi-lo na íntegra, execute o código na sua máquina.
+
+("Title":"Gilmore Girls","Year":"2008-2607", "Rated":"TV-PG", "Released":"05 Oct 2000"…,
+
+DadosSerie[tituto Gilmore Girls, totelTemporadas 7, avaliacao 8.2]
+
+DadosEpisodio titulo-The Lorelais First Day at Chilton, numero=2, avaliacao 8.0, data…
+
+DadosTemporada[numero=7, episodes=[DadosEpisodio[titulo=The Long Morrow…]]
+
+Possuímos informações referentes à série, bem como detalhes do episódio. Agora dispomos dos dados de todas as temporadas, abrangendo da Temporada 1 até a Temporada 7. Além disso, contamos com uma extensa lista de episódios. Trata-se de uma lista bastante extensa, não é mesmo, Jaque?
+
+Jacqueline: Sim, são sete temporadas de uma série sensacional de 1900 e alguma coisa.
+
+Conseguimos estruturar e enriquecer nossa aplicação, possibilitando a obtenção ágil de informações. Agora, estou curiosa para descobrir qual série você selecionará. Afinal, escolhi Gilmore Girls como minha opção.
+
+Iasmin: Agora, podemos adicionar uma nova funcionalidade ao programa, que é a leitura de qualquer série. Dessa forma, poderemos escolher os dados desejados. Assim eu vou poder escolher os meus, assim como você poderá escolher os seus. Assim, faremos o nosso ScreenMatch crescer, certo?
+
+Jacqueline: Exatamente.
+
+Na sequência adicionaremos essa nova funcionalidade. Até mais!
