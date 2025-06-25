@@ -1,0 +1,83 @@
+Conhecemos as funções lambda em vídeo, mas elas só foram introduzidas na versão do Java 8. Antes disso, foi percorrido um longo caminho até chegar nessa funcionalidade.
+
+Imagine você precisando realizar uma ação simples, como ordenar uma lista de números. Antes do Java 8, era comum criar classes inteiras apenas para encapsular essa pequena funcionalidade.
+
+O passo a passo era o seguinte: criava-se o que chamamos de Interfaces Funcionais. Uma interface funcional é uma interface que possui exatamente um método abstrato.
+
+@FunctionalInterface
+public interface Operacao {
+    int executar(int a, int b);  // Um método abstrato
+}
+Copiar código
+A anotação @FunctionalInterface indica ao compilador que essa interface deve ter apenas um método abstrato.
+
+Porém, lembre-se: a interface funcional é só uma interface! Ela precisa ser implementada. Assim, a forma mais comum de implementar uma interface funcional era criar uma classe anônima.
+
+Uma classe anônima é uma classe sem nome que implementa uma interface ou estende uma classe. Ela é útil quando você quer usar um comportamento apenas em um local específico, sem criar uma classe separada. Veja um exemplo de implementação da interface funcional Operacao:
+
+public class Teste {
+    public static void main(String[] args) {
+        Operacao soma = new Operacao() {
+            @Override
+            public int executar(int a, int b) {
+                return a + b;
+            }
+        };
+        System.out.println(soma.executar(5, 3));  // Saída: 8
+    }
+}
+Copiar código
+Repare que instanciamos a classe ao mesmo tempo que estamos declarando-a. Por isso, chamamos de classe anônima. Chamamos as funções implementadas pelas classes anônimas de funções anônimas.
+
+Essa alternativa é melhor do que criar uma classe para só depois instanciá-la. Ainda assim, é bastante verbosa e complexa de entender. As funções lambda surgem para resolver esse problema. Uma expressão lambda é uma forma mais moderna e concisa de definir uma função anônima. Em vez de criar uma classe anônima, você pode escrever a implementação diretamente, de forma compacta:
+
+public class Teste {
+    public static void main(String[] args) {
+        Operacao soma = (a, b) -> a + b;
+        System.out.println(soma.executar(5, 3));  // Saída: 8
+    }
+}
+Copiar código
+Mas então como podemos passar uma função lambda como parâmetro do forEach? Se consultarmos a documentação do forEach, veremos que o método tem a seguinte assinatura:
+
+default void forEach(Consumer<? super T> action) 
+Copiar código
+Ou seja, ele recebe um objeto do tipo Consumer. Se consultarmos a documentação desse Consumer, veremos que ele é uma interface funcional:
+
+@FunctionalInterface
+public interface Consumer<T> {
+
+    /**
+     * Performs this operation on the given argument.
+     *
+     * @param t the input argument
+     */
+    void accept(T t);
+
+    /**
+     * Returns a composed {@code Consumer} that performs, in sequence, this
+     * operation followed by the {@code after} operation. If performing either
+     * operation throws an exception, it is relayed to the caller of the
+     * composed operation.  If performing this operation throws an exception,
+     * the {@code after} operation will not be performed.
+     *
+     * @param after the operation to perform after this operation
+     * @return a composed {@code Consumer} that performs in sequence this
+     * operation followed by the {@code after} operation
+     * @throws NullPointerException if {@code after} is null
+     */
+    default Consumer<T> andThen(Consumer<? super T> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> { accept(t); after.accept(t); };
+    }
+}
+Copiar código
+Assim, quando passamos uma expressão lambda como parâmetro da função forEach, estamos fazendo de forma implícita uma implementação da interface funcional Consumer. Existem vários outros métodos das Collections Java que recebem interfaces funcionais como parâmetros, que podem ser implementadas como funções lambda.
+
+Além disso, ao trabalharmos passando funções anônimas como parâmetros de outras funções, estamos trabalhando com um paradigma de programação diferente: a programação funcional.
+
+A ideia da programação funcional é ter certos dados, e processá-los através de funções, obtendo assim novos dados. Por isso, não precisamos tanto de classes para representar os dados. Dessa forma, dizemos que esse paradigma foca muito mais nas funções do que nos objetos, diferentemente da Orientação a Objetos. Caso queira se aprofundar ainda mais no assunto, recomendamos a leitura do artigo Programação funcional: O que é?
+
+Dada a aplicabilidade dos lambdas nas Collections e esse paradigma novo de programação, é muito importante dominar esse tema. Na atividade a seguir, você poderá praticar bastante o uso de lambdas e interfaces funcionais.
+
+ Discutir no Fórum
