@@ -1,0 +1,263 @@
+Transcrição
+Iasmin: Conforme mencionamos anteriormente, vou escolher outra série. É possível fazer a alteração da série diretamente no IntelliJ, mas consideramos interessante permitir que a pessoa usuária digite o nome desejado. A partir dessa entrada, é viável buscar qualquer série disponível na API. Concorda, Jaque?
+
+Jacqueline: Exatamente, é muito interessante a possibilidade de interatividade, na qual trabalhamos bastante na última formação.
+
+Criando o menu de interação com a pessoa usuária
+Iasmin: Outra observação pertinente é que nosso método run no arquivo ScreenmatchApplication.java está bastante extenso, indo da linha 24 até a 43.
+
+Como mencionamos anteriormente, não queremos que as classes sejam muito extensas. É importante dividir as responsabilidades para facilitar a manutenção e ter uma melhor legibilidade, sempre seguindo boas práticas.
+
+Creio que, como vamos criar um menu, seria interessante criarmos uma classe principal.
+
+Jacqueline: Podemos centralizar essas informações da interação com a pessoa usuária em uma classe, sim. Isso facilitará a interação com a pessoa usuária, indicando quem chamará quem. É o momento ideal para modelarmos isso.
+
+Iasmin: Do lado esquerdo do IntelliJ, criamos um novo pacote no ScreenMatch. Para isso, clicamos com o botão direito no pacote, e selecionaramos as opções "New > Package", criaremos um pacote chamado "principal". Dentro desse pacote principal, teremos uma classe principal.
+
+Para isso, clicamos com o botão direito do pacote principal, escolhemos as opções "New > Java Class" e nomeamos a classe de "Principal". Adicionaremos isso ao Git clicando no botão "Add" na janela seguinte após nomearmos.
+
+Pacote principal no repositório do GitHub
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+}
+Copiar código
+Nessa classe principal, o primeiro método que teremos será para exibir o menu. Esse método será responsável por lidar com as interações com a pessoa usuária.
+
+Digitamos public void exibMenu(){}. Sempre que houver a necessidade de mostrar informações para a pessoa usuária ou de obter entrada de dados, utilizamos ações como inserir informações ou imprimir no terminal (System.out). Por exemplo, podemos exibir a mensagem "Digite o nome da série para a busca".
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+    }
+}
+Copiar código
+Agora, para efetivamente obter esses dados, será necessário utilizar um scanner, conforme aprendemos na formação de Orientação a Objetos. Portanto, na classe Principal, é necessário ter um atributo do tipo scanner. Vamos criar um objeto scanner chamado leitura para realizar essa tarefa.
+
+Nesse ponto, já podemos realizar a instanciação. No contexto específico, não é apropriado utilizar o var, correto, Jaque? Isso ocorre porque estamos declarando um atributo.
+
+Jacqueline: Isso, precisamos colocar o tipo específico.
+
+Iasmin: Então, digitamos new scanner e agora passamos o System.in, porque estamos indicando que estamos escaneando a entrada que está vindo do teclado.
+
+Principal.java
+
+package br.com.alura.screenmatch.principal; 
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+    }
+}
+Copiar código
+Agora, está correto usar o var logo após o System.out. Declaramos uma variável chamada nomeSerie , seguindo o padrão de nomenclatura do Java. Essa variável será igual a leitura.nextLine(), que é a maneira de obter uma string.
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine(); 
+    }
+}
+Copiar código
+Depois de obter o nome da série, a próxima etapa envolve a análise do endereço que estamos utilizando na busca.
+
+Vamos até a classe ScreenMatchApplication e copiamos esse endereço da linha 39 apenas para análise. Agora, colamos o link no arquivo Principal e utilizamos o símbolo de comentário (//) para realizar essa ação.
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine(); 
+            //"https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c"
+    }
+}
+Copiar código
+Neste trecho, existem partes que permanecem constantes, que vão desde o https até omdbapi.com/t, que é onde recuperamos o título da série.
+
+Em seguida, haverá outra seção que será modificada para incluir o nome da série (no caso, gilmore+girls). Logo após, temos uma chave de API (key) que também é constante. Essas partes que permanecem inalteradas poderiam ser definidas como constantes na nossa classe principal, não é mesmo, Jaque?
+
+Jacqueline: Exatamente. É uma boa prática. Ao declaramos como constantes. Nesse primeiro momento, estará "hardcoded", fixo no código.
+
+Após isso, podemos aprimorar e transformar em variáveis de ambiente, por exemplo, a API key (chave API), para que ela não fique visível. Logo, sim, é uma ótima prática a sua sugestão de transformar isso em uma constante.
+
+Iasmin: Vamos criar duas constantes após o Scanner. A primeira será para representar a parte inicial do endereço. Então, teremos um private string endereco.
+
+Também teremos um private string API_key.Porém, como estamos lidando com coisas que serão constantes e que não serão modificadas ao longo do tempo, podemos fazer duas coisas. A primeira será chamar essas variáveis de final, o que significa que elas não serão modificadas mais pra frente.
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+    
+    private final String endereco;
+    private final String apiKey;
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine(); 
+            //"https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c"
+    }
+}
+Copiar código
+Para as constantes, adotamos o padrão de nomenclatura em letras maiúsculas. Portanto, em vez de "endereco", utilizamos todas as letras maiúsculas. Da mesma forma, a chave de API (API key) também será em maiúsculas, com uso de underline.
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+    
+    private final String ENDERECO;
+    private final String API_KEY;
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine(); 
+            //"https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c"
+    }
+}
+Copiar código
+Jacqueline: Observamos que o código está sublinhado em vermelho nas constante que estamos criando. Isso ocorre porque, ao usar a palavra reservada "final", é obrigatório atribuir um valor, uma vez que essa variável não será modificada posteriormente.
+
+Iasmin: Portanto, após a palavra "ENDERECO", colamos a primeira parte constante do endereço, https://www.omdbapi.com/?t=. Assim a constante está declarada e agora não podemos mais modificar essa string.
+
+Aplicamos o mesmo para a API_KEY, copiamos o final do endereço e colamos para atribuir o valor à variável.
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+    
+    private final String ENDERECO = "https://www.omdbapi.com/?t=";
+    private final String API_KEY = "&apikey=6585022c";
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine(); 
+            //"https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c"
+    }
+}
+Copiar código
+Ótimo, conseguimos declarar essas duas partes.
+
+Concatenando o endereço
+Iasmin: Agora, a próxima etapa envolve a concatenação das partes constantes com a seção que variará, que é o nome da série. Dessa forma, o endereço completo será formado pela constante do início do endereço (ENDERECO), seguida pelo nome da série e, por fim, pela chave de API (API key).
+
+ENDERECO + nomeSerie + API_KEY
+Copiar código
+No entanto, sempre que inserirmos "Gilmore Girls", por exemplo, a API pode não interpretar o espaço entre as palavras. Por isso, será necessário efetuar uma substituição. Sempre que houver um espaço, faremos a troca por um sinal de adição ("+"). Dessa forma, a API reconhecerá a série exatamente como é apresentada no código.
+
+Jacqueline: Na linha 16 do endereço, encontramos "Gilmore+Girls". Se a pessoa usuária digitar um espaço, precisaremos realizar essa mesma operação, substituindo todo espaço por um "+".
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+    
+    private final String ENDERECO = "https://www.omdbapi.com/?t=";
+    private final String API_KEY = "&apikey=6585022c";
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine();
+            ENDERECO + nomeSerie.replace() + API_KEY
+            //"https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c"
+    }
+}
+Copiar código
+Iasmin: Após o nomeSerie usamos o .replace("", +) para alterar todo espço por um sinal de mais (+). Observem que há um sublinhado na cor vermelha, isso acontece porque temos que passar esse endereço para uma classe de busca de dados de consumo API, podemos copiar o que estava sendo feito na classe SpringMatchApplication.
+
+Copiamos até ObterDados para passar para a classe principal.
+
+Após digitarmos Leitura.nextLine, teclamos "Enter" e colaremos essa seção de consumo da API. Também passamos o endereço. Para isso, copiamos a linha com a concatenação e colamos dentro dos parênteses.
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+    
+    private final String ENDERECO = "https://www.omdbapi.com/?t=";
+    private final String API_KEY = "&apikey=6585022c";
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine();
+            var consumoAPI = new ConsumoApi();
+            var json = consumoApi.obterDados(ENDERECO + nomeSerie.replace("", "+") + API_KEY)
+            
+            //"https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c"
+    }
+}
+Copiar código
+Nesta parte, estamos criando uma instância de ConsumoAPI dentro do método. Como essa instância de ConsumoAPI será utilizada em várias ocasiões quando trocarmos o endereço, podemos considerar a possibilidade de tornar essa classe um atributo da classe principal.
+
+Então abaixo do Scanner digitamos private ConsumoApi consumo = new ConsumoApi();. Assim, podemos remover o var consumoAPI = new ConsumoApi(); e no var json em vez de "consumoApi" deixamos somente "consumo".
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+    private ConsumoApi consumo = new ConsumoApi();
+    
+    private final String ENDERECO = "https://www.omdbapi.com/?t=";
+    private final String API_KEY = "&apikey=6585022c";
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine();
+            var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY)
+            
+            //"https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c"
+    }
+}
+Copiar código
+Concluímos a parte mais complexa, que era a divisão desse endereço.
+
+Jacqueline: Com isso feito, agora podemos imprimir o que veio ou já modelar do formato que desejamos.
+
+Caso queiramos buscar todas as temporadas, como fizemos anteriormente, podemos copiar aquele código. Depois de obter essa série, conseguiremos representá-la. Portanto, devemos pegar o dado da série e fazer o loop.
+
+Iasmin: Legal.
+
+Faremos isso no próximo vídeo!
