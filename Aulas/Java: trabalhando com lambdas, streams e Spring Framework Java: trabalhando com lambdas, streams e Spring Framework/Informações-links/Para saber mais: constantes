@@ -1,0 +1,29 @@
+As constantes desempenham um papel importante na programação, permitindo que valores fixos e imutáveis sejam armazenados e utilizados ao longo do código. Elas são especialmente úteis quando temos valores que não devem ser alterados durante a execução do programa.
+
+Ao declarar uma constante, é importante seguir algumas boas práticas. A nomenclatura das constantes deve ser clara e descritiva, utilizando letras maiúsculas e separando as palavras por underscore (_), seguindo o padrão conhecido como "snake_case". Isso torna o código mais legível e compreensível para outros desenvolvedores.
+
+Em Java, podemos declarar uma constante utilizando a palavra-chave final. Por exemplo:
+
+final int ANO_ATUAL = 2022;
+final String NOME_EMPRESA = "Alura";
+Copiar código
+Nesse exemplo, ANO_ATUAL e NOME_EMPRESA são constantes que armazenam um valor inteiro e uma string, respectivamente. O uso da palavra-chave final indica que essas variáveis não podem ter seu valor alterado após a atribuição inicial.
+
+Além disso, é uma boa prática declarar as constantes como static caso elas pertençam a uma classe e sejam compartilhadas por vários objetos. Dessa forma, as constantes podem ser acessadas diretamente através do nome da classe, sem a necessidade de instanciar um objeto.
+
+public class ExemploConstantes {
+    public static final int ANO_ATUAL = 2022;
+    public static final String NOME_EMPRESA = "Alura";
+}
+Copiar código
+No exemplo acima, as constantes ANO_ATUAL e NOME_EMPRESA são declaradas como static, permitindo que sejam acessadas diretamente através da classe ExemploConstantes. Veja por exemplo como poderíamos acessá-las a partir de nosso métodos main.
+
+public class Principal {
+    public static void main(String[] args) {
+        System.out.println(“Eu trabalho na empresa “ +  ExemploConstantes.NOME_EMPRESA);
+    }
+}
+Copiar código
+O uso de constantes traz benefícios como facilitar a manutenção do código, evitar erros de digitação e tornar o código mais legível. Além disso, elas ajudam a evitar a repetição de valores em diferentes partes do código, promovendo a consistência e a reutilização.
+
+Lembre-se de que as constantes devem ser utilizadas para valores que não devem ser alterados durante a execução do programa.
