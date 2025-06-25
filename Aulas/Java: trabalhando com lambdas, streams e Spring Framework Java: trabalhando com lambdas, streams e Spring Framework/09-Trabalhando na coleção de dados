@@ -1,0 +1,216 @@
+Transcrição
+Principal.java
+
+// código omitido
+            
+                    List<DadosTemporada> temporadas = new ArrayList<>();
+
+                    for(int i = 1; i<=dados.totalTemporadas(); i++) {
+                                    json = consumo.obterDados(ENDERECO + nomeSerie.replace("", "+") +"&season=" + i + API_KEY)  
+                                    DadosTemporadas dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+                                    temporadas.add(dadosTemporada);
+
+                    }
+                    temporadas.forEach(System.out::println);
+    }
+}
+Copiar código
+Trabalhando na coleção de dados
+Iasmin: Agora que os dados estão salvos, é importante considerar as pessoas usuárias que vão acessar as informações. Conforme discutido antes, desejamos exibir os episódios de todas as temporadas.
+
+No entanto, em certas ocasiões, a pessoa usuária pode não precisar de todos os detalhes do episódio. Ao acessar a aba "Run" no canto inferior esquerdo, onde examinamos os dados, é possível ver a temporada e os episódios listados consecutivamente, com os DadosEpisodio ao lado.
+
+Embora possamos compreender a situação do que está sendo exibido, é possível imprimir somente os títulos das informações. O que você acha, Jaque?
+
+Jacqueline: Boa ideia. Iniciaremos imprimindo os títulos para entender como essa manipulação funciona. Quando uma coleção está contida dentro de outra, temos uma coleção de temporadas, e cada temporada contém uma coleção de episódios.
+
+Iasmin: Dado que há duas listas, a abordagem será similar ao que já está implementado no trecho FOR da linha 30.
+
+Nesse caso, precisaremos percorrer cada temporada. Entretanto, dentro de cada temporada, existe uma lista de episódios. Portanto, será necessário iterar através dessa lista de episódios também. Com base nisso, na linha 37, começaremos a implementar essa parte da iteração.
+
+Agora, estabeleceremos um contador i, começando do zero, uma vez que não consideramos mais os números das temporadas. Dessa forma, i será iniciado com o valor zero. Enquanto i for menor que dados.totalTemporadas(), incrementamos i++ por um em cada ciclo. Nesse ponto, será necessário acessar a coleção de episódios associada à respectiva temporada.
+
+Principal.java
+
+// código omitido
+
+                    temporadas.forEach(System.out::println);
+                    
+                    for (int i = 0; i < dados.TotalTemporadas(); i++){
+                    
+                    }
+    }
+}
+Copiar código
+Neste ponto, declaramos uma lista de dados de episódios (List<DadosEpisodio>) e a chamaremos de episodiosTemporada. Depois disso, utilizaremos temporadas.get(i) para acessar as temporadas. Estaremos obtendo a temporada correspondente ao índice atual, que pode ser o índice zero, o índice um e assim por diante.
+
+Em seguida, coletamos os episódios que estão armazenados dentro dela. Desta forma, acessaremos os episódios usando .episodios();.
+
+Após esse passo, teremos que percorrer essa lista de episodiosTemporada. Faremos um loop for bastante semelhante ao que foi utilizado anteriormente. Começaremos com um contador int j iniciado em zero. O loop continuará enquanto j for menor que o tamanho de episodiosTemporada.size().
+
+A cada iteração, incrementaremos o valor de j por um. Nesse momento, imprimiremos os títulos de cada episódio correspondente.
+
+Dessa forma, vamos utilizar um System.out.println() para exibir os episodiosTemporada. Novamente, estaremos acessando cada episódio, o que faremos usando o método get com o índice j. Depois de obter o episódio, focaremos apenas em extrair o título dele. Nesse ponto, selecionaremos o atributo título.
+
+Principal.java
+
+// código omitido
+
+    for(int i = 0; i < dados.totalTemporadas(); i++){
+            List<DadosEpisodio> episodiosTemporada = temporadas.get(i).episodios();
+            for(int j = 0; j< episodiosTemporada.size(); j++){
+                    System.out.println(episodiosTemporada.get(j).titulo());
+            }
+    }
+}
+Copiar código
+Feito isso, agora podemos imprimir todos os nossos títulos, não é, Jaque?
+
+Jacqueline: Isso mesmo, acredito que sim, essa abordagem deve ser adequada para nossas necessidades. Agora podemos observar a execução da aplicação.
+
+Iasmin: Vamos retornar à nossa classe ScreenMatchApplication e escolher a opção de play no botão localizado na parte superior. Será exibido o terminal com a seguinte pergunta:
+
+Digite o nome da série para busca
+
+Em seguida, digitamos a nossa série, Never Have I Ever , e será exibida uma lista de diversos episódios. Note que há um episódio sem título...
+
+Jacqueline: Nessa série voltada para o público jovem, todos os títulos começam com reticências. Dê uma olhada nos títulos.
+
+Iasmin: No entanto, acho que é um pouco confuso essa parte de fazer dois for, porque temos que lidar com índice, i, j, são várias coisas que podemos usar e aí chega num momento que vai gerar exceção. Existe uma maneira de fazer isso de uma forma um pouco mais rápida, certo, Jaque?
+
+Jacqueline: Exato, à medida que expandimos nosso entendimento e nos aprofundamos na linguagem, avançamos de uma etapa em que questionamos os procedimentos e as abordagens, para uma fase em que buscamos aprimorar o modo como realizamos as tarefas.
+
+No seu caso, você alcançou os resultados desejados, porém é possível que já tenha percebido que essa talvez não seja a maneira mais eficaz. É provável que exista uma abordagem um pouco mais otimizada, uma forma mais eficiente de atingir seus objetivos.
+
+Isso apresenta um aspecto realmente fascinante. À medida que expandimos nosso entendimento, surgem indagações como: "Será possível aprimorar a forma como estou abordando isso?" A resposta positiva surge, pois o Java disponibiliza ferramentas para aprimorar nossa abordagem.
+
+Naturalmente, Yasmin está ciente dessas nuances. Sendo uma especialista nesse campo, ela nos conduzirá por esse conceito.
+
+Iasmin: Quando eu atingir o nível que você está, Jaque, é que me tornarei um especialista de fato.
+
+Para simplificar todo esse esforço, podemos contar com uma funcionalidade relativamente do Java 8. Ainda há muitas pessoas que não estão familiarizadas com essa funcionalidade, já que estão habituadas a versões anteriores. Como vamos usar esse recurso?
+
+Vamos adicionar o nome da coleção, que é temporadas, e ela já incluirá um método interno. No cenário, onde buscamos percorrer todas as temporadas, podemos empregar um laço forEach(). Agora, em relação a cada temporada t, vamos designar um parâmetro de forma arbitrária, tipicamente usando uma única letra.
+
+Assim, para cada temporada t, acessaremos os episódios dela, denotados por t.episodios(), e prosseguiremos para percorrer essa lista de episódios usando mais um laço forEach(). Agora, tratando cada episódio e, novamente utilizaremos um parâmetro para imprimir e.titulo, executando System.out.println(e.título);.
+
+Principal.java
+
+// código omitido
+
+    for(int i = 0; i < dados.totalTemporadas(); i++){
+            List<DadosEpisodio> episodiosTemporada = temporadas.get(i).episodios();
+            for(int j = 0; j< episodiosTemporada.size(); j++){
+                    System.out.println(episodiosTemporada.get(j).titulo());
+            }
+    }
+    temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+
+}
+Copiar código
+Feito isso, conseguimos transformar todas aquelas linhas em apenas uma, de forma bem legível.
+
+Podemos adicionar comentários ao código que já havíamos criado.
+
+Jacqueline: Vamos fazer isso e, em seguida, discutiremos o significado por trás dessas instruções. Vamos utilizar t -> para indicar uma relação, seguindo para cá e para lá, e então e. Vamos rodar e analisar o que vai acontecer e posteriormente entender o que significa tudo isso.
+
+Principal.java
+
+// código omitido
+
+//        for(int i = 0; i < dados.totalTemporadas(); i++){
+//            List<DadosEpisodio> episodiosTemporada = temporadas.get(i).episodios();
+//            for(int j = 0; j< episodiosTemporada.size(); j++){
+//                System.out.println(episodiosTemporada.get(j).titulo());
+//            }
+//        }//        for(int i = 0; i < dados.totalTemporadas(); i++){
+//            List<DadosEpisodio> episodiosTemporada = temporadas.get(i).episodios();
+//            for(int j = 0; j< episodiosTemporada.size(); j++){
+//                System.out.println(episodiosTemporada.get(j).titulo());
+//            }
+//        }
+    temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+
+}
+Copiar código
+Iasmin: Após adicionar os comentários, podemos executar o código para observar o resultado. Novamente, vamos até a nossa aba superior e clicar no botão de reprodução (play). Obtemos:
+
+Digite o nome da série para busca
+
+Vamos digitar a série: Never Have I Ever, e teclar "Enter".
+
+O retorno está exatamente igual ao método que havíamos desenvolvido. Isso evidencia que as lambdas são recursos valiosos. Já abordamos o assunto das lambdas?
+
+Jacqueline: Ainda não abordamos o tópico das lambdas. Vamos falar agora.
+
+Entendendo o recurso lambda
+Jacqueline: O que exatamente são essas lambdas? Qual é o propósito dessa seta? Para que estamos empregando essa abordagem?
+
+Iasmin: Portanto, o que fizemos corresponde ao uso de lambdas.
+
+As lambdas são funções nas quais usaremos um parâmetro. Como já mencionamos, costumamos representar esse parâmetro por meio de uma única letra. E sempre que estivermos percorrendo ou manipulando uma coleção, associaremos esse parâmetro a alguma ação adicional.
+
+Ao fazer isso, conseguimos alcançar um resultado semelhante ao que foi obtido no for(), por exemplo. Às vezes não sabemos de onde esse parâmetro vem, como o Java está adivinhando o que estou fazendo aqui dentro.
+
+E quando chamamos um temporadas.forEach(), por exemplo, visualizamos que tem um consumer com dados temporadas dentro.
+
+Quando realizamos um forEach(), o Java por si só já compreende que estamos operando com as temporadas dentro dele. É por isso que podemos utilizar apenas uma única letra como parâmetro, pois o Java compreenderá automaticamente como lidar com essa situação, concorda, Jaque?
+
+Jacqueline: Sim, ele já compreende o tipo de dados que você está iterando com aquele forEach(). Portanto, utilizamos esse alias, esse apelido, para função lambda. Algumas pessoas usam f para tudo, para qualquer caso, usam f, f ponto alguma coisa.
+
+Alguns usam a primeira letra do tipo que você está iterando. No caso da Iasmin, ela está iterando temporadas, ela usou o t para ter uma boa legibilidade. Quando ela iterou episódios, ela usou o e. Portanto, isso fica mais claro para nós, o que estamos fazendo.
+
+Poderia ser um nome completo também, mas o fato é que o Java já entende o tipo que você está trabalhando e você consegue fazer isso como uma função anônima sem ter que estar fora do método. Você consegue fazer ali dentro e resolver muitas coisas em uma só linha.
+
+Iasmin: Vamos incluir na documentação informações sobre como criar o seu próprio lambda, visto que há algumas diretrizes a serem seguidas. Além disso, há outro aspecto distintivo que se manifesta quando empregamos lambdas, algo que já tínhamos utilizado, como é evidente na linha 36.
+
+Principal.java
+
+// código omitido
+
+temporadas.forEach(System.out::println);
+
+// código omitido
+Copiar código
+Existiam as temporadas, a construção forEach e essa utilização de System.out com quatro pontos. Já incorporamos essa prática desde o aprendizado de orientação a objetos, mesmo que não tenhamos discutido a fundo sobre seu funcionamento. A questão é que esses quatro pontos equivalem a executar um forEach nas temporadas t, seguido de System.out.println() com o próprio objeto t.
+
+Principal.java
+
+// código omitido
+
+    temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+    temporadas.forEach(t -> System.out.println(t));
+
+}
+Copiar código
+No entanto, há uma maneira ainda mais concisa que podemos adotar, e a própria IDE já nos auxilia nesse sentido. Quando clicamos nesta região em destaque em amarelo na IDE, que foi marcada em amarelo para nós, uma lâmpada amarela surge, e então ela nos oferece a opção de substituir a lambda pelo método de referência.
+
+Ao realizar essa substituição, transformamos o código para utilizar essa forma dos quatro pontos.
+
+Principal.java
+
+// código omitido
+
+    temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+    temporadas.forEach(System.out::println);
+
+}
+Copiar código
+Sempre que lidarmos com um único parâmetro e invocarmos uma única função com ele, já poderemos empregar essa notação dos quatro pontos ao chamar o método.
+
+Jacqueline: Muitas pessoas afirmam que o Java é verboso. E essa afirmação procede, caso você não se mantenha atualizado e não faça uso das características mais recentes. Isso ocorre porque ao empregar as funcionalidades modernas, você consegue expressar conceitos em apenas uma linha. Isso significa que não seria necessário aninhar múltiplos blocos de for() uns dentro dos outros.
+
+Assim sendo, uma parte significativa do nosso conhecimento, que é de considerável importância, reside em manter-se atualizado com as inovações que a linguagem está introduzindo.
+
+Iasmin: Por outro lado, em algumas situações, utilizamos o System.out.println, mas ocasionalmente não temos clareza sobre o que está ocorrendo.
+
+Dessa forma, em algumas instâncias, é benéfico adicionar mais código para obtermos uma compreensão mais precisa do processo em execução. Acredito que a decisão depende tanto do contexto em que as atividades estão sendo realizadas quanto do estado atual do projeto, para que se possa efetuar essas escolhas de forma apropriada.
+
+Jacqueline: Ao abordar a otimização de codificação, a exploração de recursos aprimorados e prosseguindo na sequência, iremos explorar outros recursos altamente intrigantes do Java, conhecidos como streams (fluxos), os quais permitem realizar diversas operações em um fluxo contínuo de dados. Essa perspectiva é realmente empolgante.
+
+Nosso projeto vai ser enriquecido com funcionalidades notáveis, não é mesmo, Iasmin?
+
+Iasmin: Sim, vamos mergulhar nesse conhecimento. Até mais!
+
+ Discutir no Fórum
+ Próxim
