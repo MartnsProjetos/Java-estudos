@@ -1,0 +1,185 @@
+Transcrição
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+    private ConsumoApi consumo = new ConsumoApi();
+    
+    private final String ENDERECO = "https://www.omdbapi.com/?t=";
+    private final String API_KEY = "&apikey=6585022c";
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine();
+            var json = consumo.obterDados(ENDERECO + nomeSerie.replace("", "+") + API_KEY)
+            
+            //"https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c"
+    }
+}
+Copiar código
+Buscando dados completos da série
+Iasmin: Penso que podemos iniciar com a DadoSerie, uma vez que iremos precisar da numeração da temporada, não é verdade?
+
+Jacqueline: Por conseguinte, já dispomos dessa linha preparada. Creio que podemos aproveitar diversos elementos.
+
+Iasmin: De forma básica, o procedimento será remover muitos elementos que estavam presentes no método run do arquivo ScreenmatchApplication e transferi-los para o principal. Na linha 29 e 30, vamos copiar a parte do conversor.
+
+ScreenmatchApplication
+
+ConverteDados conversor = new ConverteDados();
+DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
+Copiar código
+E colamos no arquivo Principal abaixo do json.
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+    private ConsumoApi consumo = new ConsumoApi();
+    
+    private final String ENDERECO = "https://www.omdbapi.com/?t=";
+    private final String API_KEY = "&apikey=6585022c";
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine();
+            var json = consumo.obterDados(ENDERECO + nomeSerie.replace("", "+") + API_KEY)
+            ConverteDados conversor = new ConverteDados();
+            DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
+
+            //"https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c"
+    }
+}
+Copiar código
+E novamente, percebemos a criação de um conversor dentro do método. Podemos copiar a linha do ConverteDados e transferi-la para a declaração dos atributos também, uma vez que planejamos utilizar o conversor em várias ocasiões. Após a etapa de consumo da API, vamos inserir um private, onde o conversor será instanciado como new ConverteDados().
+
+Vamos eliminar também essa linha do endereço comentado, visto que já consideramos tudo. Agora, podemos exibir esses dados da série. Assim, vamos utilizar um System.out.println() para imprimir os dados.
+
+Principal.java
+
+package br.com.alura.screenmatch.principal;
+
+public class Principal {
+
+    private Scanner leitura = new Scanner(System.in); 
+    private ConsumoApi consumo = new ConsumoApi();
+        private ConverteDados conversor = new ConverteDados();
+
+    private final String ENDERECO = "https://www.omdbapi.com/?t=";
+    private final String API_KEY = "&apikey=6585022c";
+
+    public void exibMenu(){
+            System.out.println("Digite o nome da série para a busca")
+            var nomeSerie = leitura.nextLine();
+            var json = consumo.obterDados(ENDERECO + nomeSerie.replace("", "+") + API_KEY)
+            DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
+            System.out.println(dados);
+    }
+}
+Copiar código
+Agora, na classe ScreenMatchApplication, podemos remover toda essa seção que estávamos desenvolvendo relacionada aos dados da série. Vamos deixar apenas as temporadas, pois ainda não as transferimos, certo?
+
+Jacqueline: Exatamente.
+
+Iasmin: Então, removemos essa parte dos dados dos episódios. Comentaremos este final em que estávamos lidando com as temporadas. Para isso, usamos o atalho Ctrl/.
+
+Na linha 24, iremos simplesmente criar uma instância da classe principal. Podemos definir Principal como sendo new Principal(). Em seguida, chamamos o método ExibeMenu() dessa classe.
+
+ScreenMatchApplication
+
+// código omitido
+
+Principal principal = new Principal();
+principal.exibeMenu();
+
+// código omitido
+Copiar código
+No topo, algumas importações que já não estão sendo utilizadas surgirão. Qual é mesmo o atalho que podemos usar, Jaque?
+
+Jacqueline: Podemos usar o "Ctrl + Alt + O", que remove tudo que não está mais sendo utilizado. Portanto, remove as importações que nós já não estamos mais utilizando na classe.
+
+Iasmin: Existem elementos que, em certas ocasiões, parecem supérfluos. Um exemplo disso é copiar e colar para a classe principal. Contudo, qual é a razão por trás dessa ação? No entanto, neste contexto, o meu método run será consideravelmente simplificado. E vamos remover também várias importações que já existiam antes.
+
+Jacqueline: Vamos remover os acoplamentos, certo? Sempre comentamos isso. Para ter uma alta coesão, deve haver baixo acoplamento. Portanto, quanto menos acoplado estas classes estiverem, melhor para a aplicação.
+
+Iasmin: Vamos rodar o projeto para ver se as alterações foram de fato efetivas.
+
+No terminal, obtemos:
+
+Digite o nome da série para busca
+
+Agora, vamos digitar o nome da série: Never have I ever, e teclamos "Enter". Como retorno da busca da série, temos:
+
+DadosSerie[titulo-Never Have I Ever, totalTemporadas=4, avaliacao=7.9]
+
+Jacqueline: A série possui quatro temporadas, mas avaliação 7.9, baixa.
+
+Iasmin: Com a série escolhida e considerando que a parte de obter o nome da série está funcionando, agora podemos replicar a outra parte dos dados das temporadas, sendo cautelosos ao lidar com as modificações necessárias no endereço em alguns pontos, correto, Jaque?
+
+Jacqueline: Vamos transferir esse conteúdo para o principal e revisar minuciosamente o que precisamos ajustar.
+
+Iasmin: Copiamos o que comentamos na lista do arquivo ScreenMatchApplication e então, colamos o conteúdo no principal. Precisamos remover os comentários também, utilizando o atalho "Ctrl + /".
+
+Vamos corrigir a indentação também. Agora vou importar esse dado temporada, dando um "Alt + Enter" conforme a IDE já está sugerindo. Precisaremos importar a lista também. Teremos várias importações a fazer. Apenas o consumoAPI que teremos que modificar o nome para consumo.
+
+Principal.java
+
+// código omitido
+
+            System.out.println(dados);
+            
+            List<DadosTemporada> temporadas = new ArrayList<>();
+        
+            for(int i = 1; i<=dados.totalTemporadas(); i++) {
+                    json = consumo.obterDados (endereco: "https://www.omdbapi.com/?t=gilmore+girls&season=" + i + "&apikey=6585022c"
+                    DadosTemporadas dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+                    temporadas.add(dadosTemporada);
+
+            }
+            temporadas.forEach(System.out::println);
+    }
+}
+Copiar código
+Agora não temos nenhum erro. Mas vamos analisar este endereço.
+
+Jacqueline: Nosso endereço sofrerá variações. Vamos necessitar combinar o endereço com o número da temporada (season) e também com a nossa API. Isso exigirá uma modificação nesta parte também.
+
+Iasmin: Portanto, teremos algo bastante similar ao que já possuíamos, que consistia no endereço, nome e API_KEY, porém acrescentaremos também a informação da temporada (season). Nesta parte do método obterDados, passaremos essa informação.
+
+Porém, após o nome da série, precisaremos concatenar com a temporada e o número dela. Passaremos um "&season=", concatenando com o i.
+
+Principal.java
+
+// código omitido
+            
+            List<DadosTemporada> temporadas = new ArrayList<>();
+        
+            for(int i = 1; i<=dados.totalTemporadas(); i++) {
+                    json = consumo.obterDados(ENDERECO + nomeSerie.replace("", "+") +"&season=" + i + API_KEY)  
+                    DadosTemporadas dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+                    temporadas.add(dadosTemporada);
+
+            }
+            temporadas.forEach(System.out::println);
+    }
+}
+Copiar código
+Jacqueline: Caso seja possível, pressione "Alt + 1", a visualização do projeto será fechada, contribuindo para uma visualização completa da linha. Portanto, teremos a sequência HTTP até o 'T' igual, seguida pelo nome da série fornecido pela pessoa usuária, o número da temporada (season) para todas as temporadas e, por fim, a chave da API.
+
+Acho que está tudo certo. É só testar para ver os episódios de "Never Have I Ever".
+
+Iasmin: Clicamos no botão de play para rodar e obtemos a seguinte mensagem no terminal:
+
+Digite o nome da série para busca
+
+Vamos digitar "Never Have I Ever". Temos as quatro temporadas e a nota 7.9.
+
+Agora dispomos de diversas informações armazenadas. Se alguém desejar acessar os dados da série, terá acesso tanto às informações gerais quanto a todos os episódios de todas as temporadas. Agora que esses dados estão prontos, creio que podemos iniciar o trabalho com eles, concorda, Jaque?
+
+Jacqueline: Isso mesmo, uma ideia excelente. Agora que identificamos uma abordagem otimizada para inserir o nome de uma série e recuperar todas as informações relacionadas às suas temporadas e episódios, podemos dar início à manipulação desses dados.
