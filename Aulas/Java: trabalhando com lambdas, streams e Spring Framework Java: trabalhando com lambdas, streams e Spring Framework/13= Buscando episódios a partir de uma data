@@ -1,0 +1,160 @@
+Transcrição
+Jacqueline: Então, vamos trabalhar com a manipulação de datas!
+
+Temos séries com muitas temporadas e queremos ver os episódios a partir de uma determinada data. Então, podemos incluir esse recurso na aplicação. Dessa forma, após encontrar a série e buscar os episódios, perguntaremos para a pessoa usuária a partir de que ano deseja ver os episódios.
+
+Iasmin: Podemos olhar episódios que foram lançados antes ou depois de uma data. Uma vez que já salvamos esses dados, só precisamos trabalhar com a API de datas.
+
+Jacqueline: Isso mesmo. Veremos o que essa API pode nos oferecer.
+
+A primeira coisa que vamos fazer é imprimir todos os episódios e adicionar a pergunta "A partir de que ano você deseja ver os episódios?".
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+                .map(d -> new Episodio(t.numero(), d)))
+        .collect(Collectors.toList());
+
+episodios.forEach(System.out::println);
+
+System.out.println("A partir de que ano você deseja ver os episódios? ");
+Copiar código
+A pessoa usuária vai digitar um ano, então precisamos lê-lo. Sendo assim, vamos colocar uma variável ano que receberá leitura.nextInt().
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+                .map(d -> new Episodio(t.numero(), d)))
+        .collect(Collectors.toList());
+
+episodios.forEach(System.out::println);
+
+System.out.println("A partir de que ano você deseja ver os episódios? ");
+var ano = leitura.nextInt();
+Copiar código
+Lembre-se que, toda vez que usamos nextInt(), em seguida devemos usar nextLine(). Caso contrário, quando teclarmos "Enter", ele confundirá os valores lidos.
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+                .map(d -> new Episodio(t.numero(), d)))
+        .collect(Collectors.toList());
+
+episodios.forEach(System.out::println);
+
+System.out.println("A partir de que ano você deseja ver os episódios? ");
+var ano = leitura.nextInt();
+leitura.nextLine();
+Copiar código
+A pessoa usuária vai nos informar um ano, mas como vamos formatar uma data para mostrar esses episódios?
+
+Teremos que criar uma data de busca. Portanto, vamos declarar uma variável do tipo LocalDate chamada dataBusca. Nela, usaremos LocalDate. of(), que requer ano, mês e dia.
+
+Logo, se a pessoa usuária digitar 2015, queremos que seja formada uma data a partir de 1º de janeiro de 2015
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+                .map(d -> new Episodio(t.numero(), d)))
+        .collect(Collectors.toList());
+
+episodios.forEach(System.out::println);
+
+System.out.println("A partir de que ano você deseja ver os episódios? ");
+var ano = leitura.nextInt();
+leitura.nextLine();
+
+LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+Copiar código
+Agora, poderíamos criar uma nova lista com os episódios filtrados a partir do ano selecionado, assim não afetaríamos nossa primeira lista de episódios. Porém, como ela é imutável, vamos optar apenas por imprimi-la.
+
+Vamos colocar episodios.stream() e filtrar a data com .filter(). Neste .filter(), informamos que queremos um episódio cuja data de lançamento seja depois da data de busca definida. Para isso, usaremos o método .isAfter() passando dataBusca.
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+                .map(d -> new Episodio(t.numero(), d)))
+        .collect(Collectors.toList());
+
+episodios.forEach(System.out::println);
+
+System.out.println("A partir de que ano você deseja ver os episódios? ");
+var ano = leitura.nextInt();
+leitura.nextLine();
+
+LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+
+episodios.stream()
+    .filter(e -> e.getDataLancamento().isAfter(dataBusca))
+Copiar código
+Lembre-se que, no construtor, fizemos uma tratativa em que se não fosse possível converter a data, a deixaríamos como nula. Portanto, precisamos conferir se essa data não é nula. Ou seja, ela não pode ser nula, pois não queremos episódios sem data, e também deve ser depois da data que estamos buscando.
+
+Iasmin: Nosso código correria o risco de levar um Null Pointer Exception se a busca não estivesse correta.
+
+Jacqueline: Exatamente. Por isso, vamos fazer uma condição de checagem para que a data de lançamento seja diferente de null e posterior à data buscada.
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+                .map(d -> new Episodio(t.numero(), d)))
+        .collect(Collectors.toList());
+
+episodios.forEach(System.out::println);
+
+System.out.println("A partir de que ano você deseja ver os episódios? ");
+var ano = leitura.nextInt();
+leitura.nextLine();
+
+LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+
+episodios.stream()
+    .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+Copiar código
+Em seguida, vamos utilizar um .forEach() e fazer uma impressão. Para cada episódio, queremos que o comando System.out.println seja da seguinte forma:
+
+episodios.stream()
+    .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+    .forEach(e -> System.out.println(
+        "Temporada: " + e.getTemporada() +
+            " Episódio: " + e.geTitulo() +
+                " Data lançamento: " + e.getDataLancamento()
+    ))
+Copiar código
+Perceba que, estamos trabalhando com a data no formato do OMDB, que é ano-mês-dia. Mas, no Brasil, normalmente representamos a data como dia/mês/ano.
+
+Iasmin: Exatamente! Este pode ser mais um diferencial da nossa aplicação. Como estamos desenvolvendo principalmente para brasileiros, é interessantes optarmos pelo padrão que estão acostumados. Para isso, vamos usar um formatador. Então precisamos declará-lo e depois usá-lo na data.
+
+Jacqueline: Isso!
+
+Então, antes de imprimirmos, vamos criar um DateTimeFormatter chamado formatador e, com .ofPattern(), informar que o formato terá determinado padrão. No caso, dia/mês/ano (dd/MM/yyyy).
+
+DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+episodios.stream()
+    .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+    .forEach(e -> System.out.println(
+        "Temporada: " + e.getTemporada() +
+        " Episódio: " + e.getTitulo() +
+        " Data lançamento: " + e.getDataLancamento()
+    ));
+Copiar código
+Quando o formatador for chamado em algum ponto que tiver LocalDate, a data deve ser apresentada nesse formato. Portanto, após e.getDataLancamento(), chamamos .format().
+
+DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+episodios.stream()
+    .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+    .forEach(e -> System.out.println(
+        "Temporada: " + e.getTemporada() +
+        " Episódio: " + e.getTitulo() +
+        " Data lançamento: " + e.getDataLancamento().format(formatador)
+    ));
+Copiar código
+Vamos executar o programa para ver se exibirá os episódios no formato correto quando escolhermos a série e a data.
+
+Dessa vez, optaremos pela série "gilmore girls" e ano 2003.
+
+Note que foi feito exatamente o que solicitamos: uma lista com os episódios a partir de 1º de Janeiro de 2003. Além disso, a data de cada episódio está no formato dia/mês/ano. O código funcionou!
+
+Até agora, conseguimos pegar uma lista de episódios, filtrá-la a partir de determinado ano e exibir a data formatada. Portanto, é possível realizar diversas transformações usando streams e lambda.
+
+Lembre-se que este é um tópico extremamente importante para quem vai desenvolver em Java, então devemos sempre nos aprimorar. Mas não vamos parar por aqui, ainda temos muito para aprender!
+
+Iasmin: Exatamente!
+
+A seguir, vamos começar com nossa jornada de ciência de dados em Java, onde poderemos analisar várias estatísticas de avaliações. Nos vemos lá!
+
