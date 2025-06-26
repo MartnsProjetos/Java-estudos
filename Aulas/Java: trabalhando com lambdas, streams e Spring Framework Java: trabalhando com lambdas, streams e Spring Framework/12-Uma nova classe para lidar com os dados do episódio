@@ -1,0 +1,324 @@
+Transcrição
+Jacqueline: Agora é o momento de criarmos a nossa classe de episódio para fazer uma lista de episódios.
+
+Vamos fazer um List de Episodio no arquivo "Principal.java":
+
+List<Episodio> episodios
+Copiar código
+Como ainda não temos essa classe, vamos criá-la no pacote model. Para isso, clicamos sobre Episodio, que deve estar destacado de vermelho, e no quick fix selecionamos a opção "Create class Episodio".
+
+Uma janela se abrirá onde devemos passar o caminho da localização em "Destination package", que será "br.com.alura.screenmatch.model". Feito isso, basta clicarmos em "OK" e seremos redirecionados para o arquivo "Episodio.java":
+
+package br.com.alura.screenmatch.model;
+
+public class Episodio {
+
+}
+Copiar código
+Por ser uma classe de negócio, vamos adicioná-la ao Git quando surgir uma janela perguntando se queremos fazer esta ação.
+
+Nós queremos criar uma classe, não um record, pois teremos métodos, trataremos o que vai entrar e faremos validações. Logo, será uma classe com os nossos atributos.
+
+O primeiro atributo que podemos colocar é exatamente o que estava faltando: o número da temporada.
+
+public class Episodio {
+    private Integer temporada;
+}
+Copiar código
+Os dados do episódio serão muito parecidos com os que já temos. Sendo assim, podemos copiá-los de DadosEpisodio, no arquivo "DadosEpisodio.java". Esses dados são: título, número do episódio, avaliação e data de lançamento.
+
+public class Episodio {
+    private Integer temporada;
+    String titulo,
+    @JsonAlias("Episode") Integer numero,
+    @JsonAlias("imdbRating") String avaliacao, 
+    @JsonAlias("Released") String dataLancamento
+}
+Copiar código
+Vamos fazer algumas alterações, como incluir um private para cada dado, tornar a avaliação como do tipo double, para podermos fazer estatísticas com essa avaliação, e a data de lançamento como local date.
+
+public class Episodio {
+    private Integer temporada;
+    private String titulo;
+    private Integer numeroEpisodio;
+    private Double avaliacao;
+    private LocalDate dataLancamento;
+}
+Copiar código
+A modelagem da nossa classe está adequada?
+
+Iasmin: Sim, porque representamos tudo o que queríamos. Se quisermos acrescentar mais coisas, podemos fazer isso depois sem problemas.
+
+Jacqueline: Certo!
+
+Então, vamos criar os getters e setters para esses atributos. Para isso, usamos o atalho "Alt + Insert", clicamos na opção "Getter and Setter" e selecionamos todos os atributos.
+
+O código ficará assim:
+
+package br.com.alura.screenmatch.model;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import java.time.LocalDate;
+
+public class Episodio {
+    private Integer temporada;
+    private String titulo;
+    private Integer numeroEpisodio;
+    private Double avaliacao;
+    private LocalDate dataLancamento;
+
+    public Integer getTemporada() {
+        return temporada;
+    }
+
+    public void setTemporada(Integer temporada) {
+        this.temporada = temporada;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public Integer getNumeroEpisodio() {
+        return numeroEpisodio;
+    }
+
+    public void setNumeroEpisodio(Integer numeroEpisodio) {
+        this.numeroEpisodio = numeroEpisodio;
+    }
+
+    public Double getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(Double avaliacao) {
+        this.avaliacao = avaliacao;
+    }
+
+    public LocalDate getDataLancamento() {
+        return dataLancamento;
+    }
+
+    public void setDataLancamento(LocalDate dataLancamento) {
+        this.dataLancamento = dataLancamento;
+    }
+}
+Copiar código
+Vamos remover a importação do JsonAlias, já que só foi importado porque copiamos do outro arquivo.
+
+Linha do código a ser excluída:
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+Copiar código
+De volta ao arquivo "Principal.java", a classe Principal, onde estávamos trabalhando, já entendeu que queremos uma lista de episódios.
+
+Teremos que trabalhar com as temporadas, porque a lista de dados de episódios não possui esta informação. Ficará parecido com o que fizemos em List<DadosEpisodio>, quando transformamos de temporadas para dados de episódios. Sendo assim, podemos copiar as duas primeiras linhas de List<DadosEpisodio> e colar em List<Episodio>:
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+Copiar código
+Em seguida, faremos um .map() para transformar cada um desses DadosEpisódios em novos episódios. Ou seja, vamos utilizar o d, e para cada DadosEpisodio criaremos um new Episodio.
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+            .map(d -> new Episodio)
+Copiar código
+Nesse episódio, precisamos ter o número da temporada e várias outras informações. Então podemos passar t.numero para o número da temporada, e o próprio DadosEpisodios para o construtor de episódios.
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+            .map(d -> new Episodio(t.numero(), d))
+Copiar código
+Depois que fizermos isso, faremos uma conversão utilizando o comando collect(Collectors.toList()).
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+            .map(d -> new Episodio(t.numero(), d))
+        ).collect(Collectors.toList())
+Copiar código
+Perceba que há um sublinhado vermelho em t.numero(), d), indicando que há um erro. Isso porque ainda não criamos esse construtor, certo?
+
+Iasmin: Sim, a importância de trabalhar com classes é evidente, pois agora precisamos criar um novo construtor.
+
+Jacqueline: Todos os conceitos e fundamentos abordamos anteriormente na formação são aplicados aqui: classes, getters e setters, entre outros recursos.
+
+Agora, vamos implementar um construtor personalizado, com os aspectos que precisamos: o número da temporada e os dados desse episódio.
+
+Inclusive, perceba que o quick fix nos traz uma sugestão. Ao clicarmos nele, podemos selecionar a opção "Create constructor", que deve nos redirecionar para o arquivo "Episodio.java", especificamente na classe Episodio.
+
+Vamos nomear este parâmetro como numeroTemporada. O d, usado na expressão lambda, nomearemos como dadosEpisodio, assim mantemos o código mais legível.
+
+public Episódio (Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
+
+}
+Copiar código
+Dentro, vamos fazer this.temporada, que receberá numeroTemporada; this.titulo, que receberá o valor dadosEpisodio.titulo(); e this.numeroEpisodio, que receberá dadosEpisodio.numero():
+
+public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
+        this.temporada = numeroTemporada;
+        this.titulo = dadosEpisodio.titulo();
+        this.numeroEpisodio = dadosEpisodio.numero();
+}
+Copiar código
+Temos mais dois atributos: avaliação e data de lançamento. Assim, this.avaliação receberá dadosEpisodio.avaliação() e this.dataLançamento receberá dadosEpisodio.dataLançamento.
+
+public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
+        this.temporada = numeroTemporada;
+        this.titulo = dadosEpisodio.titulo();
+        this.numeroEpisodio = dadosEpisodio.numero();
+        this.avaliacao = dadosEpisodio.avaliacao();
+        this.dataLancamento = dadosEpisodio.dataLancamento();
+}
+Copiar código
+Iasmin: Note que ocorre um erro, pois esses dois atributos possuem tipos diferentes. Sendo assim, precisamos converter os dados.
+
+Inicialmente, podemos presumir que todas as avaliações serão inseridas da maneira que esperamos e, em seguida, realizaremos a conversão, correto?
+
+Jacqueline: Isso! Vamos assumir que a avaliação foi fornecida corretamente e transformá-la em um double.
+
+Para isso, utilizaremos a classe wrapper Double com a função valueOf(), que vai ler essa string e convertê-la em um double.
+
+public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
+        this.temporada = numeroTemporada;
+        this.titulo = dadosEpisodio.titulo();
+        this.numeroEpisodio = dadosEpisodio.numero();
+        this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());
+        this.dataLancamento = dadosEpisodio.dataLancamento();
+}
+Copiar código
+Caso ocorra algum erro, o trataremos quando acontecer.
+
+Faremos o mesmo para dataLancamento. Portanto, utilizaremos LocalDate e .parse() para tentar obter os caracteres e realizar a conversão.
+
+public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
+        this.temporada = numeroTemporada;
+        this.titulo = dadosEpisodio.titulo();
+        this.numeroEpisodio = dadosEpisodio.numero();
+        this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());
+        this.dataLancamento = LocalDate.parse(dadosEpisodio.dataLancamento());
+}
+Copiar código
+O método .parse() espera que o dado esteja no padrão ISO_LOCAL_DATE, que é declarado no formato ano-mês-dia. Na maioria dos episódios, a data está neste formato, mas, se não estiver, dará um erro e o trataremos quando ocorrer.
+
+Criamos nosso construtor. Ao voltar para "Principal.java", já não temos mais erros.
+
+Agora, vamos imprimir esta lista de episódios para verificar se está correta. Portanto, faremos episodios.forEach(), passando System.out.println.
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+            .map(d -> new Episodio(t.numero(), d))
+        ).collect(Collector.toList())
+        
+episodios.forEach(System.out.println);
+Copiar código
+Ainda não implementamos o método toString(), então, se executarmos o System.out.println(), ele imprimirá apenas o nome da classe. Portanto, vamos incluir este para evitar a execução e a exibição apenas do nome da classe, ao invés do nome do episódio.
+
+No arquivo "Episodio.java", após public void setDataLancamento(), utilizamos o atalho "Alt + Insert", clicamos na opção "toString()" e selecionamos todos os campos.
+
+Será gerado o seguinte trecho:
+
+@Override
+public String toString() {
+    return "Episodio{" +
+           "temporada=" + temporada +
+           ", titulo='" + titulo + '\'' +
+           ", numeroEpisodio=" + numeroEpisodio +
+           ", avaliacao=" + avaliacao +
+           ", dataLancamento=" + dataLancamento +
+           '}';
+    }
+}
+Copiar código
+Vamos excluir a primeira e última linha:
+
+@Override
+public String toString() {
+    return "temporada=" + temporada +
+           ", titulo='" + titulo + '\'' +
+           ", numeroEpisodio=" + numeroEpisodio +
+           ", avaliacao=" + avaliacao +
+           ", dataLancamento=" + dataLancamento;
+    }
+}
+Copiar código
+Implementamos o toString(), pegamos as temporadas, as convertemos em episódios e faremos essa impressão. Vamos executar e ver como fica.
+
+Ao executar, será pedido para digitarmos o nome de uma série. Vamos optar por "game of thrones".
+
+Note que temos um primeiro problema, informado exatamente como uma exceção do tipo "NumberFormatException". Isso, porque, tínhamos episódios avaliados com o texto "N/A" e nosso double não conseguiu converter.
+
+Para esse caso, faremos um tratamento no episódio através do próprio construtor, tratando a exceção. Vamos fazer um try...catch que tentará receber a avaliação e converter para double:
+
+try {
+    this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());
+} catch () {}
+Copiar código
+Se for pego uma exceção NumberFormatException ex, deve colocar a avaliação como zero.
+
+try {
+            this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());
+        } catch (NumberFormatException ex) {
+            this.avaliacao = 0.0;
+        }
+Copiar código
+O construtor ficará assim:
+
+public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
+    this.temporada = numeroTemporada;
+    this.titulo = dadosEpisodio.titulo();
+    this.numeroEpisodio = dadosEpisodio.numero();
+
+    try {
+        this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());
+    } catch (NumberFormatException ex) {
+        this.avaliacao = 0.0;
+    }
+
+    this.dataLancamento = LocalDate.parse(dadosEpisodio.dataLancamento());
+}
+Copiar código
+Vamos executar novamente e passar a série "game of thrones".
+
+Ao fazê-lo, os dados dos episódios são exibidos com a informação de temporada. Além disso, os episódios com avaliação N/A agora estão como 0.0.
+
+Vamos executar novamente, pois nos resta verificar a questão da data. Para isso, vamos escolher a série "euphoria", que apresentava um caso sem data de lançamento.
+
+Note que apresentou erro, uma exceção do tipo "DateTimeParseException", o que significa que não foi possível converter, provavelmente porque o dado não estava como esperado.
+
+Vamos tratar este caso também usando try...catch e colocando a data como um valor nulo:
+
+public Episodio(Integer numeroTemporada, DadosEpisodio dadosEpisodio) {
+    this.temporada = numeroTemporada;
+    this.titulo = dadosEpisodio.titulo();
+    this.numeroEpisodio = dadosEpisodio.numero();
+
+    try {
+        this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());
+    } catch (NumberFormatException ex) {
+        this.avaliacao = 0.0;
+    }
+
+    try {
+        this.dataLancamento = LocalDate.parse(dadosEpisodio.dataLancamento());
+    } catch (DateTimeParseException ex) {
+        this.dataLancamento = null;
+    }
+}
+Copiar código
+Isso pode nos trazer algum problema posteriormente, mas lidaremos com ele mais adiante, se acontecer.
+
+Vamos executar novamente e optar pela mesma série, "euphoria".
+
+Perceba que a execução aconteceu sem erro e os dados foram trazidos corretamente. Ou seja, os episódios sem data foram colocados como null.
+
+Aprimoramos nosso conhecimento em relação a streams, utilizamos .map() para transformar os dados e tratamos as exceções.
+
+Cada novo recurso nos dá segurança e tranquilidade de fazer as coisas de um jeito fácil e rápido, já que só precisamos informar o que queremos que aconteça e o Java decide a melhor forma de implementar.
+
+A seguir, vamos fazer um exemplo interessante usando data. Que tal?
+
+Iasmin: Vamos lá!
