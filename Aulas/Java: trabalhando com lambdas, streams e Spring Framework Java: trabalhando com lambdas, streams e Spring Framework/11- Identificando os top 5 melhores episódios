@@ -1,0 +1,186 @@
+Transcrição
+Jacqueline: Anteriormente, vimos várias ações possíveis de serem realizadas com streams, mas vamos descomentar o trecho comentado, porque voltaremos a trabalhar com as temporadas. Para isso, basta selecionar o trecho e teclar "Ctrl + /" (barra invertida). Além disso, vamos comentar o comando realizado com a lista de nomes, pois o utilizamos apenas como exemplo.
+
+Agora, vamos supor que queremos selecionar o top 5 episódios de uma série de nosso interesse. Porém, uma série possui uma lista de temporadas, onde cada temporada tem uma lista de episódios. Então, teríamos que percorrer uma lista dentro da outra.
+
+Nosso objetivo, porém, é transformar isso em uma única lista somente com dados de episódios. Ou seja, queremos que todos os episódios de todas as temporadas estejam em uma única lista, assim podemos definir o top 5 percorrendo uma só lista, e não mais uma lista dentro de outra.
+
+Iasmin: O streams pode nos auxiliar nesse processo. Isso, porque, invés de usar duas estruturas de repetição for, uma dentro da outra, ou usar dois foreach(), temos algumas funções que nos ajudam a agregar as listas em uma só.
+
+Jacqueline: Como mencionado, queremos uma lista de episódios agregados. A primeira coisa que vamos fazer, portanto, é declarar essa lista onde estarão todos os dados de episódios. Vamos chamar de dadosEpisodios.
+
+List<DadosEpisodio> dadosEpisodios =
+Copiar código
+Agora, chamamos temporadas.stream. Para pegar cada um dos episódios e aglutiná-los, utilizaremos um recurso do streams muito parecido com o .map(): o .flatMap().
+
+Vamos declarar o parâmetro t e, para cada temporada, pegar t.episodios().stream(). Isso vai gerar um fluxo de dados com os episódios de todas as temporadas.
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+Copiar código
+Depois, não queremos fazer um forEach(), como estávamos fazendo antes, mas sim jogar isso em uma nova lista. Então, vamos usar o .collect() e passar Collectors.toList().
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+Copiar código
+Vamos recapitular: tínhamos um fluxo de dados, que era os dados de temporada. Depois que fizemos .flatMap(), foi gerado um stream de DadosEpisodios. Agora, fizemos um collect(Collectors.toList()) e jogamos essa lista em dadosEpisodios. Portanto, a lista dadosEpisodios aglutinou todos os episódios de todas as temporadas.
+
+Há um detalhe interessante que vale a pena citar: ao invés de collect(), poderíamos fazer apenas um .toList(). Mas qual é a diferença entre eles?
+
+Iasmin: A função .toList() retorna uma lista imutável. Dessa forma, não conseguiremos adicionar mais elementos à lista que contém os dados de episódios. Se tentarmos fazer isso, provavelmente irá gerar uma exceção.
+
+Jacqueline: Vamos testar!
+
+Ao invés de .collect() usaremos apenas .toList(). Depois, acessamos a lista dadosEpisodios e chamamos a função .add(), passando um título fictício, com o número do episódio, avaliação e uma data de lançamento, que são os dados do construtor:
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .toList();
+
+dadosEpisodio.add(new DadosEpisodio("teste", 3, "10", "2020-01-01"));
+Copiar código
+Em seguida, vamos aplicar um forEach():
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .toList();
+
+dadosEpisodio.add(new DadosEpisodio("teste", 3, "10", "2020-01-01"));
+dadosEpisodios.forEach(System.out::println);
+Copiar código
+Iasmin: De fato há uma diferença. No exemplo com a lista de strings, apenas imprimimos a lista. Agora, estamos coletando os dados e colocando-os em uma nova lista. Assim, podemos comparar as operações do tipo void, que executam uma ação, e as operações que são funções, pois possuem algum retorno e podem ser guardadas em uma variável.
+
+Jacqueline: Isso mesmo! Agora vamos executar o código para ver o que acontece.
+
+Como retorno, nos é solicitada o nome de uma série para busca. Vamos digitar "euphoria".
+
+Note que busca dadosEpisodios, cria a lista e pega a série, que possui três temporadas. Mas, em seguida, ocorre um erro justamente na linha do comando add(), informando que temos uma coleção imutável e, portanto, não podemos fazer essa adição.
+
+Porém, se utilizarmos collect(), conseguiremos adicionar novos itens a essa lista. Vamos testar para observar a diferença.
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+
+dadosEpisodio.add(new DadosEpisodio("teste", 3, "10", "2020-01-01"));
+dadosEpisodios.forEach(System.out::println);
+Copiar código
+Após a execução, vamos inserir "euphoria" novamente e os dados da série serão buscados. Perceba que conseguimos pegar todos os episódios e adicionar aquele que inserimos como exemplo.
+
+Então, essa é a grande diferença entre usar .toList() e .collect(Collectors.toList()). Se realmente não for preciso modificar essa lista, pode-se usar .toList(). Mas se ela precisa ser alterada em algum momento, devemos usar .collect().
+
+Vamos apagar o trecho de adição, pois fizemos apenas como exemplo.
+
+De volta ao nosso objetivo inicial, lembre-se que queremos pegar o top 5. Uma vez que pegamos dadosEpisodios, precisamos aplicar .stream().
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+            
+dadosEpisodios.stream()
+Copiar código
+Depois, vamos ordenar esta lista por avaliação, de forma decrescente. Ou seja, da melhor para a pior. Isso pode ser feito com a função .sorted():
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+            
+dadosEpisodios.stream()
+    .sorted(Comparator.comparing())
+Copiar código
+Dentro de .sorted(), vamos passar Comparator.comparing() para comparar os dados do episódio pela avaliação.
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+            
+dadosEpisodios.stream()
+    .sorted(Comparator.comparing(DadosEpisodio::avaliacao))
+Copiar código
+Dessa forma, estamos pegando todos os dados dos episódios e comparando pela avaliação. Como queremos em ordem decrescente, utilizaremos o método .reversed().
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+            
+dadosEpisodios.stream()
+    .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+Copiar código
+Após realizar esta ordenação, vamos limitar a 5 utilizando .limit(5). Assim, conseguiremos saber quais são os nossos top 5 episódios.
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+            
+dadosEpisodios.stream()
+    .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+    .limit(5)
+Copiar código
+Por fim, vamos fazer um .forEach(System.out::println).
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+            
+dadosEpisodios.stream()
+    .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+    .limit(5)
+    .forEach(System.out::println);
+Copiar código
+Antes de dadosEpisodios, vamos incluir System.out.println() passando "\n Top 5 episódios". Lembre-se que \n serve para pular linha.
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+            
+System.out.println("\n Top 5 episódios");
+dadosEpisodios.stream()
+    .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+    .limit(5)
+    .forEach(System.out::println);
+Copiar código
+Vamos executar e responder novamente como "euphoria".
+
+Obtemos o seguinte retorno:
+
+Top 5 episódios
+DadosEpisodio[titulo=Pilot, numero=1, avaliacao=N/A, dataLancamento=2019-06-16] 
+DadosEpisodio[titulo=Episode #3.1, numero=1, avaliacao=N/A, dataLancamento=N/A] 
+DadosEpisodio[titulo=Stand Still Like the Hummingbird, numero=5, avaliacao=9.5, dataLancamento-2022-02-06] 
+DadosEpisodio[titulo=Shook Ones Pt II, numero=4, avaliacao-9.1, dataLancamento-2019-07-07] 
+DadosEpisodio[titulo-Trying to Get to Heaven Before They Close the Door, numero=1, avaliacao=9]
+Copiar código
+Perceba que alguns episódios não possuem avaliação e por isso aparecem como "N/A". Mas esses episódios também foram levados em consideração porque a avaliação é uma string. Portanto, não saiu exatamente como planejado.
+
+Sendo assim, antes dessa ordenação, podemos remover quem tem a avaliação como "N/A".
+
+Iasmin: Exatamente! Isso, porque, não queremos que quem não foi avaliado seja considerado.
+
+Jacqueline: Então, antes do método .sorted(), vamos incluir uma operação intermediária, que é o método .filter(). Nele, passamos que os dados de avaliação (e.avaliacao) deverão ser diferentes de N/A.
+
+List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+            
+System.out.println("\n Top 5 episódios");
+dadosEpisodios.stream()
+    .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+    .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+    .limit(5)
+    .forEach(System.out::println);
+Copiar código
+Vamos executar novamente e responder a série "game of thrones".
+
+Como retorno, obtemos os top 5 episódios mais bem-avaliados de Game of Thrones.
+
+Iasmin: Perfeito! Mas note que não temos o indicativo das temporadas desses episódios. Portanto, quem estivesse em nossa aplicação, esbarraria neste problema.
+
+Jacqueline: De fato, perdemos a referência da temporada porque nossos dados de episódio não possuem essa informação.
+
+Pensando nisso, podemos criar uma classe de episódio que incluísse a qual temporada o episódio pertence. Além disso, podemos alterar a avaliação para que não seja mais uma string, e sim um double, onde podemos realizar alguns tratamentos diferenciados.
+
+Iasmin: Sim! Dessa forma, estaremos criando uma identidade para nossa própria aplicação, já que não ficará mais tão parecida com a API do IMDB, mas teremos a ScreenMath que possui suas próprias informações.
+
+Jacqueline: Exato! Então, a seguir, é isso que vamos fazer: criar uma classe de episódio para agregar e tratar as informações que consideramos fundamentais.
+
