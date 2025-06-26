@@ -1,0 +1,37 @@
+A imutabilidade dos dados é um conceito fundamental na programação, que se refere à característica de um objeto ou valor não poder ser alterado após ser criado. Isso traz diversos benefícios, como segurança e confiabilidade do código, uma vez que os dados imutáveis não podem ser acidentalmente modificados ou corrompidos.
+
+Além disso, a imutabilidade promove a concorrência segura em ambientes multithread, pois cada thread pode trabalhar com cópias dos dados imutáveis sem interferir nas outras. A imutabilidade também torna o código mais legível e facilita a manutenção, pois o fluxo de informações é mais claro e previsível.
+
+Em Java, podemos criar objetos imutáveis usando classes finais, atributos finais e métodos que não modificam o estado interno do objeto. Essa prática é essencial para desenvolver programas mais robustos e confiáveis.
+
+Vimos no vídeo da aula anterior, que ao utilizar streams, temos como uma das operações finais a possibilidade de colocar os dados gerados em outra lista. Vimos também que se utilizarmos diretamente o toList()para esse fim, é gerada uma lista imutável. Sendo assim, quando precisamos que a nova lista possa ser modificada, temos que utilizar o collect(Collectors.toList()).
+
+Em Java, algumas classes nativas já são imutáveis. Alguns exemplos incluem:
+
+String: A classe java.lang.String é imutável. Uma vez criada, uma instância de String não pode ser modificada.
+
+Classes Wrapper: As classes que representam os tipos primitivos, como Integer, Double, Character, etc., também são imutáveis.
+
+Enum: As enumerações (enum) em Java são imutáveis. As instâncias de um enum são criadas apenas uma vez e não podem ser modificadas.
+
+Além das classes nativas, a API de coleções do Java também oferece algumas classes imutáveis na classe utilitária Collections. Essas classes são usadas para criar coleções imutáveis, como listas, conjuntos e mapas. Alguns exemplos incluem:
+
+Collections.unmodifiableList: Cria uma lista imutável a partir de uma lista existente.
+Collections.unmodifiableSet: Cria um conjunto imutável a partir de um conjunto existente.
+Collections.unmodifiableMap: Cria um mapa imutável a partir de um mapa existente.
+Essas classes permitem que você crie versões imutáveis de coleções existentes, tornando-as seguras para compartilhar e evitar a modificação acidental.
+
+Veja esse código de exemplo:
+
+public class ImutabilidadeExemplo {
+    public static void main(String[] args) {
+        List<String> listaOriginal = new ArrayList<>();
+        listaOriginal.add("A");
+        listaOriginal.add("B");
+
+        List<String> listaImutavel = Collections.unmodifiableList(listaOriginal);
+
+        // Tentativa de adicionar um elemento na lista imutável resultará em exceção
+        listaImutavel.add("C"); // Lançará UnsupportedOperationException
+    }
+}
