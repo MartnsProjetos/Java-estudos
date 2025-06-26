@@ -1,0 +1,100 @@
+Transcrição
+Jacqueline: Na aula anterior, trabalhamos um pouco com as coleções, iniciamos a modelagem e discutimos as funções lambda, introduzidas no Java 8.
+
+Essas funções têm uma sintaxe bem específica e permitem uma escrita mais concisa. Elas sempre têm um parâmetro e, após a flecha ->, há uma expressão que indica o que ocorrerá com esse parâmetro.
+
+O Java interpreta o parâmetro dependendo do contexto. Portanto, se estivermos iterando sobre temporadas, por exemplo, o parâmetro vai representar cada uma das temporadas.
+
+Temporada((parametro) -> expressao)
+Copiar código
+Se estivermos trabalhando com episódios, como a Iasmin demonstrou, cada parâmetro vai representar um episódio.
+
+Episodio((parametro) -> expressao)
+Copiar código
+No comando feito anteriormente, iteramos sobre os episódios com t e definimos uma função para cada episódio da temporada com e.
+
+temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+Copiar código
+As funções lambda não foram criadas simplesmente para encurtar o código. Isso não seria critério para decidir a linguagem de programação, tampouco para implementar um novo recurso em uma linguagem já existente. Em conjunto com elas, o Java 8 introduziu uma API muito importante, a de Streams, que permite executar muitas operações interessantes.
+
+Iasmin: A combinação entre funções lambda e Streams confere grande poder ao desenvolvimento Java. Isso significa que em uma única linha conseguimos realizar diversas operações usando essas duas ferramentas. Agora, vamos ver como usar esses fluxos para melhorar o trabalho com dados.
+
+Jacqueline: Um Stream é um fluxo de dados. Por exemplo, cada temporada ou episódio pode ser visto como um fluxo de dados. Para exemplificar, criarei um fluxo diferente, com uma lista de strings chamada nomes:
+
+List<String> nomes = Arrays.asList("Jacque", "Iasmin", "Paulo", "Rodrigo", "Nico");
+Copiar código
+Essa lista de nomes representa um fluxo de dados. Com ele, podemos realizar um fluxo de operações encadeadas, o que é a grande vantagem dos Streams.
+
+No exemplo anterior, apenas iteramos sobre uma coleção com o método forEach(). Agora, com Streams, podemos realizar diversas operações encadeadas. Cada operação gera um novo Stream, um novo fluxo, então podemos realizar uma operação neste fluxo, seguida de outra operação, e assim por diante.
+
+Como exemplo, vamos ordenar os nomes alfabeticamente e, em seguida, imprimir a lista ordenada.
+
+nomes.stream()
+            .sorted()
+            .forEach(System.out::println);
+Copiar código
+Vamos comentar os comandos anteriores, a partir de System.out.println("Digite o nome da série para busca"), a fim de que possamos focar apenas em stream.
+
+Ao executar, temos como retorno a lista ordenada alfabeticamente:
+
+Iasmin Jacque Nico Paulo Rodrigo
+
+A função sorted() é uma operação intermediária que gera um novo fluxo de dados. Essa operação pode ser seguida por outra operação, e assim o fluxo de operações pode continuar.
+
+Após a ordenação dos nomes, podemos limitar a visualização para as três primeiras pessoas. Para fazer isso, acrescentamos .limit(3).
+
+nomes.stream()
+            .sorted()
+            .limit(3)
+            .forEach(System.out::println);
+Copiar código
+Este comando vai processar a lista de nomes, ordená-la e, posteriormente, selecionar os três primeiros nomes. Só depois disso o resultado será impresso. Portanto, o comando realizará operações encadeadas.
+
+Se não houvesse modificação, os nomes impressos seriam Jaque, Iasmin e Paulo. No entanto, como temos uma operação sobreposta à outra, o resultado correto é a exibição dos três primeiros nomes que visualizamos na execução do comando anterior: Iasmin, Jaque e Nico.
+
+Após executar a aplicação, temos o seguinte retorno:
+
+Iasmin Jacque Nico
+
+Como previsto, obtemos os três primeiros nomes em ordem alfabética. Ou seja, foi realizada a operação encadeada dentro do nosso fluxo.
+
+Iasmin: Sendo assim, tudo que gera um novo fluxo é uma operação intermediária. Tudo que faz algo com esse fluxo é uma operação final, como o forEach() que está sendo usado, por exemplo.
+
+Jacqueline: Quando trabalhamos com streams (fluxos) temos dois tipos de operações: as intermediárias e as finais.
+
+As operações intermediárias geram novos fluxos de dados para realizar funções agregadas e as operações finais são aquelas que finalizam. Deixaremos um material explicando-as melhor.
+
+Para finalizar o nosso exemplo, vamos realizar mais duas operações.
+
+Verificamos que, limitando a três, foram selecionados os nomes Iasmin, Jacque e Nico. Agora, podemos adicionar um filtro para selecionar o nome iniciado com "N". Dessa forma, apenas o nome Nico deve ser selecionado. Para isso, utilizamos .filter() passando n -> n.startWith("N").
+
+nomes.stream()
+            .sorted()
+            .limit(3)
+            .filter(n -> n.startsWith("N"))
+            .forEach(System.out::println);
+Copiar código
+Após selecionar o nome "Nico", ainda podemos transformar todas as letras do nome para maiúsculas. Para isso, vamos utilizar .map() e passar n -> n.toUpperCase().
+
+nomes.stream()
+            .sorted()
+            .limit(3)
+            .filter(n -> n.startsWith("N"))
+            .map(n -> n.toUpperCase())
+            .forEach(System.out::println);
+Copiar código
+Dessa forma, realizamos várias operações intermediárias e geramos um único nome em letras maiúsculas. Vamos executar para ver se funcionou.
+
+Como retorno, obtemos o nome "NICO", todo em letras maiúsculas. Isso é uma demonstração do que podemos fazer com os streams e o que representam.
+
+Sem a função lambda seria difícil fazer esse processo, já que, para cada operação, teríamos um método gigante para percorrer. É por isso que esses dois recursos agregados são tão importantes.
+
+Vale ressaltar que este comando poderia ser feito em uma única linha, da seguinte forma:
+
+nomes.stream().sorted().limit(3).filter(n -> n.startsWith("N")).map(n -> n.toUpperCase()).forEach(System.out::println);
+Copiar código
+Porém, por padrão, quebramos a linha para tornar o código mais legível.
+
+Fizemos uma breve introdução sobre streams (fluxos), mas, na verdade, não desejamos trabalhar com nomes, e sim com nossos episódios e séries. Agora que os conceitos de streams e de lambda estão introduzidos, começaremos a utilizar esse recurso em nossas coleções e listas na nossa aplicação.
+
+Iasmin: Em seguida, mostraremos como esses recursos podem ser aplicados em nosso programa. Até já!
