@@ -1,0 +1,39 @@
+Você precisa exibir uma lista dos 10 melhores filmes lançados num determinado ano. Para isso, você levará em consideração o total de visualizações, que deve ser maior ou igual a 10 mil, e avaliação dos clientes, que deverá ser maior ou igual a 9.4. Considere a classe Filme abaixo:
+
+public class Filme {
+    private String titulo;
+    private Integer totalVisualizacao;
+    private Double avaliacao;
+    private Integer anoLancamento;
+    
+    //getter, setters e toString() omitidos
+}
+Copiar código
+Considerando que List<Filme> filmes já está com todos os filmes populados e você quer saber os melhores filmes de 2022, como você faria o código para realizar essa tarefa?
+
+Selecione uma alternativa
+
+filmes.stream()
+                .filter(filme -> filme.getAnoLancamento()  == 2022)
+                .filter(filme -> filme.getTotalVisualizacao() >= 10000 && filme.getAvaliacao() >= 9.4)
+                .sorted(Comparator.comparingDouble(Filme::getAvaliacao))
+                .limit(10)
+                .forEach(System.out::println);
+
+filmes.stream()
+                .filter(filme -> filme.getAnoLancamento()  == 2022)
+                .filter(filme -> filme.getTotalVisualizacao() >= 10000 && filme.getAvaliacao() >= 9.4)
+                .sorted(Comparator.comparingDouble(Filme::getAvaliacao).reversed())
+                .limit(10)
+                .forEach(System.out::println);
+
+filmes.stream()
+                .filter(filme -> filme.getTotalVisualizacao() >= 10000 && filme.getAvaliacao() >= 9.4)
+                .sorted(Comparator.comparingDouble(Filme::getAvaliacao).reversed())
+                .limit(10)
+                .forEach(System.out::println);
+Este conteúdo foi útil para o seu aprendizado?
+Ícone de polegar para cima indicando que o conteúdo foi útil para seu aprendizado
+Sim
+Ícone de polegar para baixo indicando que o conteúdo não foi útil para seu aprendizado
+Não muito
