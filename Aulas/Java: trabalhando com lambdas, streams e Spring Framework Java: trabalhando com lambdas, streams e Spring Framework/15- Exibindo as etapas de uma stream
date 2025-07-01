@@ -1,0 +1,163 @@
+Transcrição
+Iasmin: Na última aula, conversamos bastante sobre os streams, exploramos diversas funcionalidades, e entendemos que podemos realizar várias operações em uma única linha.
+
+Isso nos permite economizar tempo, mas também tem um lado negativo: nem sempre conseguimos depurar bem o que está acontecendo.
+
+Jacqueline: Às vezes, realizamos muitas operações encadeadas e nos questionamos: será que foi feito corretamente? Como depuramos? Como observamos o passo a passo do que é feito?
+
+Iasmin: Além disso, há outro aspecto a ser considerado. Como estamos lidando com algo encapsulado do Java, nem sempre sabemos como a operação está sendo executada. Ele pode executar da forma que achar mais otimizada, que às vezes não é tão intuitiva para nós.
+
+Porém, acredito que existam maneiras de lidar com isso. Vamos "dar uma olhada" o nosso código?
+
+Exibindo as etapas de uma stream
+Jacqueline: O trocadilho foi excelente, pois "dar uma olhada" é justamente a tradução da função que vamos usar: a função peek(). Essa função nos permite observar o que está acontecendo em cada etapa da nossa stream.
+
+Iasmin: Abaixo, temos um trecho de código que criamos, referente à parte do top 5 episódios. Nele, podemos ver o encadeamento de funções que comentamos.
+
+Principal.java:
+
+System.out.println("\nTop 5 episódios");
+dadosEpisodios.stream()
+        .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+        .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+        .limit(5)
+        .forEach(System.out::println);
+Copiar código
+Primeiro, fazemos um filtro, depois ordenamos, e então selecionamos o top 5. Mas que tal selecionarmos um top 10, apenas para termos uma visão mais ampla do que acontece?
+
+Para isso, faremos a seguinte substituição no trecho acima:
+
+.limit(10)
+Copiar código
+Após selecionar o top 10, vamos imprimir esses dez episódios melhor avaliados.
+
+Suponha que, além disso, queremos colocar os títulos desses episódios em letras maiúsculas. Nesse caso, adicionaríamos a função .map() recebendo e, em que e.titulo() está em caixa alta com a função toUpperCase().
+
+System.out.println("\nTop 10 episódios");
+dadosEpisodios.stream()
+        .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+        .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+        .limit(10)
+        .map(e -> e.titulo().toUpperCase())
+        .forEach(System.out::println);
+Copiar código
+Agora temos muitas funções. Se formos até a classe ScreenmatchApplication.java e rodarmos o código, pelo menos algum resultado vamos conseguir visualizar.
+
+Jacqueline: Qual série vamos escolher?
+
+Iasmin: Vamos escolher uma série interessante: "The Boys"!
+
+Mas, antes disso, vamos comentar o código no arquivo Principal.java para visualizar melhor os dados. Vamos usar o atalho "CTRL + /" para comentar o trecho da linha 70 à 91.
+
+Feito isso, podemos buscar o nome da série no terminal de ScreenmatchApplication.
+
+Digite o nome da série para busca
+the boys
+Copiar código
+Jacqueline: Como retorno, teremos o top 10 episódios:
+
+Top 10 episódios
+HEROGASM
+WHAT I KNOW
+YOU FOUND ME
+OVER THE HILL WITH THE SWORDS OF A THOUSAND MEN
+BUTCHER, BAKER, CADLESTICK MAKER
+THE BLOODY DOORS OFF
+GLORIOUS FIVE YEAR PLAN
+HERE COMES A CANDLE TO LIGHT YOU TO BED
+THE NAME OF THE GAME
+THE FEMALE OF THE SPECIES
+Copiar código
+Utilizando a função peek() para depurar
+Iasmin: Mas como o Java realizou essas operações? Como saberemos o que foi feito para nós?
+
+Jacqueline: Exatamente. De que forma podemos verificar o que foi feito? Esses eram realmente os top 10 episódios? Precisamos ter essa certeza antes de colocar o código em produção. Devemos garantir que o que foi feito estava de acordo com o que imaginávamos.
+
+Iasmin: Às vezes, quando escrevemos nosso próprio código, é mais fácil. A menos que estejamos errados, o que também acontece, é fácil ir ao ponto do código, verificar o que foi feito e corrigir. No entanto, com o stream, como o Java faz tudo sozinho, nem sempre sabemos onde recorrer para corrigir um erro, por exemplo.
+
+Para nos auxiliar a visualizar cada etapa do que está sendo feito nas operações encadeadas, podemos usar a função peek(). Este é o recurso que comentamos anteriormente que permite dar uma olhada rápida no código.
+
+Após o primeiro filtro no arquivo Principal.java, vamos escrever a função .peek() recebendo a string "Primeiro filtro(N/A)". Nesse caso, iremos imprimir o que acontece. Para isso, vamos digitar e -> e imprimir esse e (ou qualquer outra variável desejada) usando System.out.println(). Entre os parênteses, passaremos a string "Primeiro filtro(N/A)" concatenada à variável e, conforme esperado pela função peek().
+
+Principal.java:
+
+System.out.println("\nTop 10 episódios");
+dadosEpisodios.stream()
+        .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+        .peek(e -> System.out.println("Primeiro filtro(N/A) " + e))
+        .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+        .limit(10)
+        .map(e -> e.titulo().toUpperCase())
+        .forEach(System.out::println);
+Copiar código
+Depois de ordenar, também podemos imprimir como ocorre essa ordenação. Então, novamente, faremos um peek(), agora após a função .sorted(), recebendo a string "Ordenação" como parâmetro.
+
+.peek(e -> System.out.println("Ordenação " + e))
+Copiar código
+Jacqueline: Continuaremos repetindo esse mesmo processo para cada comando executado. Após a função .limit(), adicionamos o mesmo .peek() de antes, agora com a string "Limite", e por fim, adicionamos isso após a função .map(), recebendo a string "Mapeamento".
+
+.peek(e -> System.out.println("Limite " + e))
+Copiar código
+.peek(e -> System.out.println("Mapeamento " + e))
+Copiar código
+É importante dar um espaço entre o texto e o fechamento das aspas duplas da string, para que o texto não fique colado.
+
+Chegaremos ao seguinte resultado:
+
+System.out.println("\nTop 10 episódios");
+dadosEpisodios.stream()
+        .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+        .peek(e -> System.out.println("Primeiro filtro(N/A) " + e))
+        .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+        .peek(e -> System.out.println("Ordenação " + e))
+        .limit(10)
+        .peek(e -> System.out.println("Limite " + e))
+        .map(e -> e.titulo().toUpperCase())
+        .peek(e -> System.out.println("Mapeamento " + e))
+        .forEach(System.out::println);
+Copiar código
+Testando o código
+Iasmin: Agora podemos ver o que o debugger peek() fornece para nós. Para isso, clicaremos no botão "Run" na barra de ferramentas superior para abrir o terminal abaixo.
+
+Buscaremos novamente pela série "The Boys".
+
+Digite o nome da série para busca
+the boys
+Copiar código
+Como retorno, teremos nosso fluxo com muitas coisas acontecendo.
+
+Jacqueline: Vamos ao início do retorno para tentar entender como esse stream é construído.
+
+Top 10 episódios
+Primeiro filtro (N/A) DadosEpisodio [titulo-The Name of the Game, numero=1, avaliacao=8.7, dataLancamento=2019-07-26] 
+Primeiro filtro (N/A) DadosEpisodio [titulo-Cherry, numero=2, avaliacao=8.5, dataLancamento 2019-07-26] 
+Primeiro filtro (N/A) DadosEpisodio [titulo-Get Some, numero=3, avaliacao=8.3, dataLancamento=2019-07-26]
+
+// retorno omitido
+Copiar código
+Note que temos uma série de "Primeiro filtro(N/A)" retornada. Nosso primeiro filtro era para eliminar todos os elementos que não fossem "N/A". Então, para tudo que não era "N/A", foi feito o primeiro processamento de remover e pegar toda entrada que não fosse "N/A" na avaliação.
+
+Iasmin: Após isso, foi iniciada a ordenação, depois o limite, o mapeamento e a impressão, tudo de uma única vez. Podemos pensar que seria melhor ordenar tudo primeiro e depois mapear, mas o programa está otimizado para fazer de outra forma.
+
+Jacqueline: Exatamente, o processo foi feito de acordo com o que é considerado mais otimizado.
+
+Iasmin: Depois da ordenação, é definido o limite. Em seguida, é feito o mapeamento e a impressão. Isso é feito para cada um dos dez episódios.
+
+Jacqueline: No final, o último episódio do top 10 foi processado da seguinte maneira: ordenação, definição do limite, mapeamento para colocar em maiúsculo e impressão. As etapas são essas: ordenar, limitar, mapear, imprimir no forEach() e voltar. Isso aconteceu dez vezes, um processo completamente diferente do que faríamos manualmente.
+
+Para exemplificar, às vezes, poderíamos pensar em pegar tudo e ordenar, mas o programa faz de uma forma que, internamente, é mais otimizada. A vantagem disso é que nós não precisamos nos preocupar com isso e ainda temos a garantia do resultado.
+
+Se formos verificar manualmente, identificaremos que foram selecionados de fato os dez melhores episódios, com as avaliações mais altas, e retornados em caixa alta. Então, conseguimos entender como funciona a programação interna, o que é muito interessante.
+
+Este é um recurso muito útil para evitarmos constantemente definir breakpoints e acompanhar o processo. Já temos um registro de tudo que aconteceu e de como o processamento dos streams ocorreu internamente.
+
+Conclusão
+Iasmin: Agora, com apenas algumas linhas, conseguimos usar os streams. Porém, se precisarmos verificar o que está acontecendo, também conseguimos fazer isso.
+
+Agora que já dominamos essa habilidade, podemos começar a trabalhar com nossas estatísticas.
+
+Jacqueline: Exatamente! Vamos começar a evoluir e fazer mais algumas coisas bem legais, como buscar as nossas estatísticas e até por outros elementos.
+
+Por exemplo: neste vídeo, buscamos pelo top 10, mas em alguns casos, podemos querer buscar a primeira ocorrência. Nesse caso, não precisamos percorrer toda a stream. Isso também é um ponto interessante: além de trabalhar com estatísticas e limites, podemos buscar pela primeira ocorrência de algo que queremos encontrar.
+
+Em breve abordaremos isso, agregando ainda mais conteúdo para você, estudante!
