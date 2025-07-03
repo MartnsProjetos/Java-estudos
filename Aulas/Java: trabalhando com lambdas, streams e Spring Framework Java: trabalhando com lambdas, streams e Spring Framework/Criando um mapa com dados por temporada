@@ -1,0 +1,127 @@
+Transcrição
+Iasmin: Com o navegador aberto, verificamos a classificação de diferentes séries. No caso de Game of Thrones, a primeira temporada tem avaliações extremamente positivas. Podemos encontrar avaliações como 8.9, 9.4, 9.6, o que me deu vontade de assistir à série.
+
+Porém, na última temporada, notamos uma queda significativa nas notas, chegando até 4.0.
+
+Jacqueline: Realmente, essas notas mais baixas são decepcionantes.
+
+Iasmin: Considerando isso, o importante a se discutir é que a API do IMDB não fornece essas informações para nós. Ela fornece uma média geral da série, quando não pesquisamos por temporada, mas não oferece avaliações específicas por temporada.
+
+Portanto, uma funcionalidade que poderíamos criar para o nosso aplicativo é exibir a avaliação por temporada.
+
+Criando um mapa com dados por temporada
+Jacqueline: Essa funcionalidade é muito interessante, pois quando se trata de uma série já finalizada, podemos querer conferir a avaliação por temporada para decidir se vale a pena assisti-la do início ao fim.
+
+Por exemplo: se todas as temporadas são bem-avaliadas, isso nos motiva a assistir. No entanto, se soubéssemos que o final é odiado pela maioria das pessoas, provavelmente pensaríamos duas vezes antes de começar a série.
+
+Iasmin: Analisando a avaliação dos últimos episódios de Game of Thrones, poderíamos pensar: "Por que assistir se sei que vou me decepcionar com a última temporada?".
+
+Na linha de código 104 do arquivo Principal.java, após o código que discutimos anteriormente, podemos começar a fazer a junção de dados.
+
+Se começarmos a pensar em como esses dados serão agrupados, veremos que não será mais uma lista. Teremos uma nova estrutura de dados que precisará de uma chave e um valor, porque associaremos cada média de avaliações a uma temporada.
+
+Jacqueline: Nesse caso, a estrutura que usamos para representar isso é um mapa, onde teremos o código de uma temporada e a respectiva média. Portanto, teremos um mapa que tem um número inteiro que representa a temporada e um double que representa a média da avaliação.
+
+Iasmin: Poderemos atribuir streams não só a listas, mas também a mapas e a vários outros tipos de coleções.
+
+Na linha 104, criaremos um Map de Integer para Double, que chamaremos de avaliacoesPorTemporada. Usaremos nossos streams novamente para chamar os episódios, então digitaremos episodios.stream().
+
+Principal.java:
+
+Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+Copiar código
+Após isso, precisaremos coletar esses dados para um mapa. Para fazer esse agrupamento de dados, existe uma classe que pode nos ajudar, a Collectors. Vamos chamá-la para collect() junto ao método groupingBy(), para o qual passaremos a forma de agrupamento, que seria pegar o episódio pela sua temporada (Episodio::getTemporada). Essa temporada corresponde à chave.
+
+O segundo parâmetro seriam as médias das avaliações. Para isso, vamos precisar chamar novamente a classe Collectors junto ao método averagingDouble().
+
+Dentro desse método, é necessário identificar a variável para calcular a média. Poderíamos escolher outra variável, como a temporada, mas nosso objetivo é olhar para as avaliações. Então, vamos passar Episodio::getAvaliacao.
+
+Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+        .collect(Collectors.groupingBy(Episodio::getTemporada,
+                Collectors.averagingDouble(Episodio::getAvaliacao)));
+Copiar código
+Com poucas linhas de código, conseguimos agrupar os dados e obter as avaliações por temporada.
+
+Testando o código
+Vamos testar para verificar se funciona corretamente?
+
+Jacqueline: Sim, vamos conferir as médias por temporada.
+
+Iasmin: Para isso, usaremos o System.out.println() na variável avaliacoesPorTemporada.
+
+Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+        .collect(Collectors.groupingBy(Episodio::getTemporada,
+                Collectors.averagingDouble(Episodio::getAvaliacao)));
+System.out.println(avaliacoesPorTemporada);
+Copiar código
+Feito isso, vamos até o menu superior e clicar no ícone "Run" para executar.
+
+Buscaremos pela série Game of Thrones. Como trecho do título do episódio, vamos digitar apenas "teste". Ao final, nós conseguimos analisar as estatísticas.
+
+{1=8.97, 2=7.95, 3=8.94, 4=9.23, 5=7.02, 6=8.99, 7=7.74, 8=6.39}
+Copiar código
+Temos a média da primeira temporada, que foi 8.97. A quarta temporada teve média de 9.23. No entanto, a oitava temporada decepcionou, com uma média de apenas 6.3.
+
+Agora, nós conseguimos separar as avaliações por temporada. Nosso Screen Match está crescendo e ficando melhor do que o IMDB.
+
+Jacqueline: Nós já temos recursos que o IMDB não tem. Agora, a pessoa usuária consegue avaliar todas as temporadas e refletir se vale a pena fazer uma maratona ou não.
+
+Iasmin: Apenas uma observação: na série Game of Thrones, já temos todas as avaliações. Então, não teremos problemas com isso. Mas, se pegarmos uma série não avaliada, como Euphoria, essa média pode cair um pouco, pois existem alguns episódios contabilizados como zero. Dessa forma, ao fazer a média, ela cai um pouco.
+
+Talvez seja interessante também filtrar pelas séries que realmente foram avaliadas, ou seja, que tenham uma avaliação maior que zero. O que acha, Jacque?
+
+Jacqueline: Isso é interessante, pois quando não temos a informação da avaliação, é injusto pegar o zero, somar e dividir. Isso realmente diminui a média.
+
+Podemos alterar nosso stream() para desconsiderar os casos em que não conseguimos buscar a avaliação e atribuímos zero no nosso construtor.
+
+Filtrando pelas séries avaliadas
+Iasmin: Após o stream(), podemos passar um .filter() para filtrar apenas os episódios (e) cuja avaliação (e.getAvaliacao()) seja maior do que 0.0. Desta forma, vamos obter somente aqueles que foram realmente avaliados.
+
+Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+        .filter(e -> e.getAvaliacao() > 0.0)
+        .collect(Collectors.groupingBy(Episodio::getTemporada,
+                Collectors.averagingDouble(Episodio::getAvaliacao)));
+System.out.println(avaliacoesPorTemporada);
+Copiar código
+Vamos tentar fazer esse filtro com Euphoria, para ter uma ideia de como fica.
+
+Nessa etapa, vamos comentar o código de busca pelo nome para simplificar.
+
+// System.out.println("Digite um trecho do título do episódio");
+// var trechoTitulo = leitura.nextLine();
+// Optional<Episodio> episodioBuscado = episodios.stream()
+//         .filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
+//         .findFirst();
+// if(episodioBuscado.isPresent()){
+//     System.out.println("Episódio encontrado!");
+//     System.out.println("Temporada: " + episodioBuscado.get().getTemporada());
+// } else {
+//     System.out.println("Episódio não encontrado!");
+// }
+Copiar código
+Antes de pegar os episódios filtrados, vamos comentar a linha do filtro para entendermos como a média difere.
+
+// .filter(e -> e.getAvaliacao() > 0.0)
+Copiar código
+Após rodar o projeto novamente, iremos buscar por Euphoria.
+
+{1=7.324999999999999, 2=8.6375, 3=0.0}
+Copiar código
+No retorno, temos a média das temporadas 1 e 2. Na terceira temporada, havia um episódio não lançado, logo, a média ficou como zero.
+
+Jacqueline: A média final para as duas primeiras temporadas foi de 7.32 e 8.6, respectivamente. Agora vamos conferir a diferença na média após aplicar o filtro.
+
+Iasmin: Para isso, vamos descomentar a linha do filtro e rodar novamente o projeto.
+
+Após pesquisar por Euphoria, agora a média da temporada 3 não é retornada, pois estava como 0. Além disso, nas temporadas 1 e 2, a média aumentou, conforme exibido no retorno abaixo.
+
+{1=8.37142857142857, 2=8.6375}
+Copiar código
+Conclusão
+Jacqueline: Agora temos uma média real do que está avaliado. Não podemos julgar o que foi avaliado, então é sempre importante analisar esses detalhes quando implementamos uma funcionalidade. Precisamos considerar o que é relevante ou não. Portanto, é muito interessante esse tipo de estatística que estamos demonstrando.
+
+Iasmin: Dito isso, já obtivemos uma nova estatística, uma nova funcionalidade. Porém, ainda podemos querer analisar outras estatísticas além da média das temporadas. Suponha que agora vamos querer saber a média geral dos episódios para compará-la com a média que vem da série. Podemos também investigar qual foi a menor avaliação, entre várias outras estatísticas.
+
+Para fazer isso, usaremos uma nova classe que em breve vamos conhecer.
+
+Jacqueline: Isso mesmo. Até daqui a pouco!
