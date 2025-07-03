@@ -1,0 +1,42 @@
+Como temos estudado no curso, Streams nos permitem manipular coleções de elementos (como Lists ou Sets) de forma mais sofisticada e eficiente do que os métodos tradicionais. Eles são especialmente úteis quando precisamos realizar operações em massa nesses elementos, como filtrar, transformar ou agregar.
+
+E a função Peek, o que é?
+A função”peek” é uma operação intermediária de uma stream. Uma operação intermediária é aquela que processa os dados da stream, mas não a finaliza, ou seja, ela permite que mais operações sejam feitas depois dela. A função peek é usada para "espiar" os elementos da stream sem alterá-los, o que pode ser muito útil para depuração. Essa função vai receber cada elemento da stream e realizar alguma operação de efeito colateral (como imprimir o elemento), mas vai devolver o mesmo elemento sem alterar nada.
+
+Por que eu deveria usar isso?
+O uso de Streams e a função peek podem te ajudar a escrever códigos mais elegantes, fáceis de ler, e diminuir a possibilidade de erros. Além disso, eles podem fazer seu código rodar mais rápido em certos casos, pois os Streams permitem a paralelização das operações, ou seja, executar várias operações ao mesmo tempo.
+
+Exemplos de código
+Vamos ver agora um exemplo simples de como podemos usar a função peek com streams. Imagine que temos uma lista com números e queremos multiplicar cada um deles por 2 e depois somar os resultados.
+
+List<Integer> numeros = Arrays.asList(1, 2, 3, 4, 5);
+
+int soma = numeros.stream()
+                .peek(n -> System.out.println("Elemento: " + n))
+                .map(n -> n * 2)
+                .peek(n -> System.out.println("Conteúdo depois do map: " + n))
+                .reduce(0, (total, numero) -> total + numero);
+
+System.out.println("A soma dos números é: " + soma);
+Copiar código
+Nesse código, nós criamos uma stream com a lista de números, espiamos cada número para imprimir (com a função.peek), multiplicamos o valor por dois, espiamos também para conferir o valor da multiplicação e depois somamos os resultados.
+
+Veja como aparece no terminal após a execução da aplicação:
+
+Elemento: 1
+Conteúdo depois do map: 2
+Elemento: 2
+Conteúdo depois do map: 4
+Elemento: 3
+Conteúdo depois do map: 6
+Elemento: 4
+Conteúdo depois do map: 8
+Elemento: 5
+Conteúdo depois do map: 10
+A soma dos números é: 30
+
+Process finished with exit code 0
+Copiar código
+Isso nos ajuda a ter certeza de que o processo está sendo feito corretamente. Aqui conseguimos perceber que a soma dos números 2 + 4 + 6 + 8 + 10 foi calculada corretamente, resultando em 30. Ou seja, a função lambda em nosso método reduce está fazendo exatamente o que era planejado. E pudemos conferir isso, com o peek.
+
+Esse é apenas um exemplo básico, mas lembre-se que a função peek pode ser usada em qualquer lugar dentro da sua stream, sempre que você quiser ver quais elementos estão passando por aquele ponto.
