@@ -1,0 +1,113 @@
+Transcrição
+Iasmin: Agora queremos saber sobre as diferentes estatísticas das séries.
+
+Coletando estatísticas
+Já vimos como calcular, por exemplo, a média por temporada, mas existem várias outras estatísticas que queremos analisar, como a maior avaliação, a menor, o total de avaliações e muitas outras coisas.
+
+Existe uma classe em Java que pode nos ajudar com isso, não é mesmo, Jaque?
+
+Usando a classe DoubleSummaryStatistics
+Jacqueline: Exatamente, temos uma classe em Java que facilita esse trabalho, para evitar a iteração sobre essa coleção, a soma de todos os elementos e a divisão para saber a média e a contagem. Essa classe já disponibiliza várias estatísticas relevantes.
+
+Iasmin: Então, além de inserir em coleções, também podemos adicionar os resultados de streams nessa nova classe: a DoubleSummaryStatistics.
+
+Vamos chamar essa variável de est, um nome comum no ambiente. Em seguida, usaremos os streams para atribuir algo a essa variável. Então, novamente, faremos episodios.stream().
+
+DoubleSummaryStatistics est = episodios.stream()
+Copiar código
+Agora queremos agir de maneira semelhante a que fizemos antes, coletando algo e colocando no map(), mas agora vamos coletar e colocar em DoubleSummaryStatistics.
+
+Como vamos focar apenas nos episódios avaliados, podemos fazer o filter(), que é a operação intermediária da linha de código 107. Então, vamos copiá-la e colar na linha 113.
+
+DoubleSummaryStatistics est = episodios.stream()
+        .filter(e -> e.getAvaliacao() > 0.0)
+Copiar código
+Agora, sim, vamos coletar os dados e atribuí-los para DoubleSummaryStatistics. Após o .filter(), podemos fazer um .collect() e passar novamente a classe Collectors. Essa é uma classe que auxilia muito na parte de sintetizar as informações da aplicação.
+
+Após Collectors, podemos passar o método summarizingDouble(). Dentro do método, vamos falar sobre qual dos atributos dos episódios queremos fazer as estatísticas, que será pela avaliação, então passaremos Episodio::getAvaliacao.
+
+DoubleSummaryStatistics est = episodios.stream()
+        .filter(e -> e.getAvaliacao() > 0.0)
+        .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+Copiar código
+Já temos nossas estatísticas prontas. Agora podemos imprimir para conferir o resultado.
+
+Jacqueline: Vamos imprimir completamente e depois explorar os métodos que essa variável est do tipo DoubleSummaryStatistics pode oferecer.
+
+Iasmin: Para isso, usaremos o System.out.println() da variável est.
+
+DoubleSummaryStatistics est = episodios.stream()
+        .filter(e -> e.getAvaliacao() > 0.0)
+        .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+System.out.println(est);
+Copiar código
+Testando o código
+Rodaremos o código e trabalharemos com a busca pela série Game of Thrones no terminal.
+
+DoubleSummaryStatistics{count=69, sum=603,800000, min=4,000000, average=8,750725, max=9,900000}
+Copiar código
+No retorno exibido acima, temos a informação do DoubleSummaryStatistics, que é o toString() que já vem da classe. Dentro dele, temos as propriedades count, sum, min, average, max. O que é isso tudo, Jacque?
+
+Jacqueline: São coletadas algumas estatísticas. Então, em count, são exibidas quantas avaliações foram consideradas para gerar as estatísticas. Nesse caso, de todas as temporadas, tivemos 69 episódios avaliados para considerar as estatísticas.
+
+A sum é o total, o que foi somado de estatísticas. A min foi a menor avaliação; houve algum episódio com nota próxima de 4,0. A média (average) é 8,75 e a max foi 9,9.
+
+O DoubleSummaryStatistics, assim como teríamos o IntegerSummaryStatistics, gera estatísticas base, que são a contagem, a soma, o mínimo, o máximo e a média.
+
+Ajustando as impressões
+Iasmin: Quando imprimimos esses dados, vieram várias informações, mas nem sempre todas serão úteis. No nosso caso, por exemplo, não vamos querer somar todas as avaliações, certo?
+
+Então, para ter algo fiel às nossas estatísticas, podemos imprimir o que faz sentido para nós.
+
+Vamos imprimir, por exemplo, a média, algo que nós queríamos saber. Para isso, aplicamos um System.out.println() na "Média: " concatenada ao método est.getAverage().
+
+Principal.java:
+
+DoubleSummaryStatistics est = episodios.stream()
+        .filter(e -> e.getAvaliacao() > 0.0)
+        .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+System.out.println("Média: " + est.getAverage());
+Copiar código
+Depois, podemos imprimir também o mínimo e o máximo.
+
+Jacqueline: Sim, correspondente ao pior e ao melhor episódio.
+
+Iasmin: O melhor episódio será nossa avaliação máxima, então vamos concatenar "Melhor episódio: " a est.getMax(). Na linha seguinte, teremos algo parecido para o pior episódio, então podemos copiar o trecho criado e colar, alterando a concatenação para "Pior episódio: " com est.getMin().
+
+A quantidade de episódios avaliados também é relevante para observarmos. Nesse caso, podemos usar o System.out.println() na "Quantidade: " e concatená-lo com as estatísticas e o método getCount().
+
+DoubleSummaryStatistics est = episodios.stream()
+        .filter(e -> e.getAvaliacao() > 0.0)
+        .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+System.out.println("Média: " + est.getAverage());
+System.out.println("Melhor episódio: " + est.getMax());
+System.out.println("Pior episódio: " + est.getMin());
+System.out.println("Quantidade: " + est.getCount());
+Copiar código
+Agora, sim, podemos executar e ter um retorno mais bonito visualmente. Após buscar por Game of Thrones no terminal, teremos as informações de uma forma mais organizada que faz sentido para nossa aplicação.
+
+Média: 8.75072463768116
+Melhor episódio: 9.9
+Pior episódio: 4.0
+Quantidade: 69
+Copiar código
+Conclusão
+Jacqueline: Esse é mais um ponto muito relevante. Durante todo o curso, trouxemos conteúdos sobre assuntos do dia a dia da pessoa desenvolvedora Java. Saber usar funções lambda, saber usar streams, gerar estatísticas para relatórios, ter um projeto usando um framework ou um gerenciador de dependência, como o Maven, tudo isso faz parte do dia a dia de uma pessoa desenvolvedora Java.
+
+No nosso contexto, falamos de séries, de filmes, de avaliações, mas em um contexto de e-commerce, isso seria, por exemplo, uma forma de você analisar qual é o seu produto mais vendido. Qual é o produto mais e o menos vendido? Em qual vale a pena investir?
+
+Ou então, entre as pessoas atendentes que trabalham em uma empresa de telemarketing, quem é a melhor avaliada? Quem é a pessoa pela qual clientes gostam de ser atendidos?
+
+Estatísticas, relatórios, streams e lambdas fazem parte do nosso cotidiano. Tentamos trazer exatamente isso: um conteúdo muito relevante que tivesse uma continuidade com o que foi abordado na formação Java e Orientação a Objetos.
+
+Tudo que estamos mostrando é muito usado. Trabalhando com streams, exploramos várias vezes a parte da classe Collectors. Vamos disponibilizar a documentação, que possui muitos conteúdos para nos auxiliar.
+
+A partir do momento que você já sabe fazer, o desafio é como fazer ainda melhor, de uma forma mais otimizada. Essa tem sido a nossa proposta ao longo do curso!
+
+Em breve, vamos trazer um desafio para você treinar e praticar. Esperamos e recomendamos que você faça para depois compartilhar conosco. Daremos algumas dicas de solução, mas queremos que você coloque a mão na massa e desenvolva o desafio. Correto, Iasmin?
+
+Iasmin: Sim, venha mergulhar conosco nesse conhecimento!
+
+Jacqueline: Vamos aprofundar cada vez mais o nosso conhecimento em Java, uma linguagem incrível e que oferece tanta oportunidade no mercado de trabalho.
+
+Na sequência, apresentaremos o desafio para você!
