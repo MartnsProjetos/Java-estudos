@@ -1,0 +1,200 @@
+Transcrição
+Iasmin: Conforme comentado anteriormente, vamos querer buscar uma primeira referência de um título de um episódio. Portanto, vamos comentar a parte da função peek() sobre a qual já falamos, usando o atalho "CTRL + /".
+
+Principal.java:
+
+// System.out.println("\nTop 10 episódios");
+// dadosEpisodios.stream()
+//         .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+//         .peek(e -> System.out.println("Primeiro filtro(N/A) " + e))
+//         .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+//         .peek(e -> System.out.println("Ordenação " + e))
+//         .limit(10)
+//         .peek(e -> System.out.println("Limite " + e))
+//         .map(e -> e.titulo().toUpperCase())
+//         .peek(e -> System.out.println("Mapeamento " + e))
+//         .forEach(System.out::println);
+Copiar código
+Encontrando a primeira ocorrência de uma busca
+Feito isso, vamos descomentar a parte dos episódios, onde criamos o mapeamento entre dados de episódio e episódios.
+
+Principal.java:
+
+List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.episodios().stream()
+                .map(d -> new Episodio(t.numero(), d)))
+        .collect(Collectors.toList());
+
+episodios.forEach(System.out::println);
+Copiar código
+Foi nesse ponto em que conseguimos pegar todas as listas de episódios e descobrir de qual temporada era o episódio escolhido. Vamos testar o código acima novamente para conferir o que está acontecendo? Feito isso, vamos buscar no terminal pela série "Game of Thrones".
+
+Digite o nome da série para busca
+game of thrones
+Copiar código
+Serão retornados todos os episódios com as temporadas já indicadas.
+
+Jacqueline: O episódio era "Batalha dos Bastardos" ("Battle of the Bastards"), nono da sexta temporada.
+
+Iasmin: Se outra pessoa fosse usar nossa aplicação e quisesse saber de qual temporada se trata o episódio, seria difícil percorrer toda a lista até achar a "Batalha dos Bastardos". Então, podemos criar um filtro para simplesmente retornar essa informação quando estivermos fazendo a busca. Para filtrar, precisamos usar uma nova função dos streams.
+
+Após a criação e impressão da lista episodios no arquivo Principal.java, vamos chamar a lista episodios com a função stream().
+
+episodios.stream()
+Copiar código
+Queremos fazer a busca por um nome digitado no terminal. Se digitarmos .find logo abaixo, teremos duas opções: findFirst() e findAny().
+
+Podemos usar uma dessas funções. Qual você acha melhor, Jacque?
+
+Jacqueline: Acredito que podemos usar a findFirst(). Ela é mais recomendada, porque a findAny(), quando usamos streams paralelas, não garante que sempre virá o mesmo episódio.
+
+A função findAny() pega o que encontrar primeiro. Já a findFirst(), sempre segue a mesma ordem na hora de encontrar. Então, temos a garantia do mesmo resultado. Sendo assim, usaremos findFirst() para ter uma acurácia maior no retorno.
+
+Iasmin:
+
+Se quiséssemos um resultado mais rápido, talvez seria ideal usar findAny(), que trabalharia com coisas paralelas. Em nosso material, explicaremos o que isso significa.
+
+Como queremos sempre o mesmo resultado, o recomendado é usar findFirst().
+
+episodios.stream()
+        .findFirst();
+Copiar código
+Com isso, será feito exatamente o que a Jacque mencionou: encontrar a primeira referência buscada. Para a função findFirst(), precisamos passar o que estamos buscando, ou seja, o que queremos filtrar.
+
+Jacqueline: Exatamente. A findFirst() é uma operação que chamamos de final. Vamos filtrar e trabalhar o stream, e ele será a operação final para nós, para encontrar o primeiro elemento.
+
+Iasmin: Posteriormente, entenderemos que ele é atribuído a uma variável.
+
+Nessa etapa, precisamos criar algumas operações intermediárias antes de chamar a função findFirst(). A primeira operação intermediária que vamos criar será um filtro.
+
+Jacqueline: Com esse filtro, podemos pedir, por exemplo, para a pessoa usuária digitar o nome do episódio. Se for digitado um nome, nós vamos querer encontrá-lo.
+
+Iasmin: Assim, faremos um .filter() em que o título do episódio e -> e.getTitulo() será correspondente a um trecho.
+
+Jacqueline: Queremos poder, por exemplo, digitar apenas uma parte do nome do episódio, como o marcante episódio "Batalha dos Bastardos"; ao inserir apenas "Bastardos", nosso objetivo será localizá-lo imediatamente.
+
+Iasmin: Para isso, utilizaremos o método contains(). Dessa forma, caso o título corresponda à parte inserida, ou seja, contains(trechoTitulo), retornaremos essa referência.
+
+episodios.stream()
+        .filter(e -> e.getTitulo().contains(trechoTitulo))
+        .findFirst();
+Copiar código
+Porém, ainda precisamos declarar a variável trechoTitulo, que corresponderá ao trecho digitado pela pessoa usuária. A variável receberá o método leitura.nextLine(), responsável pela leitura do nome inserido pela pessoa usuária.
+
+var trechoTitulo = leitura.nextLine();
+episodios.stream()
+        .filter(e -> e.getTitulo().contains(trechoTitulo))
+        .findFirst();
+Copiar código
+Dessa forma, o valor fornecido será atribuído à variável trechoTitulo, possibilitando-nos filtrar a primeira referência correspondente no fluxo de dados.
+
+É importante ressaltar que pode existir mais de um episódio com a parte do nome inserida. Entretanto, nos limitaremos a pegar a primeira referência encontrada.
+
+Jacqueline: Antes de testar, vamos adicionar um texto pedindo para digitar o nome do episódio, usando System.out.println() antes da declaração da variável trechoTitulo.
+
+System.out.println("Digite um trecho do título do episódio");
+Copiar código
+Após criarmos a comunicação com a pessoa usuária, precisaremos analisar o que ocorrerá após a execução de findFirst(). Assim, poderemos detectar se a localização foi bem-sucedida ou as possíveis falhas que podem ocorrer.
+
+Iasmin: No terminal, podemos buscar por "The Boys", por exemplo.
+
+Digite o nome da série para busca
+the boys
+Copiar código
+Em seguida, vamos buscar por um trecho do título do episódio "Payback".
+
+Digite um trecho do título do episódio
+payback
+Copiar código
+Jacqueline: Nesse caso, nada será feito, porque a operação final encontra a referência, mas precisamos lidar com o dado de alguma maneira, ou seja, precisamos atribuí-lo a um variável apropriada para uso posterior.
+
+Precisamos também prestar atenção ao tipo de retorno, pois alguns podem ser void, enquanto outros necessitam ser atribuídos a uma variável. No caso de findFirst(), ela retorna um Optional (Opcional), logo, precisamos atribuir esse retorno a alguém.
+
+Iasmin: Nesse momento, a própria IDE já nos avisa que pedimos para ser encontrada a primeira referência, mas não fizemos nada com isso. Então, vamos atribuir episodios.stream() a uma variável chamada episodioBuscado.
+
+System.out.println("Digite um trecho do título do episódio");
+var trechoTitulo = leitura.nextLine();
+Optional<Episodio> episodioBuscado = episodios.stream()
+        .filter(e -> e.getTitulo().contains(trechoTitulo))
+        .findFirst();
+Copiar código
+Ao observarmos o tipo da variável episodioBuscado, verificamos que há um Optional de Episodio, pois ele pode ou não existir. Este é um recurso introduzido no Java 8, que serve para tratar a presença ou a ausência de um valor de maneira mais fluida e segura.
+
+Além disso, ele é tipificado, ou seja, precisamos definir o tipo de valor que pode estar presente ou ausente, assim como vemos em coleções.
+
+Agora entendemos o papel do método findFirst(): retornar um Optional contendo a primeira referência encontrada que satisfaça os critérios do filtro.
+
+Jacqueline: O Java 8 é uma versão tão relevante, que trouxe tanta inovação, que até hoje é um desafio fazer as pessoas migrarem para versões mais recentes.
+
+Iasmin: Especificamente, o recurso Optional foi revolucionário. Ele é um objeto contêiner, similar a uma lista ou às coleções, que permite armazenar um objeto, neste caso, um episódio, e verificar se realmente existe um objeto dentro ou não.
+
+Com o Optional, em vez de informarmos que o episódio é nulo ou que realmente existe, podemos simplesmente usar as facilidades do próprio Optional. Ao fazer uma busca por um nome, por exemplo, poderíamos não encontrar nada, em vez de ter uma referência nula.
+
+Suponha que buscamos apenas por "Bastardos", trecho do nome do episódio de Game of Thrones. A API fornece dados em inglês; nesse caso, nada seria encontrado e teríamos uma referência nula.
+
+Para evitar isso, usamos o Optional.
+
+Jacqueline: No contexto de trabalhar com API REST, muitos dos métodos que os repositórios fornecem abstraídos, na parte de persistência de dados, retornam um Optional ao fazer uma busca, por exemplo, por ID. Pode ser que o objeto seja encontrado, pode ser que não. Portanto, é muito importante se familiarizar com Optional, pois será muito recorrente ao trabalhar com Java Web.
+
+Iasmin: Abaixo de .findFirst(), vamos começar a fazer as verificações do objeto.
+
+Para conferir se um episódio foi encontrado e verificar a referência, podemos usar métodos dessa classe, como o isPresent(). Além disso, há outros métodos úteis, como o get(), o qual usaremos em breve, e o isEmpty(), para verificar o contrário do isPresent().
+
+Se quisermos saber se a referência de episodioBuscado está nula, devemos conferir se (if) episodioBuscado.isEmpty(). Nesse caso, vamos perguntar se a referência realmente existe, então, if(episodioBuscado.isPresent()).
+
+Se o episódio estiver presente dentro do Optional, podemos dizer que o episódio foi encontrado usando System.out.println(), e até mesmo imprimir a temporada dele, que é a informação que procuramos.
+
+Para fazer isso, podemos usar um bloco System.out.println(), recuperar a temporada e concatená-la com episodioBuscado.get(). Como o Optional é um contêiner que guarda o episódio, caso ele exista, precisamos usar o get() para obter o episódio real. Como queremos apenas a temporada, usaremos também o getTemporada().
+
+Se o episódio não existir, então teremos o bloco else informando que não encontramos a referência. Neste caso, usamos System.out.println() com "Episódio não encontrado!".
+
+System.out.println("Digite um trecho do título do episódio");
+var trechoTitulo = leitura.nextLine();
+Optional<Episodio> episodioBuscado = episodios.stream()
+        .filter(e -> e.getTitulo().contains(trechoTitulo))
+        .findFirst();
+if(episodioBuscado.isPresent()){
+    System.out.println("Episódio encontrado!");
+    System.out.println("Temporada: " + episodioBuscado.get().getTemporada());
+} else {
+    System.out.println("Episódio não encontrado!");
+}
+Copiar código
+Terminamos de instruir o Java sobre o que queremos fazer, certo?
+
+Jacqueline: Deixamos claro que pode haver ou não um episódio com o findFirst(), dissemos o que queremos que aconteça se encontrarmos um episódio, e o que queremos que aconteça se não encontrarmos.
+
+Iasmin: Agora, vamos tentar rodar novamente. Para isso, clicamos em "Run" no menu superior. No terminal, vamos buscar pela série Game of Thrones.
+
+Jacqueline: O episódio desejado era "Battle of the Bastards" ("Batalha dos Bastardos"), então poderíamos buscar, por exemplo, por "bastards". Nesse caso, o episódio não foi encontrado. Porém, ele está listado no retorno. Então, o que houve?
+
+Iasmin: Até a utilização do contains(), tudo estava correto. Porém, esse método contains() se baseia no equals() do Java. Ele vai analisar caractere a caractere do trecho do título e identificará qualquer diferença. Quando ocorre essa diferença, ele indica que não encontrou o que estava procurando.
+
+Jacqueline: Então, como buscamos pelo trecho com "B" em minúsculo, a referência não será encontrada, já que para o método, "Bastards" tem "B" maiúsculo.
+
+Precisamos encontrar uma maneira de aplicar algo semelhante ao equalsIgnoreCase(), para sempre procurar em maiúsculo ou minúsculo e evitar esse tipo de diferença entre os caracteres.
+
+Iasmin: Para não obrigar a pessoa usuária a digitar exatamente da mesma forma que está escrito, podemos fazer com que todos as buscas sejam realizadas em caixa alta, por exemplo.
+
+Poderíamos escolher entre caixa alta ou caixa baixa.
+
+Vamos implementar o toUpperCase() no título (e.getTitulo()), e em seguida, na pesquisa (trechoTitulo).
+
+.filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
+Copiar código
+Jacqueline: Dessa forma, ao receber o título do episódio, colocaremos em maiúsculo, e faremos o mesmo com o trecho que a pessoa usuária digitou. Assim, será possível comparar caractere a caractere. Essa metodologia nos dá certeza de que tudo ficará em maiúsculo e a comparação será feita corretamente.
+
+Iasmin: Agora vamos rodar este código novamente. Se pesquisarmos "Game of Thrones", por exemplo, ele deve encontrar a referência apenas com a busca por "Bastards". Embora haja dois episódios com a palavra "Bastards" no título, será retornado o primeiro.
+
+Jacqueline: Esse código é muito útil, porque a partir de um único trecho, podemos encontrar vários episódios, mesmo que a pesquisa não seja exata. Podemos fazer um filtro e gerar uma lista, usando essa abordagem para criar vários mecanismos de busca para o que precisamos.
+
+Conclusão
+Iasmin: Agora temos vários filtros, como a busca pela temporada e pelas datas. Isso indica que nossa aplicação está se desenvolvendo.
+
+Outra etapa que podemos implementar é a verificação de estatísticas, conforme prometemos.
+
+Jacqueline: Até agora, falamos muito sobre a busca de episódios. Embora a série em si tenha uma avaliação, não sabemos a avaliação por temporada. Algumas temporadas são melhores, outras são piores, mas não temos essa informação no IMDB.
+
+Quando desenvolvemos nossa própria aplicação, podemos criar os recursos que queremos. Nesse sentido, podemos criar uma avaliação por temporada, o que seria um ótimo recurso para implementarmos em seguida.
+
+Iasmin: Sim, seria! No próximo vídeo, implementaremos esse recurso.
