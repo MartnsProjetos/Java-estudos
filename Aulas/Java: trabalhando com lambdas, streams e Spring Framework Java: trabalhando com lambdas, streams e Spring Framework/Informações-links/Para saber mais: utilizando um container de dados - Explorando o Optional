@@ -1,0 +1,32 @@
+A programação Java usa Containers para armazenar, acessar e manipular dados. Um exemplo particularmente útil é o Optional - um container especial que pode conter ou não um valor. Então, vamos descobrir mais sobre o Optional, como utilizá-lo e quais práticas seguir.
+
+O que é o Optional?
+O Optional é um único valor de container introduzido no Java 8. Ele pode conter um valor único ou nenhum valor. O principal uso do Optional é fornecer um tipo de retorno alternativo quando um método pode não retornar um valor.
+
+Usar null é uma prática comum, mas pode levar a erros como NullPointerException. O Optional ajuda a evitar esses erros fornecendo uma maneira mais segura de lidar com valores que podem ou não estar presentes.
+
+Como usar o Optional?
+Vamos criar um método que pode retornar um valor null. Sem o Optional, ele pode causar erros indesejados, mas com o Optional, ele é mais seguro:
+
+public Optional<String> getNome() {
+    // O nome pode ser null
+    return Optional.ofNullable(nome);
+}
+Copiar código
+Aqui, Optional.ofNullable(nome) criará um Optional que contém o valor de nome se ele não for null. Se for null, ele criará um Optional vazio.
+
+Agora, para acessar valor dentro do Optional, podemos usar ifPresent e orElse assim:
+
+Optional<String> optionalNome = getNome();
+
+optionalNome.ifPresent(System.out::println); // Só irá printar o nome se não for null
+
+String nome = optionalNome.orElse("Nome não disponível"); // Irá retornar "Nome não disponível" caso nome seja null
+Copiar código
+Melhores práticas
+Embora o Optional seja um aliado útil, há algumas coisas que devem ser levadas em consideração para usá-lo de maneira eficaz:
+
+Prefira o retorno Optional em vez de retornar null: Isso torna suas intenções claras e evita erros.
+Não use Optional.get() sem Optional.isPresent(): O Optional.get() lançará um erro se o valor não estiver presente. Portanto, é melhor verificar antes se o valor está presente.
+Não use Optional para campos da classe ou parâmetros do método: O Optional deve ser usado principalmente para retornos de métodos que podem não ter valor.
+Entender e usar corretamente o Optional pode levar a um código mais limpo e menos propenso a erros, então vale a pena investir seu tempo para aprender.
