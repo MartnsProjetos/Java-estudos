@@ -4,7 +4,7 @@ Este repositório foi criado para reunir todo o meu progresso e aprendizados em 
 
 ---
 
-## 📁 Estrutura do Repositório pq pp
+## 📁 Estrutura do Repositório 
 
 - `resumos-aulas/`  
   Resumos e anotações das aulas feitas em cursos e vídeos.
