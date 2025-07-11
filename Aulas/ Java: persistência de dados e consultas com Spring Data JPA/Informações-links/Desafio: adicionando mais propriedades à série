@@ -1,0 +1,29 @@
+Nossa classe DadosSerie não está refletindo muito bem todas as informações que queremos buscar e armazenar na nossa aplicação. Já que iremos gravar séries no banco, é ideal que ela descreva mais os dados, tendo mais atributos. Por isso, te desafiamos a incrementar a busca e adicionar dados como:
+
+Gênero;
+Atores;
+Pôster;
+Sinopse.
+Propomos que você faça o mapeamento e rode a aplicação novamente. Verifique se todos os dados foram salvos corretamente. No próximo vídeo, mostramos a nossa implementação sendo executada.
+
+Ver opinião do instrutor
+Opinião do instrutor
+
+Para adicionar as informações, podemos acrescentar os atributos citados na record DadosSerie e depois mapear os nomes específicos com a anotação @JsonAlias. O código final de DadosSerie ficará assim:
+
+package br.com.alura.screenmatch.model;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record DadosSerie(@JsonAlias("Title") String titulo,
+                         @JsonAlias("totalSeasons") Integer totalTemporadas,
+                         @JsonAlias("imdbRating") String avaliacao,
+                         @JsonAlias("Genre") String genero,
+                         @JsonAlias("Actors") String atores,
+                         @JsonAlias("Poster") String poster,
+                         @JsonAlias("Plot") String sinopse) {
+}
+Copiar código
+Agora será possível guardar mais informações na nossa aplicação e nossas séries descreveram melhor a realidade!
