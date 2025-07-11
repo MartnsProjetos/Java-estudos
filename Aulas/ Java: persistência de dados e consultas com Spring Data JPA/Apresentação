@@ -1,0 +1,32 @@
+Transcrição
+Iasmin: Olá! Tudo bem? Eu sou a Iasmin Araújo, faço parte do Scuba Team na escola de Programação, e te dou boas-vindas a mais um curso de Java na Alura!
+
+Audiodescrição: Iasmin se descreve como uma mulher branca, de cabelo longo, liso e castanho-escuro e olhos verdes. Ela veste uma camisa preta e está sentada em um quarto com iluminação azul ao fundo, um guarda-roupa à esquerda e uma cama à direita.
+
+Porém, não estou sozinha. Mais uma vez, estou com minha parceria, a rainha do Java: a Jacque!
+
+Jacqueline: Ótimo! Obrigada pela linda introdução, Iasmin. Eu sou a Jacqueline Oliveira, engenheira de software e instrutora aqui na Alura!
+
+Audiodescrição: Jacqueline se descreve como uma mulher de pele branca, com cabelos longos, lisos e loiros e olhos castanho-escuros. Ela veste uma blusa preta e também está sentada em um escritório com iluminação azul ao fundo, e uma estante com enfeites à direita.
+
+Público-alvo
+Iasmin: Este conteúdo é para você que já está acompanhando a nossa formação de OO, concluiu o primeiro curso desta formação, sobre streams e lambdas, e deseja continuar aprendendo Java conosco e se aventurar no mundo da persistência de dados.
+
+O que vamos aprender?
+Jacqueline: Neste curso, vamos conhecer o banco de dados relacional PostgreSQL, vamos modelar classes para serem salvas no banco, utilizando o Spring Data JPA, que tem várias anotações, as quais iremos conhecer.
+
+Também vamos mapear relacionamentos entre as entidades, seja um relacionamento de um para muitos ou muitos para um. Vamos salvar informações no banco e recuperá-las, realizando diversos tipos de consultas, utilizando JPQL.
+
+Temos um spoiler de algo muito interessante que vamos fazer. Não vamos revelar o recurso, mas daremos uma pista: vamos consumir a API do ChatGPT e integrá-la com uma inteligência artificial.
+
+Iasmin: Vamos explorar tudo isso no projeto ScreenMatch, que você já conhece. Trata-se de um site de streaming de filmes e séries. Continuaremos com um projeto de linha de comando, mas agora vamos evoluir esse projeto, adicionando mais opções para escolha.
+
+Podemos buscar séries na web, assim como na nossa própria aplicação, no nosso próprio banco de dados. Vamos buscar séries, episódios, criar vários filtros e muito mais.
+
+Jacqueline: Além disso, como foi muito solicitado nos depoimentos e feedbacks, teremos desafio surpresa. Haverá um desafio em um contexto diferente do ScreenMatch, para que você possa praticar e consolidar o conhecimento adquirido no curso.
+
+Iasmin: Lembre-se de que você tem o apoio tanto do fórum quanto da comunidade do Discord, então sinta-se à vontade para compartilhar todas as suas dúvidas ou sugestões!
+
+Aproveite todos os recursos que temos à disposição. Temos vídeos, documentações extra, entre outros. Fique à vontade para estudar tudo o que puder, para evoluir bastante em Java.
+
+Jacqueline: Pegue seu café ou sua água e junte-se à nossa maratona!
