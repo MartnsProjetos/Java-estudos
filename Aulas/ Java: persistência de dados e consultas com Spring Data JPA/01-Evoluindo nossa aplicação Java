@@ -1,0 +1,173 @@
+Transcrição
+Iasmin: Vamos prosseguir com o desenvolvimento da aplicação ScreenMatch? No curso anterior, trabalhamos bastante com streams e listas. Agora, vamos continuar o desenvolvimento levando em consideração várias séries. Antes, focamos principalmente nos episódios e temporadas de uma única série. Agora vamos analisar dados de múltiplas séries.
+
+Evoluindo nossa aplicação Java
+Nosso projeto está muito semelhante ao anterior, porém, optamos por separá-lo em alguns métodos. Nós criamos uma modularização e agora temos os métodos buscarSerieWeb(), getDadosSerie() e buscarEpisodioPorSerie(). Deixamos um pouco de lado a parte dos streams e das listas, pois o nosso foco agora é um pouco diferente.
+
+Jacqueline: Ao longo do curso, tanto nos anteriores quanto o imediatamente anterior a este, trabalhamos conceitos do Java para chegar ao momento de evoluir a nossa aplicação.
+
+Trabalhamos com questões de buscas e listas, mas o objetivo do nosso projeto é que essa aplicação se transforme em uma API. Queremos começar a disponibilizar para o nosso público esses dados que hoje buscamos de terceiros. Portanto, o nosso desenvolvimento está sendo feito de maneira incremental para que isso aconteça.
+
+Iasmin: Vamos executar o nosso projeto para verificar como ele está funcionando. Ao clicar no botão "Run" na barra de menu superior à direita, o botão verde de reprodução, será aberto o terminal e exibido o nosso menu.
+
+Temos as opções: "1 - Buscar séries"; e "2 - Buscar episódios". Vamos escolher a opção 1 e buscar a série "The Boys". Com isso, serão retornados os dados da série.
+
+DadosSerie[titulo=The Boys, totalTemporadas=4, avaliacao=8.7]
+Copiar código
+Após isso, terminamos a execução. Se quisermos buscar os episódios de "The Boys", teremos que executar o projeto mais uma vez, selecionar a opção 2 e, em seguida, buscar os episódios. Portanto, vamos digitar novamente "The Boys", e teremos como resultado os dados detalhados.
+
+Podemos aprimorar essa aplicação, não é mesmo, Jacque?
+
+Estrutura de repetição
+Jacqueline: Para começar, podemos trabalhar com essa estrutura de repetição. A ideia é buscar várias séries primeiro, e depois decidir qual episódio queremos buscar. Vamos criar uma repetição para que a aplicação seja finalizada somente quando a pessoa usuária decidir.
+
+Iasmin: Já temos isso previamente configurado. Temos a opção "0" para sair. O que faremos será criar uma condição de parada. Para isso, usaremos o while na linha 25 do arquivo Principal.java, para informar enquanto a opção for diferente de zero (while(opcao "= 0)).
+
+Em seguida, vamos abrir chaves e fechá-las logo após o switch.
+
+Principal.java:
+
+while(opcao != 0) {
+    var menu = """
+            1 - Buscar séries
+            2 - Buscar episódios
+            3 - Listar séries buscadas
+
+            0 - Sair                                 
+            """;
+
+    System.out.println(menu);
+    var opcao = leitura.nextInt();
+    leitura.nextLine();
+
+    switch (opcao) {
+        case 1:
+            buscarSerieWeb();
+            break;
+        case 2:
+            buscarEpisodioPorSerie();
+            break;
+        case 0:
+            System.out.println("Saindo...");
+            break;
+        default:
+            System.out.println("Opção inválida");
+    }
+}
+Copiar código
+Agora, mudaremos o local da declaração de opcao da linha 35. Em vez de ficar dentro do bloco while, ela ficará do lado de fora, pois precisamos dessa variável para a condição do while.
+
+Iremos instanciá-la com o valor "-1" na linha 25, apenas para entrar no while uma única vez, e depois a pessoa usuária é quem irá modificá-la.
+
+public void exibeMenu() {
+    var opcao = -1;
+    while(opcao != 0) {
+        
+        // código omitido
+        
+        System.out.println(menu);
+        opcao = leitura.nextInt();
+        leitura.nextLine();
+        
+        // código omitido
+Copiar código
+Agora temos um loop. A pessoa usuária pode ficar o quanto desejar, mas precisamos fazer com que haja uma lista de séries e que essa lista seja exibida, ou não faz sentido ter um loop.
+
+Adicionando uma lista de séries
+Portanto, precisaremos de uma lista de séries para que possamos adicioná-las. Vamos declarar essa lista após API_KEY na linha 22. Teremos uma lista privada (private List<>) de DadosSerie chamada dadosSeries, e vamos instanciar essa lista usando new ArrayList<>().
+
+private List<DadosSerie> dadosSeries = new ArrayList<>();
+Copiar código
+Agora, toda vez que buscarmos uma série na web, vamos adicioná-la à lista. Então, no método buscarSerieWeb(), vamos digitar dadosSeries.add() e passar os dados buscados.
+
+private void buscarSerieWeb() {
+    DadosSerie dados = getDadosSerie();
+    dadosSeries.add(dados);
+    System.out.println(dados);
+}
+Copiar código
+Criando o método listarSeriesBuscadas()
+Podemos imprimir essa lista, concorda, Jacque?
+
+Jacqueline: Perfeito, é uma boa ideia criar um novo método para listar as séries que acabamos de adicionar à lista.
+
+Iasmin: Então, primeiramente, vamos criar uma opção no menu que será para listar as séries buscadas ("3 - Listar séries buscadas").
+
+var menu = """
+        1 - Buscar séries
+        2 - Buscar episódios
+        3 - Listar séries buscadas
+
+        0 - Sair                                 
+        """;
+Copiar código
+Feito isso, também precisaremos declarar no switch o case 3, que será para chamar este método de listar. Então, vamos utilizar case 3: seguido de listarSeriesBuscadas() abaixo.
+
+switch (opcao) {
+    case 1:
+        buscarSerieWeb();
+        break;
+    case 2:
+        buscarEpisodioPorSerie();
+        break;
+    case 3:
+        listarSeriesBuscadas();
+        break;
+    case 0:
+        System.out.println("Saindo...");
+        break;
+    default:
+        System.out.println("Opção inválida");
+}
+Copiar código
+Agora, precisamos criar esse método que ainda não existe. Vamos copiar a assinatura do método, lembrando também de usar o break na última linha do case, algo crucial no switch case.
+
+O método listarSeriesBuscadas() será privado (private), pois queremos fortalecer o encapsulamento. Então, teremos private void listarSeriesBuscadas() ao final do código.
+
+A única função deste método será imprimir os dados da lista dadosSeries. Sendo assim, no escopo do método, vamos executar dadosSeries.forEach(System.out::println).
+
+private void listarSeriesBuscadas() {
+    dadosSeries.forEach(System.out::println)
+}
+Copiar código
+Jacqueline: Vamos executar a aplicação para verificar o que acontece?
+
+Lembre-se: sempre focamos em boas práticas. Como é uma única linha de código, isso poderia ter sido incluído no case. No entanto, nosso código fica muito mais legível quando separamos por métodos e deixamos descrito exatamente o que acontece.
+
+Além disso, pode ser que em algum momento queiramos alterar como essas séries serão listadas. Então, definitivamente não é uma boa prática lançar todo esse código dentro do case.
+
+Criamos um novo método privado, para que apenas essa classe possa chamá-lo e não a classe ScreenmatchApplication que chama a principal. Queremos que a classe externa possa chamar apenas o método exibeMenu(). Então, todos os outros métodos desta classe são privados.
+
+Estamos sempre trabalhando não só o que vamos fazer, mas a melhor maneira possível de fazer, usando boas práticas de desenvolvimento.
+
+Testando o código
+Iasmin: Agora vamos testar e utilizar essas duas práticas.
+
+Após executar a aplicação, temos as três opções no terminal e vamos buscar várias séries. Para isso, selecionamos a opção 1 e pesquisamos, por exemplo, "Never Have I Ever".
+
+Jacqueline: A próxima série pode ser "Grey's Anatomy".
+
+Iasmin: Vamos buscar só mais uma, a série "The Boys". Assim, temos três séries. Vamos tentar listar essas séries agora. Para isso, digitamos 3. Como resultado, temos o seguinte:
+
+DadosSerie[titulo=Never Have I Ever, totalTemporadas=4, avaliacao=7.9]
+DadosSerie[titulo=Grey's Anatomy, totalTemporadas=19, avaliacao=7.6]
+DadosSerie[titulo=The Boys, totalTemporadas=4, avaliacao=8.7]
+Copiar código
+Já conseguimos buscar várias séries!
+
+Conclusão
+Jacqueline: Perfeito. Agora, podemos listar como um próximo passo buscar mais dados dessa série, porque se vamos disponibilizar isso para nossas pessoas usuárias, sabemos que no OMDB temos mais informações dessa série que poderíamos utilizar, além de título, total de temporadas e avaliação. Temos uma série de coisas que podem ser retornadas na mesma requisição.
+
+Dito isso, poderíamos pegar alguns outros elementos, por exemplo, as categorias e a imagem do pôster, para que quando o front-end consumir essa API, ele mostre essa imagem. A sinopse também é interessante, para quem consultar saber sobre o que é a série.
+
+O que você acha, Iasmin?
+
+Iasmin: Acho que o nome dos atores também seria interessante, Jacque.
+
+Jacqueline: Boa ideia, Iasmin!
+
+Iasmin: Nós já sabemos como fazer, estudamos bastante sobre isso no primeiro curso, que seria buscar informações no arquivo JSON. De uma forma muito semelhante ao que já foi feito, nós desafiamos você a fazer isso!
+
+Trabalharemos em segundo plano e na próxima aula discutiremos o que foi realizado.
+
+Jacqueline: Exatamente. Na sequência, você perceberá que na nossa aplicação já estará mapeado, porém, o desafio é você alterar a modelagem e incluir as informações extra de série!
