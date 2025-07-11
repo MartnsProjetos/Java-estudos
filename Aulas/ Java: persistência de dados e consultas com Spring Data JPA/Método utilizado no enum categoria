@@ -1,0 +1,10 @@
+No vídeo a seguir, precisaremos de criar um Enum e utilizar um método específico para fazer a conversão entre as informações do OMDB e as da nossa aplicação. Você pode copiar o código a seguir para conseguir prosseguir:
+
+public static Categoria fromString(String text) {
+        for (Categoria categoria : Categoria.values()) {
+            if (categoria.categoriaOmdb.equalsIgnoreCase(text)) {
+                return categoria;
+            }
+        }
+        throw new IllegalArgumentException("Nenhuma categoria encontrada para a string fornecida: " + text);
+    }
