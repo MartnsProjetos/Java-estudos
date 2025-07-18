@@ -1,0 +1,116 @@
+Transcrição
+Jacqueline: Aprendemos como buscar todas as séries e adicioná-las em uma lista. Porém, é bastante inconveniente procurar a mesma série repetidas vezes e ter que inseri-las na lista constantemente. Por isso, decidimos começar a persistir esses dados em um banco de dados, uma prática comum na rotina da pessoa desenvolvedora.
+
+Persistência de Dados em Bancos de Dados Relacionais
+Sempre precisamos persistir os dados. Os dados são o "coração" da aplicação. Existem vários tipos de bancos de dados, bancos orientados a documentos e de diversas formas, mas optamos por utilizar um banco relacional.
+
+Iasmin: Um banco relacional é aquele no qual temos várias entidades, várias tabelas, e elas estão relacionadas entre si. Conseguiremos programar esses relacionamentos. No nosso caso, utilizaremos o Postgres.
+
+Configuração e Conexão com o Banco de Dados
+Jacqueline: No Preparando ambiente, disponibilizaremos instruções de como instalar o Postgres e fazer as configurações necessárias. No meu computador, ele já está instalado.
+
+Para acessar o Postgres e visualizar os bancos, tabelas, colunas e registros, temos o "PgAdmin", que é o administrador do banco de dados.
+
+Por exemplo, vou abrir meu "PgAdmin", estou trabalhando na versão 15. Dentro do PostgreSQL 15, existe um banco de dados chamado alura_musicas. Ao selecioná-lo e abrindo o "Query Tools", encontraremos duas tabelas: "cantor" e "música".
+
+Portanto, em um banco relacional as tabelas se relacionam através de chaves: chaves primárias e chaves estrangeiras. Para cada tabela, temos uma chave primária que identifica aquele registro unicamente. A relação entre um e outro é feita através de chaves estrangeiras.
+
+Por exemplo, temos a tabela "cantor" e a tabela "música". Para demonstrar o que é a tabela "cantor", executamos o seguinte comando:
+
+select * from cantor
+Copiar código
+id	nome
+1	1	kiss
+2	2	Bon Jovi
+3	3	Aerosmith
+O retorno é de uma tabela "cantor" com três registros: Kiss; Bon Jovi; e Aerosmith. Então, temos as chaves primárias, que identificam esse registro. No caso, temos um número inteiro representando a chave primária. Além disso, temos uma tabela de músicas que faz uma associação com essa tabela de cantor.
+
+Agora, vamos executar outro comando:
+
+select * from musicas
+Copiar código
+id	nome	cantor_id
+1	1	Always	2
+2	2	Livin on a prayer	2
+3	3	Crazy	3
+4	4	Forever	1
+O retorno contém o "id" das músicas, o "nome" das músicas e um campo chamado "cantor_id", sobre quem é o cantor da música ou qual é a banda associada a ela.
+
+Por exemplo, a música "Always" é da banda de id 2, ou seja, do Bon Jovi. A música "Forever", que é de id 4, está associada ao número 1, que é o Kiss.
+
+Dessa forma, nos bancos relacionais, as tabelas têm essa relação entre si. Para não repetirmos em uma tabela, por exemplo, o nome da música e o nome do cantor, relacionamos com o ID de uma tabela que já existe, evitando a repetição de dados.
+
+Essa é uma característica dos bancos relacionais e muitos tipos de bancos, como o MySQL, SQL Server e o Postgres, sendo que este último é o que vamos usar no curso.
+
+Além destes, existem também bancos de dados que não são relacionais, como o MongoDB, que utilizam estruturas diferentes para armazenamento.
+
+Como conectamos a aplicação a um banco de dados? Já temos o banco de dados alura_musicas, como podemos criar o alura_series e conectá-lo ao alura_musicas. Precisaremos de dependências que nos auxiliem nesta tarefa.
+
+Assim, no nosso arquivo pom.xml adicionaremos algumas dependências. Mas como não temos certeza do nome da dependência, podemos acessar o site do Spring Initializr, que exploramos em aulas anteriores. Lá, especificamos que queremos nos conectar com o banco Postgres e o site nos informará qual é a dependência necessária para a conexão.
+
+Além disso, precisaremos do Spring Data JPA , que é um módulo do Spring que abstrai conceitos de conexão e fornece métodos que realizam as tarefas de CRUD (Create, Read, Update, Delete, em português, Criar, Ler, Atualizar e Apagar um registro). Então, no Spring initializr, campo "Dependencies", escreveremos "spring data JPA".
+
+Em seguida, vamos selecionar a opção "Maven" e apertar o botão "Explore". Então, o site nos mostrará o arquivo pom.xml com algumas dependências. Precisamos do sprin-boot-starter-data-jpa e de um driver do Postgres para realizarmos a conexão.
+
+Vamos copiar as duas dependências, acessar o projeto que a Yasmin começou a codificar e já subiu para o GitHub, pois estamos trabalhando colaborativamente e colá-las no arquivo pom.xml.
+
+    <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+Copiar código
+ORM e Mapeamento de Objetos para Tabelas
+Iasmin: Enquanto você cola as dependências, gostaria de mencionar sobre a JPA. A JPA é uma especificação da ORM (Object Relational Mapping, em português, Mapeamento do Objeto Relacional). O ORM, que usamos com Java neste caso, é o Hibernate. Ele é responsável por fazer a conexão entre o objeto e a entidade relacional que ficará no banco.
+
+Jacqueline: Quando estamos trabalhando com um banco orientado a documentos, o jeito que a nossa API recebe um JSON pode ser o jeito que ele será armazenado no banco de dados.
+
+Mas, quando estamos trabalhando com um banco relacional, que tem tabelas, colunas, registros, pode não ser tão óbvio. Afinal, como fazer essa associação? Transformar uma classe em uma tabela?
+
+O ORM é fundamental para conseguirmos fazer essa tradução do que temos em classe e para o que será tabela no banco. Após adicionarmos as duas dependências, o que precisa ser feito? Se tentarmos executar a aplicação agora, apenas com as duas dependências adicionadas, o que acontecerá?
+
+Provavelmente, receberemos uma mensagem sinalizando algo como: "Você está tentando conectar-se a um banco, mas não me disse qual é". O sistema entendeu que queremos conectar um banco, então, nos informa que a configuração da URL, pois ele não sabe qual banco queremos usar, por exemplo, um H2 ou HSQL.
+
+Então, inserimos o driver, adicionamos a JPA, mas não configuramos a conexão. Qual é o próximo passo para configurarmos a conexão? Precisaremos usar um arquivo que fica dentro da pasta "resources", que é o application.properties.
+
+No application.properties é onde vamos configurar qual é a URL do nosso banco, qual é o usuário para conexão e qual é a senha. Quando instalamos o Postgres, notamos que ele tem um usuário padrão chamado "Postgres" e precisaramos configurar uma senha. Tudo isso precisa estar descrito.
+
+Também precisaremos mencionar o dialeto do Hibernate, que foi mencionado pela Iasmin. Por isso, vamos copiar e colar as propriedades. Elas serão disponibilizadas no Arquivo do curso. Vamos conferir essas propriedades:
+
+spring.datasource.url=jdbc:postgresql://localhost/alura_series
+spring.datasource.username=postgres
+spring.datasource.password=123
+spring.datasource.driver-class-name=org.postgresql.Driver
+hibernate.dialect=org.hibernate.dialect.HSQLDialect
+Copiar código
+Estamos informando que a URL do banco é jdbc:postgresql://localhost/, porque ele está instalado localmente no computador, e queremos que o nome do banco de dados seja alura_series. O usuário padrão, username, será postgres. A senha é 123, mas você pode criar uma senha muito mais segura.
+
+Também indicamos qual é a classe do driver, ou seja, quem é o driver do banco. Se fosse MySQL, seria outro driver. Se fosse o SQL Server, talvez outro. Então, isso é específico do Postgres. Por fim, mencionamos o dialeto que utilizaremos para o Hibernate realizar as operações especificadas pela JPA.
+
+Fizemos essas configurações no application.properties e, agora, vamos tentar executar a aplicação para testar se ela vai entender o que precisamos fazer. Se ele vai conseguir se conectar ao banco ou não.
+
+Então, executaremos apertando o "Run". Existem várias formas de executar a aplicação. Você já sabe disso, porque este não é o primeiro curso que acompanha, então, já sabe como executar a aplicação. Vamos rodar! Provavelmente vai dar um erro. Qual é o erro? Vamos entender.
+
+O erro informa Database "alura_series" does not exist. O banco de dados informado para conexão não existe. Uma propriedade que pode ser inserida ao nosso código é a createDatabaseIfNotExists=true. Isso funciona para alguns bancos, por exemplo, para o MySQL. Ele consegue entender e cria sozinho o banco.
+
+O Postgres não dá suporte a essa anotação. Então, ele vai retornar novamente: Database "alura_series" does not exist. Então, vamos parar e remover a anotação. Agora, precisaremos criar manualmente esse banco de dados no PgAdmin.
+
+Iasmin: Sim, da mesma forma que criamos o alura_musicas, criaremos o alura_series também.
+
+Jacqueline: Exatamente! Estamos no PgAdim, vamos clicar em "Databases" com o botão direito, selecionar a opção "Create Database" e vou nomeá-lo de alura_series.
+
+Criamos o alura_series e ele não tem nenhuma tabela, o banco está vazio, mas precisamos saber se ele conseguirá se conectar. Por isso, vamos executar a aplicação novamente, clicando no "Run", e se tudo ocorrer conforme o esperado, a conexão será estabelecida sem erros.
+
+Foi exatamente isso que aconteceu! A aplicação buscou séries, buscou episódios e listou séries. Isso significa que ela conseguiu se conectar com o banco de dados.
+
+No entanto, até o momento, não estamos fazendo nada com o banco. Não estamos salvando nada nele, nem buscando nada dele, ele está exatamente como estava antes. A única coisa que fizemos foi estabelecer uma conexão bem-sucedida.
+
+Futuras Implementações
+O próximo passo será justamente esse. Com o banco conectado, como é possível criar nele uma tabela de séries ou uma tabela de episódios? Como salvar dados ou recuperá-los?
+
+Iasmin: A seguir, vamos criar o mapeamento entre um elemento e outro.
