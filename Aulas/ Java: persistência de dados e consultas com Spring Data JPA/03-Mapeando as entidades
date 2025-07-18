@@ -1,0 +1,133 @@
+Transcrição
+Jacqueline: A nossa conexão foi bem sucedida! Quando executamos a aplicação, a presença de uma JPA e de um driver do Postgres foi identificada, possibilitando a conexão com o banco de dados alura_series. Contudo, ainda não temos nada neste banco.
+
+Sendo assim, agora precisamos fazer o mapeamento objeto relacional. Ou seja, precisamos definir qual das nossas classes vai se transformar em uma tabela no banco de dados.
+
+Mapeamento Objeto-Relacional
+Dentro do nosso pacote "model", na classe Serie, precisamos indicar para a JPA que essa classe se tornará uma tabela do banco. Para isso, usaremos uma anotação, a @Entity, do jakarta.persistence.
+
+Criamos a nossa série com o nome no singular: serie. No entanto, talvez queiramos renomeá-la, no banco de dados, para series, pois ela armazenará várias séries. Vamos informar isso para a JPA através de uma anotação. Não é necessário acatar que o nome da tabela no banco seja serie também.
+
+Iasmin: A JPA salvaria automaticamente como serie. Porém, quando usamos uma anotação, podemos indicar o nome que queremos usar quando a tabela for criada.
+
+Jacqueline: Conseguimos personalizar para o nome que quisermos. Basta inserir uma nova anotação @Table. Vamos indicar @Table e especificar que o nome da tabela, name, será series.
+
+@Entity
+@Table(name = "series")
+Copiar código
+O mesmo vale para as colunas. Se não quiséssemos o nome titulo na tabela, poderíamos usar @Column e especificar com name que o nome é "nomeDaSerie", por exemplo.
+
+@Column(name = "nomeDaSerie")
+Copiar código
+Vamos manter como titulo, mas existe essa possibilidade de personalização também do nome das colunas, pois nem sempre vamos trabalhar com um projeto novo. Muitas vezes lidaremos com projetos legados, então, pegamos um banco de dados existente e criamos um projeto Java que usará esse banco de dados.
+
+É possível fazer essa correspondência entre o que está no banco para o que será mostrado na classe.
+
+Iasmin: Um ponto interessante sobre o @Column é que ele terá vários atributos. Além do name, também podemos personalizar a classe com outras propriedades do banco de dados. Por exemplo, também poderíamos acrescentar o unique ou o nullable.
+
+Existem vários parâmetros que podemos utilizar para personalizar nossas colunas com @Column.
+
+Jacqueline: Perfeito! Com o @Column podemos especificar que o título da série não será repetido. Assim, evitaremos armazenar 4 ou 5 vezes uma série, por exemplo, com o nome "Game of Thrones". Uma vez gravado o nome "Game of Thrones", ele será único.
+
+Quando escrever @Column e abrimos parênteses, aparecem várias opções e escolheremos unique = true. O default é falso, significa que podemos repetir valores. Mas, passaremos true, assim, o título nunca poderá se repetir.
+
+@Entity
+@Table(name = "series")
+public class Serie {
+    
+    @Column(unique = true)
+    private String titulo;
+
+// Código omitido. 
+Copiar código
+Neste ponto, indicamos para a nossa JPA que a série vai ser uma tabela no banco, que o nome dela no banco não será serie, mas sim series e que a coluna titulo tem um índice único, ou seja, não podemos repetir títulos. No entanto, há um detalhe muito importante que ainda não definimos, que é a chave primária, ou seja, o índice único.
+
+Assim, vamos criar um novo atributo, private Long id e indicar para a JPA que este é o id, a chave primária. Então, vamos passar a anotação @Id.
+
+@Entity
+@Table(name = "series")
+public class Serie {
+        
+        @Id
+        private Long id; 
+    @Column(unique = true)
+    private String titulo;
+
+// Código omitido. 
+Copiar código
+Além disso, precisamos indicar qual é a estratégia de geração deste id. Quando geramos um id, podemos controlar esse identificador único de várias maneiras:
+
+Criar um recurso no banco chamado sequence;
+
+Controlar os ids por meio de uma tabela específica;
+
+Declará-lo como auto-incremental.
+
+Portanto, precisamos informar qual será a estratégia de geração do id, para isso, vamos adicionar a anotação @GenerationType. Em seguida, informaremos a nossa estratégia de geração:
+
+AUTO, em que a JPA decide qual é a melhor estratégia;
+
+IDENTITY, que é o auto-incremental. Então, se temos um valor inteiro, ele gerará a sequência;
+
+SEQUENCE;
+
+TABLE.
+
+Disponibilizaremos uma documentação detalhando cada um deles. No nosso caso, escolheremos o IDENTITY. Portanto, a estratégia escolhida é a auto-incremental:
+
+@Entity
+@Table(name = "series")
+public class Serie {
+        
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id; 
+    @Column(unique = true)
+    private String titulo;
+
+// Código omitido. 
+Copiar código
+Resolvemos a questão do id e definimos como ele será gerado. Seguindo, precisamos indicar que a Categoria é do tipo enum. Para isso, dispomos de uma anotação para identificar que o gênero é um enum. Basta inserir, antes de Categoria, um @Enumerated(), dizendo o tipo da enumeração.
+
+@Enumerated()
+private Categoria genero;
+
+// Código omitido. 
+Copiar código
+Temos duas opções:
+
+ORDINAL, a qual irá considerar a ordem na qual os dados foram criados;
+
+STRING, que grava a informação como uma string.
+
+Vamos gravar como STRING para evitar problemas caso seja necessário inserir um novo elemento em outra posição, o que poderia causar erros de categorização caso o tipo escolhido fosse ORDINAL.
+
+@Enumerated(EnumType.STRING)
+private Categoria genero;
+
+// Código omitido. 
+Copiar código
+A última etapa para criarmos efetivamente essa tabela no nosso banco é pedir para que a JPA faça isso automaticamente. Não precisamos criar a tabela manualmente, a JPA já tem essa funcionalidade.
+
+Para isso, no application.properties, informaremos para a JPA que queremos que ela crie a tabela automaticamente através do seguinte comando:
+
+spring.jpa.hibernate.ddl-auto=update
+Copiar código
+Com isso, estamos dando permissão para que a JPA verifique se houve alguma alteração nas classes com a execução da aplicação, neste caso, ela atualizará o banco de dados. Vamos testar isso agora!
+
+Vamos executar a aplicação e verificar se ela vai criar a tabela de séries. Provavelmente, nós esquecemos algum detalhe. Por exemplo, não criei os getters do ID. Vamos fazer isso e continuar.
+
+Iasmin: Podemos perceber a importância de ter modelado a série adequadamente antes. Agora, nós apenas utilizamos as anotações e vamos armazenar esses dados diretamente no banco.
+
+Jacqueline: Exato! Então, vamos executar e conferir se ele apresenta algum erro. Provavelmente, esqueci algum detalhe e vamos verificar isso agora.
+
+Então, ele vai tentar conectar, criar a tabela. Em teoria, tudo foi feito corretamente. Ótimo! Se clicarmos no 0, ele vai sair. Vamos verificar no banco.
+
+No PgAdmin, daremos refresh no banco de dados da alura_series. Ele já criou uma tabela de séries. Acessando Query tools e colocando o comando select * from series, ele retornará o "id", "atores", "avaliacao", "genero", dentre outras informações da série em ordem alfabética.
+
+Próximos Passos
+Portanto, ele já conseguiu criar uma tabela que vai armazenar as informações da série. Falta gravá-las, porque ainda não adaptamos a aplicação para isso. E é o que vamos fazer em seguida.
+
+Iasmin: Vamos fazer todas as alterações necessárias para conseguir fazer esse save.
+
+Jacqueline: Então, até já!
