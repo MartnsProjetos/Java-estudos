@@ -1,0 +1,27 @@
+Para dar continuidade ao curso será necessário utilizar o banco de dados Postgres, e seu administrador PGAdmin. No curso PostgreSQL o passo a passo das instalações é feito detalhadamente. Recomendamos que assista o vídeo Ambiente e versões . Segue, de forma resumida, as etapas dos processos de instalação:
+
+1- Para começar, você pode ir ao site de download do Postgres e escolher seu sistema operacional. No meu caso, escolhi o Windows. Depois, clique em Download the installer. Feito isso, irá abrir uma página com várias versões do Postgres. Recomendamos que você baixe a versão mais atualizada. Até o momento, a versão mais recente é a 15.
+
+Print da tela Download PostgresSQL com a tabela que contém os links para download do PostgreSQL com uma seta vermelha apontada para a versão 15.4 e destacando o botão de download
+
+2 - Depois de clicar em instalar, vai iniciar o processo de download do instalador do Postgres. Quando o download for concluído, você deverá ir até a pasta de downloads e executar o instalador. A partir daí, podemos ir dando vários “Next” até chegar na configuração da senha. Escolha sua senha e lembre-se que ela será utilizada no decorrer das nossas aulas. Os dois campos devem ser preenchidos com a mesma senha.
+
+3 - Logo depois, aparece o pedido para selecionar o número da porta. A porta padrão que o Postgre vai utilizar é a "5432", que já estará digitada no campo, então apenas clique em "Next". Na próxima janela, será solicitado um local. Aqui, você pode selecionar Portuguese, Brazil e clicar em "Next".
+
+Print da tela de setup do download do PostgreSQL, com o título “Advanced Options”. Há a instrução “Select the locale to be used by the new database cluster.”, com o Locale “Portuguese, Brazil” selecionado e destacado em azul
+
+4 - Beleza! Agora iremos confirmar os dados. Clique em Next nesta janela e na próxima e ele já fará a instalação.
+
+Quando concluir esse processo, ele vai para uma nova janela com uma caixa de seleção marcada para iniciar o Stack Builder. Você pode desmarcar ela porque a gente não vai utilizar o Stack Builder, e clicar em Finish (finalizar).
+
+Captura de tela da finalização do PostgreSQL, com a caixa de seleção desmarcada. ClicamosDestaque para o botão a ser pressionado “Finish” para prosseguir.
+
+5 - Podemos testar se nossa instalação funcionou e verificar se o PGAdmin, que será utilizado no curso, está configurado. Digite no buscador do computador "pgAdmin" e clique para abrir o programa.
+
+Captura de tela em que temos a barra de pesquisa do Windows - botão da lupa à direita do botão iniciar, onde está digitado “pgAdmin”. Na parte superior, aparece na primeira opção o aplicativo pgAdmin4, que está destacado por um retângulo vermelho.
+
+Uma nova tela será aberta: clique em “Servers”, no menu à esquerda. Será solicitada uma senha, que deve ser a senha que você configurou na instalação. Após digitar a senha, você verá carregado o "PostgreSQL 15" e, clicando sobre ele, você poderá ter acesso aos bancos já cadastrados.
+
+Captura de tela com a janela com o pgAdmin aberta. Há um destaque na coluna da esquerda, onde tem a opção Servers e, abaixo, "PostgreSQL 12"
+
+Feito isso, poderemos seguir e utilizar o Postgres e o PGAdmin nas nossas aulas! Qualquer dúvida sobre a instalação, lembre-se de consultar o vídeo e fique à vontade para enviar no fórum!
