@@ -1,0 +1,125 @@
+Transcrição
+Jacqueline: Nossa persistência está funcionando! Já temos no alura_series a minha série favorita "Grey's Anatomy". Agora vamos seguir o fluxo. Precisamos gravar mais algumas séries e recuperar os dados. Já aprendemos a salvar usando o método repositorio.save(). Mas como buscar as séries? Como encontrar os dados no banco e trazê-los para a nossa aplicação?
+
+Deixando os dados sensíveis em segurança
+Na classe Principal, temos alguns métodos no menu, como o buscarSerieWeb(), que busca no OMDB e salva no banco. Nós queremos listar as séries buscadas (listarSeriesBuscadas()), mas agora não queremos buscar mais da lista anterior, e sim do banco.
+
+Então, no método listarSeriesBuscadas(), declarado na linha 97, não temos que fazer um stream() de dadosSeries. Queremos buscar do banco de dados.
+
+Sendo assim, o método precisará ser alterado. Temos uma variável chamada series dentro de uma List<Serie>, mas não faremos mais dadosSeries.stream(). Vamos apagar todo o trecho até Collectors.toList(). No lugar disso, faremos repositorio.findAll().
+
+Principal.java:
+
+private void listarSeriesBuscadas(){
+    List<Serie> series = new ArrayList<>();
+    series = repositorio.findAll();
+    series.stream()
+            .sorted(Comparator.comparing(Serie::getGenero))
+            .forEach(System.out::println);
+}
+Copiar código
+Com isso, falamos que já está implementado na JPA. Queremos dizer o seguinte: "Vá ao repositório e nos dê todos os cadastros". Não buscaremos mais de uma lista de dadosSeries ou de lugar nenhum; queremos trazer tudo do nosso repositório.
+
+Teoricamente, se executarmos a aplicação agora e mandar listar, ela já terá que trazer "Grey's Anatomy". Antes mesmo de ter buscado qualquer coisa, a aplicação deve ir ao banco e informar que já temos um cadastro de "Grey's Anatomy".
+
+Iasmin: Podemos apagar o new ArrayList<>() da linha 99, conforme a IDE reclama.
+
+Jacqueline: Exatamente, podemos reformular o código e criar series a partir de repositorio.findAll(). Assim, economizamos uma linha e ajustamos o código.
+
+private void listarSeriesBuscadas(){
+    List<Serie> series = repositorio.findAll();
+    series.stream()
+            .sorted(Comparator.comparing(Serie::getGenero))
+            .forEach(System.out::println);
+}
+Copiar código
+Com isso, a lista de séries vem de repositorio.findAll().
+
+Se observarmos, o findAll(), um método já descrito na JPA, retorna um List<> de tipo genérico. Qual é esse tipo genérico? O tipo que definimos que ele salva. Então, será retornado um List<> de Serie, que é justamente o que temos no código acima.
+
+Assim, o método findAll() já faz isso para nós. Vamos executar a aplicação e verificar se vai aparecer a série "Grey's Anatomy", usando a opção "3 - Listar séries buscadas".
+
+Nesse momento, será retornado um erro no terminal. O log nos diz que não temos um construtor padrão para a entidade Serie. Uma exigência da JPA é que tenhamos um construtor padrão.
+
+A partir da implementação da classe em Java, o construtor padrão é fornecido. Mas a partir do momento que criamos outro construtor, não é mais fornecido. Precisamos explicitar isso. Então, na classe Serie, como tínhamos Serie() baseado em DadosSerie, agora temos que adicionar um construtor padrão também.
+
+Para isso, usaremos public Serie(). O construtor padrão é somente isso, sem nenhum parâmetro, seguido de abertura e fechamento de chaves.
+
+Serie.java:
+
+public Serie() {}
+Copiar código
+A JPA exige que tenhamos isso; para conseguir recuperar os dados do banco e representar como um objeto do tipo Serie, precisamos ter o construtor padrão.
+
+Agora, ao executar a aplicação e listar as séries buscadas, teremos como retorno "Grey's Anatomy". Se buscarmos por mais uma série, como "Gilmore Girls", ao listar as séries, a plataforma já mostra para nós as séries "Gilmore Girls" e "Grey's Anatomy".
+
+Perfeito, os dados estão sendo salvos e buscados no banco corretamente. Nós fizemos o repositorio.save() e o repositorio.findAll(), que a JPA já fornece pronto para persistir e buscar dados. Fácil de fazer, não precisamos digitar quase nada.
+
+Usando variáveis de ambiente
+Agora que já codificamos bastante, vamos subir o projeto no GitHub. Porém, nesse projeto há várias senhas. Temos usuário, senha do Postgres, nome do banco, servidor. Está tudo fixo no código (hardcoded). Temos até mesmo a chave que criamos em ConsultaChatGPT.java.
+
+Isso não é recomendável. Nossa ideia é criar variáveis de ambiente e fazer substituições. Essa é uma boa prática para evitar subir o projeto no Git e alguém ter acesso essa chave. Assim, ninguém verá qual é o nosso usuário e a nossa senha do Postgres. Temos várias atualizações para fazer o commit, mas antes de fazê-lo, precisamos fazer a alteração.
+
+Já deixamos as variáveis de ambiente criadas, pois a partir do momento que criamos uma variável de ambiente, é preciso reiniciar o sistema operacional para que ele possa reconhecê-la.
+
+Para evitar essa interrupção, já deixamos as variáveis criadas. Basta clicar no Windows e escrever "variáveis de ambiente" para exibir a tela padrão de "Propriedade do Sistema", onde clicaremos em "Variáveis de Ambiente…", no canto inferior direito.
+
+Criamos uma variável chamada DB_HOST para dizer quem é o servidor. Também temos uma chamada DB_NAME para dizer o nome do banco de dados. A DB_PASSWORD é a senha, enquanto a DB_USER é o usuário. Além disso, temos a OPENAI_APIKEY, que é a minha própria chave no ChatGPT. Então, já temos nossas próprias variáveis para utilizar no projeto.
+
+Uma vez que criamos essas variáveis, definimos o valor, gravamos e reiniciamos o sistema operacional e a aplicação, conseguimos usá-las. No arquivo application.properties, vamos substituir os valores que estão fixos pela variável de ambiente que criamos.
+
+Por exemplo, no lugar de localhost na linha 1, vamos colocar ${DB_HOST}, variável de ambiente que tem o localhost que acabamos de criar.
+
+No nome do banco de dados (alura_series), a mesma coisa: vamos colocar um sinal de cifrão, abrir chaves e colocar DB_NAME. Feito isso, vamos copiar ${DB_NAME} e usar a mesma estrutura para os outros valores.
+
+Em username, teremos ${DB_USER}; em password, ${DB_PASSWORD}.
+
+application.properties:
+
+spring.datasource.url=jdbc:postgresql://${DB_HOST}/${DB_NAME}
+spring.datasource.username=${DB_USER}
+spring.datasource.password=${DB_PASSWORD}
+spring.datasource.driver-class-name=org.postgresql.Driver
+hibernate.dialect=org.hibernate.dialect.HSQLDialect
+
+spring.jpa.hibernate.ddl-auto=update
+Copiar código
+Com isso, as especificidades de nosso banco de dados não ficarão explícitas no código, garantindo uma maior segurança para nosso projeto.
+
+No código, temos o host, identificando se é local ou se está na nuvem; temos o nome do banco de dados; temos o usuário; e temos a senha.
+
+Ainda precisamos fazer alterações no arquivo ConsultaChatGPT.java. Podemos chamar nossa variável de ambiente. Então, em vez de inserir diretamente o token na linha 10, vamos excluí-lo e inserir System.getenv() chamando o nome da variável, que é OPENAI_APIKEY.
+
+ConsultaChatGPT.java:
+
+public class ConsultaChatGPT {
+    public static String obterTraducao(String texto) {
+        OpenAiService service = new OpenAiService(System.getenv("OPENAI_APIKEY"));
+        
+        // código omitido
+Copiar código
+Após fazer esses ajustes e substituir o respectivo valor no arquivo application.properties, podemos testar se tudo funciona corretamente.
+
+Vamos nos lembrar que, após a criação e configuração das variáveis de ambiente, é necessário reiniciar o sistema operacional para conseguir utilizá-las corretamente. Caso contrário, será apresentado um erro inicial.
+
+Testando o código
+Vamos executar, pois já realizamos o processo de reiniciar, e verificar se está tudo certo. Somente após essas verificações, poderemos fazer o commit e enviar esse código para o GitHub ou qualquer outra ferramenta de compartilhamento de código, sem o risco de alguém visualizar nossa senha, URL do banco de dados ou a chave do ChatGPT.
+
+Ao procurar por uma série, como "Game of Thrones", por exemplo, vamos conferir se ele será traduzido corretamente e se a função do ChatGPT executa como o esperado. Se tudo correr bem, podemos fazer o commit.
+
+Após a busca, podemos listar. Teremos como retorno "Game of Thrones" aparecendo em primeiro lugar na lista e descrita como ação. A aplicação conseguiu executar corretamente a busca no ChatGPT, retornando uma sinopse sobre "Nove famílias nobres que lutam pelo controle".
+
+Conclusão
+Criamos nossa variável de ambiente, recuperamos as informações do banco de dados, trabalhamos seguindo boas práticas, considerando critérios de segurança da informação e permitindo a colaboração. Agora, podemos subir o código sem preocupação, pois ninguém terá acesso à chave ou saberá a senha do banco de dados.
+
+Estamos seguindo boas práticas e garantindo a segurança, certo, Iasmin?
+
+Iasmin: Sim, e além das boas práticas de segurança, nós também temos outra vantagem. Agora, por exemplo, o DB_USER pode ser diferente. Como temos a nossa variável de ambiente DB_USER, podemos trocar sem mais problemas de compatibilidade que poderiam ocorrer antes. São realmente práticas ótimas para seguirmos.
+
+Jacqueline: Sim, imagine que cada vez que você clonasse, eu pegasse minhas alterações, tivesse fixo o nome do banco de dados, o usuário e a senha. Desse modo, você teria que trocar os dados toda hora. Assim, agilizamos muito mais o trabalho realizado de forma colaborativa.
+
+Isso é só o início! Começamos a trabalhar apenas com a persistência da série, mas temos muito mais adiante para desenvolver, que é executar o relacionamento entre séries e episódios.
+
+Vamos fazer nossa pausa, tomar aquele café que gostamos, e logo mais continuaremos trabalhando com JPA, persistência e evoluindo nosso projeto!
+
+Iasmin: Isso mesmo. Até lá!
