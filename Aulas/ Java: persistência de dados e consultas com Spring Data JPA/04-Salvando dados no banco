@@ -1,0 +1,180 @@
+Transcrição
+Jacqueline: Já conseguimos criar a tabela de séries em ordem alfabética, com: "atores"; "avaliacao"; "genero"; dentre outras informações. O JPA resolveu essa questão simplesmente por termos mapeado a classe com @Entity, @Table, passado o Id e as anotações necessárias.
+
+Vamos voltar para nossa aplicação, Serie.java. Já conseguimos avançar bastante.
+
+Iasmin: Comentamos sobre entidade, relacionamento e eles nos lembram dos episódios. Quando pensamos em uma série, logo vem à mente que uma série tem uma lista de episódios. Poderíamos incluir isso diretamente?
+
+Jacqueline: Sim, vamos fazer exatamente isso!
+
+Estabelecendo Relacionamentos na Modelagem
+Podemos criar mais um atributo: private List. Já temos a classe Episodio. Vamos chamá-la de episodios, instanciá-la como um new arrayList e fazer os getters e setters para importá-la. Vamos apertar "Alt + Insert" para fazer os getters e setters de Episodio.
+
+public List<Episodio> getEpisodios(){
+   return episodios;
+}
+
+Copiar código
+Se executarmos, será que o JPA vai entender? Será que isso vai influenciar em algo que a JPA já fez? Vamos executar e testar. Teoricamente, nosso caso de episódios e séries vai ser parecido com música e cantor.
+
+Uma pessoa que canta pode compor várias músicas. Da mesma maneira, uma série tem vários episódios. Portanto, precisará haver algo relacionado à chave estrangeira.
+
+A JPA está sinalizando um erro no log, está dizendo que não conseguiu determinar o jdbctype para Episodio. Portanto, está faltando o relacionamento. No entanto, não vamos pensar nesse relacionamento agora. Nossa prioridade é salvar as séries.
+
+Existe alguma anotação que informe ao JPA para deixar esse atributo em repouso? Não fazer nada com ele por enquanto?
+
+Iasmin: Sim, existe. Acho que é o @Transient, um objeto que não vai ser salvo.
+
+Jacqueline: Exato! Por enquanto, os episódios ficam quietos. Depois vamos pensar no relacionamento entre série e episódio. Para isso, usaremos @Transient.
+
+@Transient
+private List<Episodio> episodios = new ArrayList<>();
+
+Copiar código
+Com isso, o JPA já consegue executar o código sem apresentar erros.
+
+Nosso objetivo, de fato, é salvar as séries no banco, por exemplo, Gilmore Girls, Grey's Anatomy e Game of Thrones. Sendo assim, vamos criar um novo pacote na nossa aplicação.
+
+Temos o model, o principal, o service e criaremos um novo pacote chamado repository (basta selecionar "br.com.alura.screenmatch" com o botão direito do mouse, e apertar "New > Package"), onde teremos um repositório que vai executar as operações básicas do CRUD.
+
+Em "New Package", onde está escrito "br.com.alura.sreenmatch", preencheremos com "repository".
+
+Implementação de Repositório para Operações CRUD
+Iasmin: Você mencionou CRUD, Jaque, e elas são operações que talvez a pessoa estudante ainda não tenha ouvido falar. Servem para criar, ler, atualizar e deletar o banco de dados. Vamos falar bastante disso a partir de agora.
+
+Jacqueline: Por nomenclatura, se temos na "model", por exemplo, uma classe chamada serie - que é a nossa classe de negócio e representa a nossa tabela no banco - no Repository, escrevemos o quê?
+
+Colocamos o nome da entidade seguido do sufixo "Repository". Portanto, ficará: SerieRepository. O mesmo ocorrerá quando evoluírmos nosso projeto para uma API e precisarmos criar um controlador. Neste caso, teremos um SerieController.
+
+Enfim, o padrão de nomenclatura é esse: SerieRepository. E o que vamos fazer a partir daqui?
+
+package br.com.alura.sreenmatch,repository;
+
+
+public class SerieRepository {
+}
+
+Copiar código
+Isso não é uma classe, na verdade. Nós criamos como uma classe, mas isso será uma interface. Essa interface vai herdar do JPA Repository, que já abstrairá todos os métodos necessários para realizarmos as operações básicas no banco.
+
+Então, passaremos extends_JpaRepository. Basta escrever extends_JPA para que a opção JpaRepository seja exibida:
+
+JpaRepository<T, ID> org.springframework.data // trecho omitido. 
+
+Copiar código
+Aqui temos os generics, que estudamos bastante nos cursos anteriores. Então, aparecem um tipo e um ID. Mas, o que isso significa? Significa que precisamos dizer qual entidade estamos persistindo. Este repositório está manipulando quem? Com qual tabela ou entidade estamos trabalhando?
+
+Estamos lidando com uma Serie, logo, precisamos dizer, nos primeiros parâmetros do generics, quem é a entidade, que no caso é a Serie que está no módulo.
+
+O segundo item é qual é o tipo do id? Quem é a chave primária dessa série? Ela é uma string? Se fosse um banco orientado a documentos, como um MongoDB, provavelmente o Id seria uma string. Mas no nosso caso, nós definimos nosso Id como Long. Então, precisamos dizer que o id é do tipo Long.
+
+Então, vamos importar o Serie no model.
+
+package br.com.alura.sreenmatch,repository;
+
+
+import br.com.alura.screenmatch.model.Serie;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+public interface SerieRepository extends JpaRepository<Serie, Long> {
+}
+
+Copiar código
+Definindo apenas esse trecho, conseguiremos salvar e recuperar informações do banco.
+
+Iasmin: Isso é incrível!
+
+Jacqueline: Prosseguindo, na nossa classe principal, onde salvávamos as informações, buscávamos as séries e salvávamos em uma lista chamada DadosSerie.
+
+Agora, não queremos mais salvar na lista, mas no repositório. Portanto, precisamos chamar esse repositório de alguma forma. Porém, não conseguimos fazer, por exemplo, SerieRepository serie = new SerieRepository().
+
+Não é possível instanciar um repositório que está herdando de uma interface. Ele é uma interface, então, isso não existe, eu não consigo fazer isso. Ou seja, ele é uma interface que está herdando de outra interface. Precisamos tratar isso de uma forma diferente. Qual a estratégia?
+
+Injeção de Dependência com Spring
+Vamos usar um recurso do Spring chamado injeção de dependência, isso significa que delegaremos para o Spring — para o framework — a responsabilidade de instanciar uma classe que vamos usar.
+
+Então, o repositório é uma interface que vamos precisar usar o tempo todo. Precisamos salvar, buscar e queremos que o Spring tenha a responsabilidade de deixar isso disponível para quando precisarmos. Chamamos isso de injeção de dependência.
+
+Para implementar a injeção de dependência, nós usamos uma anotação chamada autowired. Também disponibilizaremos uma documentação sobre ela.
+
+A nossa classe Principal é uma classe que criamos. Vamos fazer um @AutoWired, para indicar uma injeção de dependência, e passar private SerieRepository repositorio.
+
+@Autowired
+private SerieRepository repositorio
+
+Copiar código
+Em seguida, comentaremos dadosSeries.add(dados) e acrescentaremos repositorio.save, que nos permitirá salvar a série que estamos fazendo. Portanto, nossa intenção é transformar a dadosSeries em outra coisa. Vamos indicar que Serie serie recebe new Serie(), e passaremos os dados que obtivemos.
+
+Salvar Dados no Banco de Dados
+Para salvar essa série, localizamos o repositorio e passamos um save na serie, pois definimos anteriormente que ela salvaria a série.
+
+public interface SerieRepository extends JpaRepository<Serie, Long> {
+}
+Copiar código
+Portanto, para chamar um save, um findAll, sempre temos que estar trabalhando com um objeto do tipo serie.
+
+private void buscarSerieWeb() {
+    DadosSerie dados = getDadosSerie();
+    Serie serie = new Serie (dados);
+    //dadosSeries.add(dados);
+    repositorio.save(serie);
+    System.out.println(dados);
+}
+
+
+// Código omitido. 
+
+Copiar código
+Vamos tentar salvar por aqui, na nossa classe principal, e testar se vai funcionar. Provavelmente, não vai funcionar. Vamos tentar executar, chamar, por exemplo, a série "gilmore girls" e ao fazer o save no repositório, ele apresentará um erro avisando que o Repository.save(Object), porque ele está null(vazio).
+
+Então, ele está vazio pois a responsabilidade de gerenciar e instanciar é do Spring. Isso deve ser feito em uma classe que o Spring também gerencie.
+
+A nossa classe Principal não é gerenciada pelo Spring, mas, sim, por nós. Nós fomos até o ScreenmatchApplication e instanciamos o Principal. Portanto, não é o Spring que está gerenciando o Principal, somos nós.
+
+Logo, precisamos de uma classe do Spring para transferir a ele a responsabilidade de gerencia. Disponibilizaremos uma documentação com algumas anotações para que você crie classes que o Spring gerencie, já que ele aceita várias anotações, como @Bean, @Component, @Configuration.
+
+A princípio, para não introduzirmos complexidade desnecessária ao nosso curso, vamos criar o repositório na classe que o Spring gerencia, que é a @SpringBootApplication. Então, copiaremos o @Autowired e incluiremos dentro da classe.
+
+@SpringBootApplication
+public class ScreenmatchApplication implements CommandLineRunner {
+
+
+   @Autowired
+     private SerieRepository repositorio; 
+
+
+// Código omitido. 
+
+Copiar código
+O próximo passo é passar o repositorio no Principal().
+
+// Código omitido. 
+
+
+  @Override
+  public void run(String... args) throws Exception { 
+      Principal principal = new Principal(repositorio);
+          principal.exibeMenu();
+    }
+}
+
+Copiar código
+Com isso, estamos dizendo: quando instanciar o Principal, receba o repositorio. Queremos que o Spring gerencie um repositório e vamos passá-lo para a Principal, que salvará e recuperará dados, então, teremos que alterar o construtor.
+
+Sendo assim, na Principal, vamos remover a anotação @Autowired, pois ela já está sendo utilizada na aplicação do Spring e passar this.repositorio = repositorio.
+
+public Principal(SerieRepository repositorio) {
+   this.repositorio = repositorio; 
+
+Copiar código
+Passamos uma referência de um para outro. Agora, quando chamarmos o repositorio.save(serie), ele já deve ser capaz de salvar a série. Então, vamos testar se ele conseguiu salvar? Vamos executar!
+
+Selecionaremos a opção 1 - Buscar Séries e buscar a série "grey's anatomy". Ele vai buscar e mostrar a série. Em seguida, no banco de dados, vamos realizar uma consulta com select * from series, e os dados foram gravados. Temos: o Id (Identificador) 1; os atores; a avaliação; o gênero, o pôster; a sinopse; e o título da série, Grey's Anatomy.
+
+Próximos passos
+Conseguimos completar a primeira tarefa, que era salvar os dados no banco. A seguir, entenderemos como recuperar esses dados do banco. Uma vez que começarmos a salvar várias séries no banco, como poderemos buscá-las?
+
+Na próxima aula, portanto, nosso foco é esse: uma vez que conseguimos salvar dados no banco de dados, como recuperá-los depois?
+
+Iasmin: Até a próxima aula!
