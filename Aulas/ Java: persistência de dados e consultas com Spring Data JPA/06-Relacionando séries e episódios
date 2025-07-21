@@ -1,0 +1,126 @@
+Transcrição
+Iasmin: Então, estamos com o Serie.java aberto, e já conversamos sobre esses episódios, que nós não iríamos salvar no banco, pelo menos a princípio. Por isso, utilizamos esse @Transient na linha 26. Mas não queríamos deixar esses episódios de fora, precisamos de um banco de dados que armazene tanto séries quanto episódios.
+
+Portanto, para salvá-los, precisaremos indicar para a JPA como esse relacionamento está acontecendo na nossa aplicação para que ela possa replicá-lo no banco de dados. Portanto, removeremos o @Transient.
+
+Iasmin: Isso que faremos é muito parecido com o que eu demonstrei com música e cantor. Nós tínhamos vários cantores e várias músicas, e precisávamos relacionar quem era o cantor de cada música. Nesse caso, teremos episódios que estarão ligados a uma série. Portanto, precisamos entender essa relação e mapeá-la.
+
+Iasmin: Você já comentou sobre o exemplo de cantores e músicas, onde tínhamos um para muitas. Eu acredito que é exatamente essa relação que temos agora: uma série para muitos episódios.
+
+Portanto, ao analisarmos a classe Serie, notamos que o relacionamento é um one to many (um para muitos), porque temos uma série para vários episódios. Sendo assim, na linha 26, ao invés de @Transient, escreveremos @OneToMany. Se mapeamos na classe série, também precisaremos mapear no Episodio.java para termos uma relação bidirecional.
+
+Precisaremos abrir o Episodio.java e criar uma atributo Serie para mencionarmos qual é a série de um determinado episódio. Portanto, acima de Episodio(), na linha 13, vamos declarar private Serie serie;. Também vamos declarar a visão do Episodio() sobre esse relacionamento, que seria Many to one(muitos para um). Portanto, vamos adicionar um @ManyToOne acima de Serie.
+
+// código omitido
+
+private LocalDate dataLancamento;
+
+@ManyToOne
+private Serie serie;
+
+// código omitido
+Copiar código
+Já temos o @OneToMany e o @ManyToOne, mas eu poderíamos ter várias dessas anotações nas outras classes. Para conseguirmos fazer esse mapeamento de fato, identificando qual é realmente o atributo, precisaremos mencionar onde esse mapeamento foi realizado na outra classe.
+
+Para isso, voltaremos ao Serie.java e utilizaremos o atributo mappedBy dentro da anotação @OneToMany(). Passaremos como dado o nome do atributo que tem esse relacionamento na classe Episodio. Portanto, nosso código fica @OneToMany(mappedBy = "serie"). Agora nós temos o mapeamento configurado.
+
+// código omitido
+
+@OneToMany(mappedBy = "serie")
+private List<Episodio> episodios = new ArrayList<>();
+
+// código omitido
+Copiar código
+Jacqueline: Para essas cardinalidades, é interessantes que você faça cursos especificamente de banco de dados, para conseguir entender mais facilmente que tipo de cardinalidade nós temos de uma entidade para outra. Com isso ficará mais claro identificar as tabelas e saber quando usar cada tipo de relação.
+
+Esse é um conhecimento importante, e nós deixaremos um material extra nas atividades. Contudo, é fundamental que você se aperfeiçoe e estude mais sobre isso. Assim ficará mais fácil traduzir para a classe e você usar a anotação correta do que você realmente quer fazer.
+
+Iasmin: Uma vez que nós conhecemos esses mapeamentos com o conhecimento de banco de dados, fica bem fácil saber quando usar cada anotação. Então, ter esse conhecimento é bem útil para nós.
+
+Nosso relacionamento está feito, mas não salvamos o Episodio. Se tentarmos executar essa aplicação, nosso terminal retornará que o episódio não está configurado, da mesma forma que já tínhamos obtido um erro antes.
+
+De fato, ao executarmos o código, recebemos uma AnnotationException, informando que houve um erro nessa associação com episódios, porque o episódio não tem entidade. Mais uma vez essa informação chega dentro de um log enorme, com muitas informações. Contudo, nele temos em detalhes do que precisamos fazer para corrigir nosso erro.
+
+Precisamos configurar o relacionamento com a entidade em questão em Episodio.java. Sendo assim, no começo do código, acima do public class Episodio, escreveremos @Entity e, na linha abaixo, @Table(). Após escrevermos o @Table, precisamos pressionar "Alt + Enter" para importá-lo. Em seguida, passamos name = "episodios" dentro do parênteses.
+
+//código omitido
+
+@Entity
+@Table(name = "episodios")
+public class Episodio {
+    //código omitido
+Copiar código
+Além disso, precisaremos de um @Id. Podemos copiar o código que criamos em Serie.java, pois ele também será autoincremental. Portanto, após declararmos o Episodio, colaremos o código de @Id.
+
+@Entity
+@Table(name = "episodios")
+public class Episodio {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Integer temporada;
+    private String titulo;
+    private Integer numeroEpisodio;
+    private Double avaliacao;
+    private LocalDate dataLancamento;
+    @ManyToOne
+        
+        //código omitido
+Copiar código
+Em seguida, vamos gerar os getters e setters. Para isso, depois do Episodio(), por volta da linha 45, pressionaremos o atalho "Alt + Insert" e selecionamos "Getters and Setters" no menu flutuante. Com isso, abrimos a janela "Select Fields to Generate Getters and Setters" (Selecione campos para gerar getters e setters), onde escolheremos o id:Long e o serie:Serie. Em seguida, clicamos no botão "OK", na parte inferior da janela. Mais algum mapeamento, Jacque?
+
+Jacqueline: Por enquanto, podemos tentar rodar e verificar se ele consegue executar corretamente. A princípio, acreditamos que apenas criar o id e estabelecer o relacionamento sejam suficientes e ele consiga efetivamente criar essa tabela no banco de dados que utilizamos a opção update no Application Properties. Então, a partir do momento em que incluímos essa anotação de @Entity, ao abrir a aplicação, ele já deve conseguir criar a tabela Episodios, mesmo que ainda não tenha nada.
+
+Iasmin: Vamos, então, executar nosso projeto novamente, clicando no botão Run na barra superior. Nosso projeto é executado no terminal e aparecem as opções:
+
+1- Buscar séries
+
+2- Buscar episódios
+
+3- Listar séries buscadas
+
+0- Sair
+
+Vamos tentar buscar uma série. Para isso, escrevemos 1 e pressionamos "Enter". Assim recebemos o texto "Digite o nome da série para busca". No caso, eu escrevi the noys, o que está errado, então dá erro e o processo é finalizado.
+
+1- Buscar séries
+
+2- Buscar episódios
+
+3- Listar séries buscadas
+
+0- Sair
+
+1
+
+Digite o nome da série para busca
+
+the noys
+
+Jacqueline: Não tem problema. Vamos executar o programa novamente e conferir o banco de dados, porque, teoricamente, a tabela já deve ter sido criada.
+
+Iasmin: Abrimos o programa "pgAdmin" e acessamos "PostgreSQL > Databases > alura_series > Schemas > Tables". Nessa pasta já temos as opções "episodios" e "series". Vamos descobrir como estão vindo essas informações.
+
+Clicamos com o botão direito na pasta "Tables" e selecionamos "PSQL Tool". Assim, abre uma área para query na parte centro-superior da janela, onde escreveremos select * from episodios para descobrirmos como essa tabela foi criada.
+
+Esperamos recebê-la com uma chave estrangeira, já que configuramos o relacionamento em nossa aplicação. Assim, já deveríamos ter algo configurado, da mesma maneira que já tinha feito manualmente com musicas e cantores. Ao executamos esse select, pressionando "F5", ou clicando no botão "Execute" na barra superior da query, recebemos a tabela na parte inferior da janela.
+
+id	avaliacao	data_lancamento	numero_episodio	temporada	titulo	serie_id
+Observamos que temos todos os atributos de episódio e um serie_id, que é a chave estrangeira que mencionamos. Voltando para o Episodio.java no IntelliJ, reparem o que fizemos na aplicação: adicionamos a Serie no Episodio, mas o que a JPA salvou foi um serie_id, que é realmente essa chave estrangeira. É assim que acontece em um relacionamento no banco de dados. Portanto, funcionou, né? Conseguimos atingir nosso objetivo.
+
+Jacqueline: E ele, inclusive, já usa esse nome padrão. Quando você não especifica o nome da coluna que você deseja que seja chave estrangeira, ele já coloca nome_id, que é o padrão que comumente usamos, até mesmo quando estamos fazendo manualmente, não é mesmo?
+
+Jacqueline: Podemos também alterar este nome utilizando a anotação @JoinColumn. E agora que conseguimos criar a tabela, nosso próximo passo pode ser tentar inserir os episódios e fazer com que eles apareçam em nossa aplicação.
+
+Jacqueline: Exatamente. Antes vamos tentar listar as séries para ver o que acontece?
+
+Iasmin: Executaremos nosso programa e selecionaremos a opção 1 para cadastrar uma série no nosso banco ainda vazio. Dessa vez escreverei a série friends. Pressionamos "Enter" e ele retorna todos os dados relacionados à série.
+
+Tentaremos agora selecionar o que está no banco de dados. Como o menu de opções já reapareceu, podemos apenas enviar o número 3. Com isso, os dados sobre "Friends" são retornados para nós.
+
+Jacqueline: Perfeito. Até agora, as opções 1 e 3 do menu não deram erro. A opção número 2, que ainda não programamos para gravar, será nosso próximo passo, certo?
+
+Iasmin: Isso mesmo. Vamos fazer isso em breve.
+
+ Discutir no Fórum
