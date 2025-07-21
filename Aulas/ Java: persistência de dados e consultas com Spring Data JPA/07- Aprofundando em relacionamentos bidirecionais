@@ -1,0 +1,173 @@
+Transcrição
+Iasmin: Já temos as opções 1 e 3 funcionando, mas também queremos programar a opção 2. Atualmente, a busca de episódios está buscando dados, mas eles só são visíveis para nós. O que queremos é buscar episódios e salvar no banco de dados.
+
+Então, vamos alterar nossa classe principal e efetuar essas mudanças na busca de episódios por série.
+
+Jacqueline: É engraçado que você falou "as opções 1 e 3 estão funcionando, por enquanto". É muito isso, é comum implementarmos uma coisa e outra coisa parar de funcionar. Por isso, é importante sempre retestar o que já foi feito, para garantir que uma implementação não tenha afetado outra.
+
+Iasmin: É. Vamos alterar a busca de episódios e, em seguida, teremos que buscar a série novamente para verificar se está tudo funcionando como esperado.
+
+Ao invés de termos um dadosSerie buscando na web, queremos buscar os episódios de séries que já existem em nosso banco de dados. Então, vou remover essa linha DadosSerie dadosSerie = getDadosSerie().
+
+Vão aparecer alguns erros, mas não se preocupe, é perfeitamente normal.
+
+Vamos querer que a pessoa usuária digite qual é a série que deseja buscar. Precisamos mostrar as séries disponíveis em nosso banco e solicitar que a pessoa escolha em qual delas quer buscar os episódios. Então, aqui teremos que fazer essa interação com a pessoa usuária.
+
+Criaremos uma variável chamada nome_serie que atuará com a função leitura.nextLine(). Antes disso, precisamos conversar com nossa pessoa usuária. Então, vamos exibir uma mensagem de "Escolha uma série pelo nome" utilizando System.out.println().
+
+    private void buscarEpisodioPorSerie(){
+        System.out.println("Escolha uma série pelo nome");
+        var nomeSerie = leitura.nextLine();
+        List<DadosTemporada> temporadas = new ArrayList<>();
+Copiar código
+Nossa pessoa usuária também não saberá quais séries estão disponíveis para escolher. Portanto, antes disso, precisamos listar todas as séries disponíveis em nosso banco de dados. Temos um método que faz isso, chamado listarSeriesBuscadas(). Contudo, como vamos precisar usar esse método em outro lugar, nossa lista de séries não pode ser local. Se chamarmos esse método listarSeriesBuscadas() ali em cima no código, e posteriormente precisarmos dessas séries novamente, teremos que criar uma lista que seja um atributo de nossa classe principal.
+
+Portanto, vou criar aqui, após a linha de repositório private SerieRepository repositorio;, uma lista de séries. Ela precisa ser privada.
+
+private SerieRepository repositorio;
+private List<Serie> series = new ArrayList<>();
+Copiar código
+Com isso, no nosso método listarSeriesBuscadas(), podemos tirar o List<Serie> e deixar o series como atributo. Não precisamos instanciar mais.
+
+    private void listarSeriesBuscadas(){
+        series = repositorio.findAll();
+        series.stream()
+                .sorted(Comparator.comparing(Serie::getGenero))
+                .forEach(System.out::println);
+Copiar código
+Agora temos uma lista que está global.
+
+Agora poderemos listar essas séries buscadas.
+
+    private void buscarEpisodioPorSerie(){
+    listarSeriesBuscadas();
+        System.out.println("Escolha uma série pelo nome");
+        var nomeSerie = leitura.nextLine();
+        List<DadosTemporada> temporadas = new ArrayList<>();
+Copiar código
+Uma vez que listar e solicitar que a pessoa usuária escolha uma das séries disponíveis, precisaremos realizar uma busca a partir do nome dessa série. Para isso, usaremos uma estrutura que já foi utilizada antes, o stream com o findFirst().
+
+Vamos filtrar a série pelo nome da série que a pessoa usuária digitou. Depois de filtrar, precisamos capturar a primeira referência dessa série com findFirst().
+
+    private void buscarEpisodioPorSerie(){
+        listarSeriesBuscadas();
+        System.out.println("Escolha uma série pelo nome");
+        var nomeSerie = leitura.nextLine();
+
+        series.stream()
+                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
+                .findFirst();
+Copiar código
+Uma vez feito isso, vamos atribuir o resultado a um Optional<Serie>. Com o cursor do mouse em cima de findFirst() clicaremos com o botão direito do mouse e selecionaremos a opção "Show Context Actions > Introduce local variable" e selecionaremos "Optional<Serie>". Podemos chamá-la de serie mesmo.
+
+        Optional<Serie> serie = series.stream()
+                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
+                .findFirst();
+Copiar código
+Em seguida, vamos verificar se essa série existe ou não. Então, farei um if (serie.isPresent()). Depois desse if, teremos tudo que foi criado anteriormente para a busca de episódios.
+
+Se a série não estiver presente, podemos imprimir uma mensagem para a pessoa usuária: "série não encontrada!".
+
+Veja como fica o código com a inclusão do if e do else:
+
+        if(serie.isPresent()) {
+            List<DadosTemporada> temporadas = new ArrayList<>();
+
+        for (int i = 1; i <= dadosSerie.totalTemporadas(); i++) {
+            var json = consumo.obterDados(ENDERECO + dadosSerie.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
+            DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+            temporadas.add(dadosTemporada);
+        }
+        temporadas.forEach(System.out::println);
+    }
+        } else {
+            System.out.println("Série não encontrada!");
+        }
+    }
+Copiar código
+Caso nossa série esteja presente dentro do objeto Optional, ou seja, se ela foi encontrada na nossa lista de séries, podemos então criar a série de fato.
+
+Vale lembrar que esse optional serie é uma variável do tipo optional, e queremos trabalhar com uma variável do tipo série.
+
+Então, precisaremos criar uma variável serieEncontrada, que será gerada a partir do método serie.get(). Quando realizamos o método get(), nós realmente temos a referência da série.
+
+Jacqueline: Isso, na realidade, é opcional. Nós poderíamos, em todos os lugares onde precisamos usar a série, repetir "serie.get().algumacoisa". Portanto, o que está sendo feito aqui é apenas uma facilidade para não precisarmos fazer um serie.get() em todos os pontos em que precisamos manipular dados.
+
+Nesse caso, a referência do get() é passada para uma variável e, a partir de agora, sempre que precisarmos de algum valor da serieEncontrada, utilizaremos simplesmente serieEncontrada. Isso facilita e torna o código realmente mais legível.
+
+Iasmin: Sim. Isso acaba facilitando bastante.
+
+Portanto, no lugar de dadosSerie, podemos usar serieEncontrada e apenas modificar o TotalTemporadas para getTotalTemporadas(), uma vez que agora estamos trabalhando com uma série em vez de dadosSerie. E da mesma forma, no título, vamos passar um serieEncontrada.getTitulo().
+
+        if(serie.isPresent()) {
+
+                var serieEncontrada = serie.get();
+            List<DadosTemporada> temporadas = new ArrayList<>();
+
+        for (int i = 1; i <= serieEncontrada.getTotalTemporadas(); i++) {
+            var json = consumo.obterDados(ENDERECO + serieEncontrada.getTitulo().replace(" ", "+") + "&season=" + i + API_KEY);
+            DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
+            temporadas.add(dadosTemporada);
+        }
+        temporadas.forEach(System.out::println);
+    }
+        } else {
+            System.out.println("Série não encontrada!");
+    }
+}
+Copiar código
+Nesse momento, já conseguimos buscar a série na nossa lista de dados armazenados no banco de dados. Também buscamos os episódios que estão relacionados a ela, mas agora precisamos realmente setar isso na nossa série e associar os episódios que estão nela.
+
+Para isso, também vamos precisar retomar algo que já fizemos antes: a partir dessas temporadas, instanciar os episódios. Dessa forma, teremos uma lista de episódios e vamos associar a lista de episódios da série.
+
+Vamos escrever um temporadas.stream() e .flatMap(). Para cada DadosTemporada, vamos fazer um d. Para cada lista de DadosEpisodios que existe lá, também chamaremos stream().
+
+E aí sim, com esse stream, vamos fazer esse mapeamento entre DadosEpisodios e Episodios.
+
+ temporadas.stream()
+       .flatMap(d -> d.episodios().stream()
+Copiar código
+Em seguida, criaremos um map(). Para cada DadosEpisodios, criaremos um new Episodio. E então, passamos o número da temporada, que será d.numero, e o dado de episódio, e.
+
+Feito isso, coletamos tudo para uma lista, ou seja, fazemos um .collectToList().
+
+Vamos também criar uma variável local, que será episodios.
+
+            List<Episodio> episodios = temporadas.stream()
+                    .flatMap(d -> d.episodios().stream()
+                            .map(e -> new Episodio(d.numero(), e)))
+                    .collect(Collectors.toList());
+Copiar código
+Criamos a nossa lista de episódios e agora vamos associar a nossa série. Portanto, chamaremos a serieEncontrada e vamos modificar os episódios que estão nela. Para isso, vamos usar setEpisodios(). Passamos episodios como parâmetro da função, que acabamos de criar, e então, conseguimos programar toda essa mudança.
+
+            List<Episodio> episodios = temporadas.stream()
+                    .flatMap(d -> d.episodios().stream()
+                            .map(e -> new Episodio(d.numero(), e)))
+                    .collect(Collectors.toList());
+
+            serieEncontrada.setEpisodios(episodios);
+Copiar código
+Por fim, vamos salvar tudo isso com um repositorio.save(serieEncontrada).
+
+Nosso código ficou assim:
+
+            List<Episodio> episodios = temporadas.stream()
+                    .flatMap(d -> d.episodios().stream()
+                            .map(e -> new Episodio(d.numero(), e)))
+                    .collect(Collectors.toList());
+
+            serieEncontrada.setEpisodios(episodios);
+            repositorio.save(serieEncontrada);
+        } else {
+            System.out.println("Série não encontrada!");
+        }
+Copiar código
+Jacqueline: Temos bastante código aqui, mas nada que seja completamente novo. Esta parte do flatMap, exploramos no curso anterior, da mesma forma. A busca por um nome também foi abordada. São conhecimentos que sinalizamos que eram importantes justamente por isso, pois precisaremos utilizá-los aqui novamente e em vários momentos de nossa vida como pessoa desenvolvedora. Muitas vezes precisaremos utilizar streams, e os métodos map e flat map. Portanto, precisamos praticar isso o máximo possível.
+
+Iasmin: Agora, podemos executar nossa aplicação novamente. Vou interromper e reiniciar a aplicação.
+
+Vamos buscar os episódios de "Friends", que é o único que temos no banco de dados por enquanto. Demorou um pouco para retornar porque são muitas temporadas.
+
+Mas ele retornou um log de erro. Ele buscou, mas não localizou os episódios no banco de dados porque ainda não salvamos no banco de dados.
+
+Jacqueline: Nosso log deu uma dica do que aconteceu, no próximo vídeo vamos analisar esse log corrigir nossa aplicação, e efetivamente fazer com que este registro seja bem-sucedido. Até mais!
